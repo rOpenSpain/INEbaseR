@@ -1,7 +1,7 @@
 # API INE (Series)
 #
-# Author: Andrés Nacimiento García <andresnacimiento@gmail.com>
-# Director de proyecto: Carlos Pérez González <cpgonzal@ull.es>
+# Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
+# Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 #
 
 # getOperaciones
@@ -18,6 +18,7 @@ getSeries <- function(codigo) {
 }
 
 # Example of usage
+# library(jsonlite)
 # cod <- getOperaciones()
 # getSeries(cod$Codigo[1])
 

@@ -27,4 +27,5 @@ listar_variables_operacion_ioe <- function(cod_ioe) {
 # Example of usage
 # library(jsonlite)
 # list_vars <- listar_variables_all()
-# list_vars_op <- listar_variables_operacion_ioe("30138")
+# list_vars_op <- listar_variables_operacion("IPC")
+# list_vars_op_ioe <- listar_variables_operacion_ioe("30138")

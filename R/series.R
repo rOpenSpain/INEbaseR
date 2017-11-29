@@ -10,27 +10,17 @@ listar_operaciones_series <- function() {
   return(fromJSON("http://servicios.ine.es/wstempus/js/ES/OPERACIONES_DISPONIBLES"))
 }
 
-# listar_series
-# Return all series from an operation
-listar_series <- function(codigo) {
-  url <- paste0("http://servicios.ine.es/wstempus/js/ES/SERIES_OPERACION/", codigo, "?page=1&det=2")
+# obtener_serie
+# Obtiene una serie a partir del código identificativo de la serie
+obtener_serie <- function(codigo) {
+  url <- paste0("http://servicios.ine.es/wstempus/js/ES/SERIE/", codigo)
   return(fromJSON(url))
-}
-
-# getSerie
-# Return a data frame with one series data between a date range
-getSerie <- function(codigo, date_start, date_end) {
-  date_start <- format.Date(date_start,'%Y%m%d')
-  date_end <- format.Date(date_end,'%Y%m%d')
-  url <- paste0("http://servicios.ine.es/wstempus/js/ES/DATOS_SERIE/", codigo, "?date=", date_start, ":", date_end, "&det=2")
-  return(fromJSON(url)$Data)
 }
 
 
 # Example of usage
-# library(jsonlite)
-# codOperaciones <- getOperaciones()
-# codeSeries <- getSeries(codOperaciones$Codigo[1])
-# codSerieDate <- getSerie(codeSeries$COD[1], "2017-01-01", "2017-10-23")
-# codSerieDate <- getSerie("FREG373", "2017-01-01", "2017-10-23")
+# ob_serie <- obtener_serie("IPC206449")
+
+
+
 

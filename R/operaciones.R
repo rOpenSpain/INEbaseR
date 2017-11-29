@@ -31,7 +31,6 @@ listar_operaciones_codigo <-function(cod) {
   return(fromJSON(url))
 }
 
-
 # Example of usage
 # library(jsonlite)
 # list_op_all <- listar_operaciones_all()

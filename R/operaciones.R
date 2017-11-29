@@ -11,29 +11,22 @@ listar_operaciones_all <- function() {
 }
 
 # listar_operaciones_id
-# Obtiene un data frame a partir del código numérico Tempus3 interno (id)
-listar_operaciones_id <- function(id) {
-  url <- paste0("http://servicios.ine.es/wstempus/js/ES/TABLAS_OPERACION/", id)
+# Obtiene un data frame a partir del código numérico (id) y código alfabético (IPC) Tempus3 interno
+listar_operaciones <- function(cod) {
+  url <- paste0("http://servicios.ine.es/wstempus/js/ES/OPERACION/", cod)
   return(fromJSON(url))
 }
 
 # listar_operaciones_ioe
 # Obtiene un data frame a partir del IOE (Inventario de Operaciones Estadísticas)
 listar_operaciones_ioe <- function(cod_ioe) {
-  url <- paste0("http://servicios.ine.es/wstempus/js/ES/TABLAS_OPERACION/IOE", cod_ioe)
-  return(fromJSON(url))
-}
-
-# listar_operaciones_codigo
-# Obtiene un data frame a partir del código alfabético Tempus3 interno
-listar_operaciones_codigo <-function(cod) {
-  url <- paste0("http://servicios.ine.es/wstempus/js/ES/TABLAS_OPERACION/", cod)
+  url <- paste0("http://servicios.ine.es/wstempus/js/ES/OPERACION/IOE", cod_ioe)
   return(fromJSON(url))
 }
 
 # Example of usage
 # library(jsonlite)
 # list_op_all <- listar_operaciones_all()
-# list_op_id <- listar_operaciones_id(25)
+# list_op_id <- listar_operaciones(25)
+# list_op_cod <- listar_operaciones("IPC")
 # list_op_ioe <- listar_operaciones_ioe(30138)
-# list_op_cod <- listar_operaciones_codigo("IPC")

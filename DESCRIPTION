@@ -1,14 +1,13 @@
 Package: RLibINE
 Type: Package
-Title: INE (Instituto Nacional de Estadística) API
+Title: INE (Instituto Nacional de Estad?stica) API
 Version: 0.1.0
 Author: Andres Nacimiento <andresnacimiento@gmail.com>
 Maintainer: Andres Nacimiento <andresnacimiento@gmail.com>
 Description: R library for obtaining and analyzing open data from
-    INE (Instituto Nacional de Estadística) API
+    INE (Instituto Nacional de Estad?stica) API
 License: GNU General Public License version 3
 Encoding: UTF-8
 LazyData: true
-Imports:
-    jsonlite
+Imports: jsonlite
 RoxygenNote: 6.0.1

@@ -4,7 +4,6 @@
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 #
 
-
 # listar_variables_all
 # Información de todas las variables del Sistema: identificador Tempus3, nombre de la variable y código oficial.
 listar_variables_all <- function() {
@@ -18,7 +17,14 @@ listar_variables_operacion <- function(cod) {
   return(fromJSON(url))
 }
 
+# listar_variables_operacion_ioe
+# Obtiene un data frame con las variables operación a partir del IOE (Inventario de Operaciones Estadísticas)
+listar_variables_operacion_ioe <- function(cod_ioe) {
+  url <- paste0("http://servicios.ine.es/wstempus/js/ES/VARIABLES_OPERACION/IOE", cod_ioe)
+  return(fromJSON(url))
+}
+
 # Example of usage
 # library(jsonlite)
 # list_vars <- listar_variables_all()
-# list_vars_op <- listar_variables_operacion("IOE30138")
+# list_vars_op <- listar_variables_operacion_ioe("30138")

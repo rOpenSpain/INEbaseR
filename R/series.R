@@ -4,15 +4,15 @@
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 #
 
-# getOperaciones
+# listar_operaciones_series
 # Return all operations available
-getOperaciones <- function() {
+listar_operaciones_series <- function() {
   return(fromJSON("http://servicios.ine.es/wstempus/js/ES/OPERACIONES_DISPONIBLES"))
 }
 
-# getSeries
+# listar_series
 # Return all series from an operation
-getSeries <- function(codigo) {
+listar_series <- function(codigo) {
   url <- paste0("http://servicios.ine.es/wstempus/js/ES/SERIES_OPERACION/", codigo, "?page=1&det=2")
   return(fromJSON(url))
 }

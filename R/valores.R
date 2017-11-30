@@ -7,7 +7,7 @@
 # listar_valores_all
 # Información de los valores que puede tomar la variable: identificador Tempus3 del valor, identificador Tempus 3 de la variable a la que pertenece, nombre del valor y código oficial.
 # [?parámetros] = posibilidad de usar det=1 para ver el detalle de la variable a la que pertenece.
-listar_valores_all <- function(id, det = 0){
+listar_valores_all <- function(id, det = 0) {
   if ((det < 0) || (det > 1))
     stop("Ha definido el parámetro 'det' con un valor incorrecto.")
   url <- paste0("http://servicios.ine.es/wstempus/js/ES/VALORES_VARIABLE/", id, "?det=", det)

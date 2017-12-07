@@ -4,29 +4,34 @@
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 #
 
-# listar_operaciones_all
+# get_operations_all
 # Obtiene un data frame con todas las operaciones estadísticas disponibles
-listar_operaciones_all <- function() {
-  return(fromJSON("http://servicios.ine.es/wstempus/js/ES/OPERACIONES_DISPONIBLES"))
+get_operations_all <- function(lang = "ES") {
+
+  return(fromJSON(paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACIONES_DISPONIBLES")))
+
 }
 
-# listar_operaciones_id
-# Obtiene un data frame a partir del código numérico (id) y código alfabético (IPC) Tempus3 interno
-listar_operaciones <- function(cod) {
-  url <- paste0("http://servicios.ine.es/wstempus/js/ES/OPERACION/", cod)
-  return(fromJSON(url))
-}
+# get_operation
+# Obtiene un data frame a partir de:
+#   Código numérico (id)
+#   código alfabético (IPC)
+#   código IOE (Inventario de Operaciones Estadísticas)
+get_operation <- function(code, ioe = FALSE, lang = "ES") {
 
-# listar_operaciones_ioe
-# Obtiene un data frame a partir del IOE (Inventario de Operaciones Estadísticas)
-listar_operaciones_ioe <- function(cod_ioe) {
-  url <- paste0("http://servicios.ine.es/wstempus/js/ES/OPERACION/IOE", cod_ioe)
+  if (ioe)
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/IOE", code)
+
+  else
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/", code)
+
   return(fromJSON(url))
+
 }
 
 # Example of usage
 # library(jsonlite)
-# list_op_all <- listar_operaciones_all()
-# list_op_id <- listar_operaciones(25)
-# list_op_cod <- listar_operaciones("IPC")
-# list_op_ioe <- listar_operaciones_ioe(30138)
+# list_op_all <- get_operations_all()
+# list_op_id <- get_operation(25)
+# list_op_cod <- get_operation("IPC")
+# list_op_ioe <- get_operation(30138, ioe = TRUE)

@@ -7,9 +7,7 @@
 # get_operations_all
 # Obtiene un data frame con todas las operaciones estadísticas disponibles
 get_operations_all <- function(lang = "ES") {
-
   return(fromJSON(paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACIONES_DISPONIBLES")))
-
 }
 
 # get_operation
@@ -18,15 +16,11 @@ get_operations_all <- function(lang = "ES") {
 #   código alfabético (IPC)
 #   código IOE (Inventario de Operaciones Estadísticas)
 get_operation <- function(code, ioe = FALSE, lang = "ES") {
-
   if (ioe)
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/IOE", code)
-
   else
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/", code)
-
   return(fromJSON(url))
-
 }
 
 # Example of usage

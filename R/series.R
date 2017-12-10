@@ -4,24 +4,44 @@
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 #
 
-# obtener_serie
-# Obtiene una serie a partir del código identificativo de la serie
-obtener_serie <- function(cod) {
-  url <- paste0("http://servicios.ine.es/wstempus/js/ES/SERIE/", cod)
+# get_serie - SERIE
+# Obtiene una serie
+# [?parámetros]= posibilidad de usar:
+#   det=2 para ver dos niveles de detalle, en contreto para poder acceder al objeto PubFechaAct
+#   tip=M para obtener los metadatos (cruce variables-valores) de la serie.
+get_serie <- function(code, det = 0, tip = NA, lang = "ES") {
+  if ((det < 0) || (det > 2))
+    stop("You have defined 'det' parameter with an incorrect value.")
+  if ((tip != "M") && (!is.na(tip)))
+    stop("You have defined 'tip' parameter with an incorrect value.")
+  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE/", code, "?det=", det, "&tip=", tip)
   return(fromJSON(url))
 }
 
-# listar_series_operacion
-# Obtiene series de una operación
-listar_series_operacion <- function(cod) {
-  url <- paste0("http://servicios.ine.es/wstempus/js/ES/SERIES_OPERACION/", cod)
+# get_series_operation - SERIES_OPERACION
+# Obtener series de una operación
+# [?parámetros]= posibilidad de usar:
+#   det=2 para ver dos niveles de detalle, en contreto para poder acceder al objeto PubFechaAct
+#   tip=M para obtener los metadatos (cruce variables-valores) de la serie.
+get_series_operation <- function(code, det = 0, tip = NA, page = 1, ioe = FALSE, lang = "ES") {
+  if ((det < 0) || (det > 2))
+    stop("You have defined 'det' parameter with an incorrect value.")
+  if ((tip != "M") && (!is.na(tip)))
+    stop("You have defined 'tip' parameter with an incorrect value.")
+  if (ioe)
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
+  else
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
   return(fromJSON(url))
 }
 
 # Example of usage
-# list_serie_op <- listar_series_operacion("IPC")
-# ob_serie <- obtener_serie("IPC206449")
-
-
-
-
+# library(jsonlite)
+# Nota: el id se obtiene del código (COD) de SERIES_OPERACION¿?
+# list_serie <- get_serie("IPC206449")
+# list_serie <- get_serie("IPC206449", 2, "M")
+# Nota: el id se obtiene de las operaciones
+# list_serie_op <- get_series_operation(25)
+# list_serie_op <- get_series_operation(25, 2, "M")
+# list_serie_op <- get_series_operation(30138, ioe = TRUE)
+# list_serie_op <- get_series_operation(30138, 2, "M", ioe = TRUE)

@@ -76,9 +76,9 @@ get_series_metadataoperation <- function(id, g1var = 0, g1val = 0, g2var = 0, g2
   if (g3var <= 0)
     stop("You have to insert a 'g3' parameter with a correct value.")
   if (ioe)
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/IOE", id, "?g1=", g1var, ":", g1val, "&g2=", g2var, ":", g2val, "&g3=", g3var, ":&p=" , p)
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/IOE", id, "?g1=", g1var, ":", g1val, "&g2=", g2var, ":", g2val, "&g3=", g3var, ":&p=" , p, "&tip=", tip, "&det=", det)
   else
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", id, "?g1=", g1var, ":", g1val, "&g2=", g2var, ":", g2val, "&g3=", g3var, ":&p=" , p)
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", id, "?g1=", g1var, ":", g1val, "&g2=", g2var, ":", g2val, "&g3=", g3var, ":&p=" , p, "&tip=", tip, "&det=", det)
   return(fromJSON(url))
 }
 

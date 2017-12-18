@@ -14,8 +14,8 @@ get_operations_all <- function(lang = "ES") {
 }
 
 #' @title Get operation
-#' @description This function returns a data frame with all available statistical operations of an id or code
-#' @param code to find an operation
+#' @description This function returns a data frame with all available statistical operations from an id or code
+#' @param code operation identification
 #' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
 #' @param lang language used to obtain information
 #' @details

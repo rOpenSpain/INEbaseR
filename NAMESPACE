@@ -2,6 +2,9 @@
 
 export(get_operation)
 export(get_operations_all)
+export(get_tables_group)
+export(get_tables_group_values)
+export(get_tables_operation)
 export(get_values_all)
 export(get_values_variableoperation)
 export(get_variable)

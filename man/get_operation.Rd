@@ -7,14 +7,14 @@
 get_operation(code, ioe = FALSE, lang = "ES")
 }
 \arguments{
-\item{code}{to find an operation}
+\item{code}{operation identification}
 
 \item{ioe}{\code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default}
 
 \item{lang}{language used to obtain information}
 }
 \description{
-This function returns a data frame with all available statistical operations of an id or code
+This function returns a data frame with all available statistical operations from an id or code
 }
 \details{
 Numeric code (id)

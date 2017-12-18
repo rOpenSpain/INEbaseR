@@ -45,8 +45,6 @@ get_tables_group <- function(id, lang = "ES"){
   return(fromJSON(paste0("http://servicios.ine.es/wstempus/js/", lang, "/GRUPOS_TABLA/", id)))
 }
 
-# get_tables_group_values - VALORES_GRUPOSTABLA
-# Obtiene la combinación de variables y valores que definen una tabla. (segunda parte)
 #' @title Get tables group values
 #' @description This function returns a data frame with a combination of variables and values that define a table from an id or code
 #' @param id table identification

@@ -2,13 +2,17 @@
 #
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
-#
 
-# get_serie - SERIE
-# Obtiene una serie
-# [?parámetros]= posibilidad de usar:
-#   det=2 para ver dos niveles de detalle, en contreto para poder acceder al objeto PubFechaAct
-#   tip=M para obtener los metadatos (cruce variables-valores) de la serie.
+#' @title Get serie
+#' @description This function returns a data frame with a serie from an id or code
+#' @param code operation identification
+#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
+#' @param tip \code{tip = M} to obtain the metadata (crossing variables-values) of the series.
+#' @param lang language used to obtain information
+#' @examples
+#' list_serie <- get_serie("IPC206449")
+#' list_serie <- get_serie("IPC206449", 2, "M")
+#' @export
 get_serie <- function(code, det = 0, tip = NA, lang = "ES") {
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")

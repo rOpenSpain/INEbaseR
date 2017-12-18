@@ -2,12 +2,16 @@
 #
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
-#
 
-# get_values_all
-# Obtiene todos los valores de una variable.
-# Consulta: Valores de la variable “Provincias”.
-# [?parámetros] = posibilidad de usar det=1 para ver el detalle de la variable a la que pertenece.
+#' @title Get values (all)
+#' @description This function returns a data frame with all values from a variable
+#' @param id operation identification
+#' @param det \code{det = 1} to see the detail of the variable to which it belongs, \code{det = 0} by default
+#' @param lang language used to obtain information
+#' @examples
+#' get_values_all(115)
+#' get_values_all(115, 1)
+#' @export
 get_values_all <- function(id, det = 0, lang = "ES") {
   if ((det < 0) || (det > 1))
     stop("You have defined 'det' parameter with an incorrect value.")
@@ -15,9 +19,23 @@ get_values_all <- function(id, det = 0, lang = "ES") {
   return(fromJSON(url))
 }
 
-# get_values_variableoperation
-# Obtiene todos los valores de una variable para una operación.
-# [?parámetros] = posibilidad de usar det=1 para ver el detalle de la variable a la que pertenece.
+#' @title Get values from variable operation
+#' @description This function returns a data frame with all values from a variable to an operation
+#' @param id variable identification
+#' @param op operation identification
+#' @param det \code{det = 1} to see the detail of the variable to which it belongs, \code{det = 0} by default
+#' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
+#' @param lang language used to obtain information
+#' @details
+#' Numeric code \code{id}
+#' Alphabetic code \code{IPC}
+#' \code{IOE} code (Inventario de Operaciones Estadísticas)
+#' @examples
+#' get_values_variableoperation(762, 25)
+#' get_values_variableoperation(762, 25, 1)
+#' get_values_variableoperation(762, 30138, ioe = TRUE)
+#' get_values_variableoperation(762, 30138, ioe = TRUE, 1)
+#' @export
 get_values_variableoperation <- function(id, op, det = 0, ioe = FALSE, lang = "ES") {
   if ((det < 0) || (det > 1))
     stop("You have defined 'det' parameter with an incorrect value.")
@@ -27,14 +45,3 @@ get_values_variableoperation <- function(id, op, det = 0, ioe = FALSE, lang = "E
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/VALORES_VARIABLEOPERACION/", id, "/", op, "?det=", det)
   return(fromJSON(url))
 }
-
-# Example of usage
-# library(jsonlite)
-# Nota: estos id (115) se obtienen de las variables ("Provincias")
-# list_val <- get_values_all(115) # "det" no definido.
-# list_val <- get_values_all(115, 1) # det = 1
-# Nota: el "id" (762) se obtiene del código id de variables, y "op" (25) es el código de las operaciones
-# list_val_var_op <- get_values_variableoperation(762, 25)
-# list_val_var_op <- get_values_variableoperation(762, 25, 1)
-# list_val_var_op <- get_values_variableoperation(762, 30138, ioe = TRUE)
-# list_val_var_op <- get_values_variableoperation(762, 30138, ioe = TRUE, 1)

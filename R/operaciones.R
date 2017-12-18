@@ -19,9 +19,9 @@ get_operations_all <- function(lang = "ES") {
 #' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
 #' @param lang language used to obtain information
 #' @details
-#' Numeric code (id)
-#' Alphabetic code (IPC)
-#' IOE code (Inventario de Operaciones Estadísticas)
+#' Numeric code \code{id}
+#' Alphabetic code \code{IPC}
+#' \code{IOE} code (Inventario de Operaciones Estadísticas)
 #' @examples
 #' get_operation(25)
 #' get_operation("IPC")

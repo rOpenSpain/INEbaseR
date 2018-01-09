@@ -2,10 +2,22 @@
 #
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
-#
 
-# get_data_serie - DATOS_SERIE
-get_data_serie <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0, lang = "ES") {
+#' @title Get data serie
+#' @description This function returns a data frame with data of a serie from an id or/and from a date or date range
+#' @param id operation identification
+#' @param date_start start date in format (string) \code{YYYY-MM-DD}
+#' @param date_end end date in format (string) \code{YYYY-MM-DD}
+#' @param nult last \code{n} values
+#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
+#' @param lang language used to obtain information
+#' @examples
+#' get_data_serie("IPC206449", nult = 1) # Get the latest data of a series
+#' get_data_serie("IPC206449", nult = 5) # Get the \code{n} last data of a series
+#' get_data_serie("IPC206449", "2013-01-01", "2016-01-01") # Get data of a series between two dates
+#' get_data_serie("IPC206449", "2010-01-01") # Get data from a series from a date
+#' @export
+get_data_serie <- function(id, date_start = NA, date_end = NA, nult = 0, det = 0, lang = "ES") {
   if (!is.na(date_end))
     if (date_start > date_end)
       stop("Start date cannot be after the end date.")
@@ -25,11 +37,16 @@ get_data_serie <- function(code, date_start = NA, date_end = NA, nult = 0, det =
   return(fromJSON(url))
 }
 
-# get_data_table - DATOS_TABLA
-# Obtiene los n últimos datos de una tabla
-# {?parámetros}= posibilidad de usar:
-#   det=2 para ver dos niveles de detalle, en concreto para poder acceder a los atributos del objeto dato
-#   tip=AM para obtener los metadatos (cruce variables-valores) de la serie y una salida de tipo amigable.
+#' @title Get data table
+#' @description This function returns a data frame with latest \code{n} data of a table from an id or code
+#' @param id table identification
+#' @param nult last \code{n} values
+#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
+#' @param tip \code{tip = AM} to obtain the metadata (crossing variables-values) of the series and a friendly output.
+#' @param lang language used to obtain information
+#' @examples
+#' get_data_table(22350, 4)
+#' @export
 get_data_table <- function(id, nult = 0, det = 0, tip = NA, lang = "ES") {
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
@@ -42,11 +59,23 @@ get_data_table <- function(id, nult = 0, det = 0, tip = NA, lang = "ES") {
   return(fromJSON(url))
 }
 
-# DATOS_METADATAOPERACION
-# Obtiene los "n" últimos datos de series mediante el cruce de metadatos
-# {?parámetros}= posibilidad de usar:
-#   det=2 para ver dos niveles de detalle, en concreto para poder acceder a los atributos del objeto dato.
-#   tip=AM para obtener los metadatos (cruce variables-valores) de la serie y una salida de tipo amigable.
+#' @title Get data metadata-operation
+#' @description This function returns a data frame with latest \code{n} series data by crossing metadata from an id or code
+#' @param id table identification
+#' @param g1var variable (g1)
+#' @param g1val valor (g1)
+#' @param g2var variable (g2)
+#' @param g2val valor (g2)
+#' @param g3var variable (g3)
+#' @param p periodicidad
+#' @param nult last \code{n} values
+#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
+#' @param tip \code{tip = AM} to obtain the metadata (crossing variables-values) of the series and a friendly output.
+#' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
+#' @param lang language used to obtain information
+#' @examples
+#' get_data_metadataoperation("IPC", 115, 29, 3, 84, 762, p = 1, nult = 1)
+#' @export
 get_data_metadataoperation <- function(id, g1var = 0, g1val = 0, g2var = 0, g2val = 0, g3var = 0, p = 0, nult = 0, det = 0, tip = NA, ioe = FALSE, lang = "ES") {
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
@@ -72,21 +101,3 @@ get_data_metadataoperation <- function(id, g1var = 0, g1val = 0, g2var = 0, g2va
       url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_METADATAOPERACION/", id, "?nult=", nult, "&g1=", g1var, ":", g1val, "&g2=", g2var, ":", g2val, "&g3=", g3var, ":&p=" , p, "&tip=", tip, "&det=", det)
   return(fromJSON(url))
 }
-
-# Example of usage
-# library(jsonlite)
-# DATOS_SERIE:
-# Obtener el último dato de una serie
-# list_datos_serie <- get_data_serie("IPC206449", nult = 1)
-# Obtener los n últimos datos de una serie
-# list_datos_serie <- get_data_serie("IPC206449", nult = 5)
-# Obtener datos de una serie entre dos fechas
-# list_datos_serie <- get_data_serie("IPC206449", "2013-01-01", "2016-01-01")
-# Obtener datos de una serie a partir de una fecha
-# list_datos_serie <- get_data_serie("IPC206449", "2010-01-01")
-# DATOS_TABLA:
-# Obtener los n últimos datos de una tabla
-# list_datos_tabla <- get_data_table(22350, 4)
-# DATOS_METADATAOPERACION:
-# Obtener n los últimos datos de series mediante el cruce de metadatos
-# list_datos_metaop <- get_data_metadataoperation("IPC", 115, 29, 3, 84, 762, p = 1, nult = 1)

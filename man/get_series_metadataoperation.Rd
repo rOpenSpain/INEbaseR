@@ -39,10 +39,10 @@ Numeric code \code{id}
 Alphabetic code \code{IPC}
 \code{IOE} code (Inventario de Operaciones Estadísticas)
 Código identificativo de la operación (IOE30138 /IPC/ 25) y códigos identificativos de las variables y valores:
-Provincias (FK_VARIABLE=115) = "Madrid" (FK_VALOR=29)  ⇒  g1=115:29
-Tipo de dato (FK_VARIABLE=3) = “Variación mensual”   (FK_VALOR=84) ⇒ g2=3:84
-Grupos ECOICOP (FK_VARIABLE=762) = "Todos los grupos ECOICOP” (FK_VALOR=null) ⇒  g3=762:
-Serie mensual (FK_PERIODICIDAD=1) ⇒  p=1  (Ver PUBLICACIONES_OPERACION)
+Provincias (FK_VARIABLE=115) = "Madrid" (FK_VALOR=29)  >  g1=115:29
+Tipo de dato (FK_VARIABLE=3) = “Variación mensual”   (FK_VALOR=84) > g2=3:84
+Grupos ECOICOP (FK_VARIABLE=762) = "Todos los grupos ECOICOP” (FK_VALOR=null) >  g3=762:
+Serie mensual (FK_PERIODICIDAD=1) >  p=1  (Ver PUBLICACIONES_OPERACION)
 }
 \examples{
 get_series_metadataoperation("IPC", 115, 29, 3, 84, 762, 1)

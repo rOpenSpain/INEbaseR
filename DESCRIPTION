@@ -1,11 +1,11 @@
-Package: RLibINE
+Package: INEBaseR
 Type: Package
-Title: INE (Instituto Nacional de Estad?stica) API
+Title: INE (Instituto Nacional de Estadistica) API
 Version: 0.1.0
 Author: Andres Nacimiento <andresnacimiento@gmail.com>
 Maintainer: Andres Nacimiento <andresnacimiento@gmail.com>
 Description: R library for obtaining and analyzing open data from
-    INE (Instituto Nacional de Estad?stica) API
+    INE (Instituto Nacional de Estadistica) API
 License: GNU General Public License version 3
 Encoding: UTF-8
 LazyData: true

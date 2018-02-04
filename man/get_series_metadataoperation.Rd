@@ -4,22 +4,15 @@
 \alias{get_series_metadataoperation}
 \title{Get series metadata operation}
 \usage{
-get_series_metadataoperation(id, g1var = 0, g1val = 0, g2var = 0,
-  g2val = 0, g3var = 0, p = 0, det = 0, tip = NA, ioe = FALSE,
-  lang = "ES")
+get_series_metadataoperation(code, query = NULL, p = 1, det = 0,
+  tip = NA, ioe = FALSE, lang = "ES")
 }
 \arguments{
-\item{g1var}{variable (g1)}
+\item{code}{operation identification}
 
-\item{g1val}{valor (g1)}
+\item{query}{string separated by \code{AND} with syntax \code{variable = value} using natural language}
 
-\item{g2var}{variable (g2)}
-
-\item{g2val}{valor (g2)}
-
-\item{g3var}{variable (g3)}
-
-\item{p}{periodicidad}
+\item{p}{periodicity, \code{p = 1} by default}
 
 \item{det}{\code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default}
 
@@ -28,8 +21,6 @@ get_series_metadataoperation(id, g1var = 0, g1val = 0, g2var = 0,
 \item{ioe}{\code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default}
 
 \item{lang}{language used to obtain information}
-
-\item{code}{operation identification}
 }
 \description{
 This function returns a data frame with all series by metadata crossing from an id or code
@@ -45,5 +36,5 @@ Grupos ECOICOP (FK_VARIABLE=762) = "Todos los grupos ECOICOP” (FK_VALOR=null) 
 Serie mensual (FK_PERIODICIDAD=1) >  p=1  (Ver PUBLICACIONES_OPERACION)
 }
 \examples{
-get_series_metadataoperation("IPC", 115, 29, 3, 84, 762, 1)
+get_series_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
 }

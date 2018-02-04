@@ -107,7 +107,7 @@ get_series_table <- function(id, det = 0, tip = NA, lang = "ES") {
 #' @examples
 #' get_series_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
 #' @export
-get_series_metadataoperation <- function(code, query = NA, p = 1, det = 0, tip = NA, ioe = FALSE, lang = "ES"){
+get_series_metadataoperation <- function(code, query = NULL, p = 1, det = 0, tip = NA, ioe = FALSE, lang = "ES"){
 
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
@@ -115,8 +115,6 @@ get_series_metadataoperation <- function(code, query = NA, p = 1, det = 0, tip =
     stop("You have defined 'p' (periodicity) parameter with an incorrect value.")
   if ((tip != "M") && (!is.na(tip)))
     stop("You have defined 'tip' parameter with an incorrect value.")
-  if (!is.na(query))
-    stop("You have defined 'query' parameter with an incorrect value.")
 
   # Split query
   df_queries <- NULL
@@ -161,6 +159,4 @@ get_series_metadataoperation <- function(code, query = NA, p = 1, det = 0, tip =
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det)
   return(fromJSON(url))
 }
-
-tmp <- get_series_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
 

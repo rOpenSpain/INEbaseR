@@ -17,7 +17,7 @@
 #' get_data_serie("IPC206449", "2013-01-01", "2016-01-01") # Get data of a series between two dates
 #' get_data_serie("IPC206449", "2010-01-01") # Get data from a series from a date
 #' @export
-get_data_serie <- function(id, date_start = NA, date_end = NA, nult = 0, det = 0, lang = "ES") {
+get_data_serie <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0, lang = "ES") {
   if (!is.na(date_end))
     if (date_start > date_end)
       stop("Start date cannot be after the end date.")

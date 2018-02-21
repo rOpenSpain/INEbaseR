@@ -18,7 +18,7 @@ plot_series(code, date_start = NA, date_end = NA, nult = 0, det = 0,
 
 \item{det}{\code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default}
 
-\item{type}{what type of plot should be drawn, \code{type = "p"} (for points) by default}
+\item{type}{what type of plot should be drawn, \code{type = "p"} (for points) by default. See \code{type} in \code{\link{plot}}}
 
 \item{lang}{language used to obtain information}
 }

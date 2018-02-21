@@ -167,7 +167,7 @@ get_series_metadataoperation <- function(code, query = NULL, p = 1, det = 0, tip
 #' @param date_end end date in format (string) \code{YYYY-MM-DD}
 #' @param nult last \code{n} values
 #' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
-#' @param type what type of plot should be drawn, \code{type = "p"} (for points) by default
+#' @param type what type of plot should be drawn, \code{type = "p"} (for points) by default. See \code{type} in \code{\link{plot}}
 #' @param lang language used to obtain information
 #' @examples
 #' plot_series("IPC206449", nult = 1) # Get the latest data of a series

@@ -5,7 +5,7 @@
 
 #' @title Get data serie
 #' @description This function returns a data frame with data of a serie from an id or/and from a date or date range
-#' @param id operation identification
+#' @param code operation identification
 #' @param date_start start date in format (string) \code{YYYY-MM-DD}
 #' @param date_end end date in format (string) \code{YYYY-MM-DD}
 #' @param nult last \code{n} values

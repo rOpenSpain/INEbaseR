@@ -179,6 +179,6 @@ plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0,
   data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
   if (is.na(type))
     type = "p"
-  plot(x = as.POSIXct((data$Fecha+0.1)/1000, origin = "1960-01-01", tz = "GMT"), y = data$Valor, type = type)
-  title(main = paste("Datos de la serie", code), xlab = "Fechas", ylab = "Datos")
+  plot(x = as.POSIXct((data$Fecha+0.1)/1000, origin = "1960-01-01", tz = "GMT"), y = data$Valor, xlab = "", ylab = "", type = type)
+  title(main = paste("Datos de la serie", code), xlab = "Fechas", ylab = "Valores de la serie")
 }

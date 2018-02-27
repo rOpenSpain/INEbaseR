@@ -13,14 +13,23 @@
 #' get_serie("IPC206449")
 #' get_serie("IPC206449", 2, "M")
 #' @export
-get_serie <- function(code, det = 0, tip = NA, lang = "ES") {
+get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE) {
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
   if ((tip != "M") && (!is.na(tip)))
     stop("You have defined 'tip' parameter with an incorrect value.")
+
   url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE/", code, "?det=", det, "&tip=", tip)
+  download_cache(url, "SERIE", code)
+
+  # Get data from cache
+  if (cache){
+    if (check_cache("SERIE", code)){
+      url <- paste0("cache/", "SERIE", "_", code, ".json")
+    }
+  }
+
   return(fromJSON(url))
-  fromJSON(paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE/", code, "?det=", det, "&tip=", tip))
 }
 
 #' @title Get series operation

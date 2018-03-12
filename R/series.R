@@ -9,27 +9,49 @@
 #' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
 #' @param tip \code{tip = M} to obtain the metadata (crossing variables-values) of the series.
 #' @param lang language used to obtain information
+#' @param cache used to load data from local cache instead API, \code{cache = FALSE} by default.
+#' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
 #' @examples
 #' get_serie("IPC206449")
 #' get_serie("IPC206449", 2, "M")
 #' @export
-get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE) {
+get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, benchmark = FALSE) {
+
+  if (benchmark) {
+    g <- rnorm(100000)
+    h <- rep(NA, 100000)
+    ptm <- proc.time() # Start the clock!
+  }
+
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
+
   if ((tip != "M") && (!is.na(tip)))
     stop("You have defined 'tip' parameter with an incorrect value.")
 
   url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE/", code, "?det=", det, "&tip=", tip)
-  download_cache(url, "SERIE", code)
+  clean_cache("SERIE", code)
+  save_cache(url, "SERIE", code)
 
   # Get data from cache
-  if (cache){
+  if (cache) {
     if (check_cache("SERIE", code)){
-      url <- paste0("cache/", "SERIE", "_", code, ".json")
+      data <- get_cache("SERIE", code)
+    }
+    else {
+      stop("No cache file found in cache folder.")
     }
   }
+  # Get data from API
+  else {
+    data <- fromJSON(url)
+  }
 
-  return(fromJSON(url))
+  if (benchmark) {
+    print(proc.time() - ptm) # Stop the clock
+  }
+
+  return(data)
 }
 
 #' @title Get series operation

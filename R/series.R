@@ -31,6 +31,7 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, bench
     ptm <- proc.time()
   }
 
+  # URL definition
   url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE/", code, "?det=", det, "&tip=", tip)
 
   # Get data from cache
@@ -42,6 +43,7 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, bench
       stop("No cache file found in cache folder.")
     }
   }
+
   # Get data from API
   else {
     data <- fromJSON(url)
@@ -64,6 +66,8 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, bench
 #' @param page pagination
 #' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
 #' @param lang language used to obtain information
+#' @param cache used to load data from local cache instead API, \code{cache = FALSE} by default.
+#' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
 #' @details
 #' Numeric code \code{id}
 #' Alphabetic code \code{IPC}
@@ -90,7 +94,7 @@ get_series_operation <- function(code, det = 0, tip = NA, page = 1, ioe = FALSE,
     ptm <- proc.time()
   }
 
-
+  # URL definition
   if (ioe) {
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
   }

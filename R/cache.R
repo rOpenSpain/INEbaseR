@@ -8,9 +8,12 @@ check_cache <- function(data_type, code){
   file_test("-f", file_name)
 }
 
-save_cache <- function(url, data_type, code){
+save_cache <- function(data, data_type, code){
+  if (check_cache(data_type, code)){
+    clean_cache(data_type, code)
+  }
   file_name <- paste0("cache/", data_type, "_", code, ".RData")
-  content <- fromJSON(url)
+  content <- data
   save(content, file = file_name, compress = TRUE, compression_level = 6)
   save.image()
 }

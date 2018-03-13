@@ -17,21 +17,21 @@
 #' @export
 get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, benchmark = FALSE) {
 
-  if (benchmark) {
-    g <- rnorm(100000)
-    h <- rep(NA, 100000)
-    ptm <- proc.time() # Start the clock!
-  }
-
+  # Checking options
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
 
   if ((tip != "M") && (!is.na(tip)))
     stop("You have defined 'tip' parameter with an incorrect value.")
 
+  # Start the clock!
+  if (benchmark) {
+    g <- rnorm(100000)
+    h <- rep(NA, 100000)
+    ptm <- proc.time()
+  }
+
   url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE/", code, "?det=", det, "&tip=", tip)
-  clean_cache("SERIE", code)
-  save_cache(url, "SERIE", code)
 
   # Get data from cache
   if (cache) {
@@ -45,10 +45,12 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, bench
   # Get data from API
   else {
     data <- fromJSON(url)
+    save_cache(data, "SERIE", code)
   }
 
+  # Stop the clock
   if (benchmark) {
-    print(proc.time() - ptm) # Stop the clock
+    print(proc.time() - ptm)
   }
 
   return(data)
@@ -72,16 +74,52 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, bench
 #' get_series_operation(30138, ioe = TRUE)
 #' get_series_operation(30138, 2, "M", ioe = TRUE)
 #' @export
-get_series_operation <- function(code, det = 0, tip = NA, page = 1, ioe = FALSE, lang = "ES") {
+get_series_operation <- function(code, det = 0, tip = NA, page = 1, ioe = FALSE, lang = "ES", cache = FALSE, benchmark = FALSE) {
+
+  # Checking options
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
+
   if ((tip != "M") && (!is.na(tip)))
     stop("You have defined 'tip' parameter with an incorrect value.")
-  if (ioe)
+
+  # Start the clock!
+  if (benchmark) {
+    g <- rnorm(100000)
+    h <- rep(NA, 100000)
+    ptm <- proc.time()
+  }
+
+
+  if (ioe) {
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
-  else
+  }
+  else {
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
-  return(fromJSON(url))
+  }
+
+  # Get data from cache
+  if (cache) {
+    if (check_cache("SERIE_OPERATION", code)){
+      data <- get_cache("SERIE_OPERATION", code)
+    }
+    else {
+      stop("No cache file found in cache folder.")
+    }
+  }
+
+  # Get data from API
+  else {
+    data <- fromJSON(url)
+    save_cache(data, "SERIE_OPERATION", code)
+  }
+
+  # Stop the clock
+  if (benchmark) {
+    print(proc.time() - ptm)
+  }
+
+  return(data)
 }
 
 #' @title Get series values

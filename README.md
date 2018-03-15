@@ -28,5 +28,5 @@ devtools::install_github("oddworldng/RLibINE")
 * Twitter: [@INEbaseR](https://twitter.com/INEbaseR)
 
 ## Authors
-* **Andrés Nacimiento García**, computer engineer at University of La Laguna. <andresnacimiento@gmail.com>
+* **Andrés Nacimiento García**, computer engineer at [University of La Laguna](https://ull.es/). <andresnacimiento@gmail.com>
 * **Carlos J. Pérez González**, project director. <cpgonzal@ull.es>

@@ -4,24 +4,15 @@
 \alias{get_data_metadataoperation}
 \title{Get data metadata-operation}
 \usage{
-get_data_metadataoperation(id, g1var = 0, g1val = 0, g2var = 0,
-  g2val = 0, g3var = 0, p = 0, nult = 0, det = 0, tip = NA,
-  ioe = FALSE, lang = "ES")
+get_data_metadataoperation(code, query = NULL, p = 1, nult = 1, det = 0,
+  tip = NA, ioe = FALSE, lang = "ES")
 }
 \arguments{
-\item{id}{table identification}
+\item{code}{table identification}
 
-\item{g1var}{variable (g1)}
+\item{query}{string separated by \code{AND} with syntax \code{variable = value} using natural language}
 
-\item{g1val}{valor (g1)}
-
-\item{g2var}{variable (g2)}
-
-\item{g2val}{valor (g2)}
-
-\item{g3var}{variable (g3)}
-
-\item{p}{periodicidad}
+\item{p}{periodicity}
 
 \item{nult}{last \code{n} values}
 
@@ -37,5 +28,5 @@ get_data_metadataoperation(id, g1var = 0, g1val = 0, g2var = 0,
 This function returns a data frame with latest \code{n} series data by crossing metadata from an id or code
 }
 \examples{
-get_data_metadataoperation("IPC", 115, 29, 3, 84, 762, p = 1, nult = 1)
+get_data_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL", nult = 1)
 }

@@ -8,6 +8,8 @@ get_data_serie(code, date_start = NA, date_end = NA, nult = 0, det = 0,
   lang = "ES")
 }
 \arguments{
+\item{code}{operation identification}
+
 \item{date_start}{start date in format (string) \code{YYYY-MM-DD}}
 
 \item{date_end}{end date in format (string) \code{YYYY-MM-DD}}
@@ -17,8 +19,6 @@ get_data_serie(code, date_start = NA, date_end = NA, nult = 0, det = 0,
 \item{det}{\code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default}
 
 \item{lang}{language used to obtain information}
-
-\item{id}{operation identification}
 }
 \description{
 This function returns a data frame with data of a serie from an id or/and from a date or date range

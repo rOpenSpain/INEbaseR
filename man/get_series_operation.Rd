@@ -5,7 +5,7 @@
 \title{Get series operation}
 \usage{
 get_series_operation(code, det = 0, tip = NA, page = 1, ioe = FALSE,
-  lang = "ES")
+  lang = "ES", cache = FALSE, benchmark = FALSE)
 }
 \arguments{
 \item{code}{operation identification}
@@ -19,6 +19,10 @@ get_series_operation(code, det = 0, tip = NA, page = 1, ioe = FALSE,
 \item{ioe}{\code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default}
 
 \item{lang}{language used to obtain information}
+
+\item{cache}{used to load data from local cache instead API, \code{cache = FALSE} by default.}
+
+\item{benchmark}{used to measure the performance of the system, \code{benchmark = FALSE} by default.}
 }
 \description{
 This function returns a data frame with all series of an operation from an id or code

@@ -4,7 +4,8 @@
 \alias{get_serie}
 \title{Get serie}
 \usage{
-get_serie(code, det = 0, tip = NA, lang = "ES")
+get_serie(code, det = 0, tip = NA, lang = "ES", cache = FALSE,
+  benchmark = FALSE)
 }
 \arguments{
 \item{code}{serie identification}
@@ -14,6 +15,10 @@ get_serie(code, det = 0, tip = NA, lang = "ES")
 \item{tip}{\code{tip = M} to obtain the metadata (crossing variables-values) of the series.}
 
 \item{lang}{language used to obtain information}
+
+\item{cache}{used to load data from local cache instead API, \code{cache = FALSE} by default.}
+
+\item{benchmark}{used to measure the performance of the system, \code{benchmark = FALSE} by default.}
 }
 \description{
 This function returns a data frame with a serie from an id or code

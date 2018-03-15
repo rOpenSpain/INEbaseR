@@ -70,7 +70,6 @@ get_data_table <- function(id, nult = 0, det = 0, tip = NA, lang = "ES") {
 #' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
 #' @param lang language used to obtain information
 #' @examples
-#' get_data_metadataoperation("IPC", 115, 29, 3, 84, 762, p = 1, nult = 1)
 #' get_data_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL", nult = 1)
 #' @export
 get_data_metadataoperation <- function(code, query = NULL, p = 1, nult = 1, det = 0, tip = NA, ioe = FALSE, lang = "ES") {
@@ -127,6 +126,5 @@ get_data_metadataoperation <- function(code, query = NULL, p = 1, nult = 1, det 
   else
       url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_METADATAOPERACION/", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det, "&nult=", nult)
 
-  print(url)
   return(fromJSON(url))
 }

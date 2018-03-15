@@ -8,7 +8,7 @@ check_cache <- function(data_type, code){
   file_test("-f", file_name)
 }
 
-save_cache <- function(data, data_type, code){
+build_cache <- function(data, data_type, code){
   if (check_cache(data_type, code)){
     clean_cache(data_type, code)
   }

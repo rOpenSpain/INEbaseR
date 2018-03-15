@@ -47,7 +47,7 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, bench
   # Get data from API
   else {
     data <- fromJSON(url)
-    save_cache(data, "SERIE", code)
+    build_cache(data, "SERIE", code)
   }
 
   # Stop the clock
@@ -115,7 +115,7 @@ get_series_operation <- function(code, det = 0, tip = NA, page = 1, ioe = FALSE,
   # Get data from API
   else {
     data <- fromJSON(url)
-    save_cache(data, "SERIE_OPERATION", code)
+    build_cache(data, "SERIE_OPERATION", code)
   }
 
   # Stop the clock

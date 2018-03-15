@@ -22,6 +22,11 @@ devtools::install_github("oddworldng/RLibINE")
 
 * [jsonlite](https://cran.r-project.org/web/packages/jsonlite/index.html)
 
+## Social media
+
+* Blog: [INEbaseR](https://inebaser.wordpress.com/) 
+* Twitter: [@INEbaseR](https://twitter.com/INEbaseR)
+
 ## Authors
 * **Andrés Nacimiento García**, computer engineer at University of La Laguna. <andresnacimiento@gmail.com>
 * **Carlos J. Pérez González**, project director. <cpgonzal@ull.es>

@@ -1,4 +1,4 @@
-# INE (Instituto Nacional de Estadística) API
+# INEbaseR project
 
 ## Description
 

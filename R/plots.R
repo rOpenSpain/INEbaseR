@@ -4,27 +4,53 @@
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
 plot_detect_date_pattern <- function(timestamp_vector) {
+
+  # search in vector of time stamp
   for (i in 1:length(timestamp_vector)){
+
+    # GET A PATTERN
     month <- as.numeric(format(timestamp_vector[i], "%m")) ## get numeric month
+
+    # if is not out of vector
     if (i + 1 <= length(timestamp_vector)) {
       if (month == 12){
-        nextmonth <- as.numeric(format(timestamp_vector[i+1], "%m"))+12 ## get numeric month
+        nextmonth <- as.numeric(format(timestamp_vector[i+1], "%m"))+12 # if next month is 1 (january) and this month is 12 (december)
       }else{
-        nextmonth <- as.numeric(format(timestamp_vector[i+1], "%m")) ## get numeric month
+        nextmonth <- as.numeric(format(timestamp_vector[i+1], "%m"))
       }
     }
+
+    # latest date of vector
     else{
       if (month == 12){
         month <- as.numeric(format(timestamp_vector[i-1], "%m"))
-        nextmonth <- as.numeric(format(timestamp_vector[i], "%m"))+12
+        nextmonth <- as.numeric(format(timestamp_vector[i], "%m"))
       }else{
         month <- as.numeric(format(timestamp_vector[i-1], "%m"))
-        nextmonth <- as.numeric(format(timestamp_vector[i], "%m"))+12
+        nextmonth <- as.numeric(format(timestamp_vector[i], "%m"))+12 # if next month is 1 (january) and this month is 12 (december)
       }
     }
-    pattern <- nextmonth - month
-    print(pattern)
+
+    pattern <- nextmonth - month # pattern
+
+    # GET IF THE PATTERN IS ALWAYS THE SAME
+    if (i != 1) {
+      if (pattern == pattern_prev){
+        pattern_prev <- pattern # save previous pattern
+      }
+      else {
+        return(-1) # if there isn't the same pattern in all dates
+      }
+    }
+    # first date pattern of vector
+    else {
+      pattern_prev <- pattern # in first vector element: previous pattern = pattern
+    }
   }
+
+  # the pattern is returned
+  return(pattern)
+
 }
 
 

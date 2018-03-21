@@ -14,8 +14,13 @@ plot_detect_date_pattern <- function(timestamp_vector) {
       }
     }
     else{
-      month <- as.numeric(format(timestamp_vector[i-1], "%m"))
-      nextmonth <- as.numeric(format(timestamp_vector[i], "%m"))
+      if (month == 12){
+        month <- as.numeric(format(timestamp_vector[i-1], "%m"))
+        nextmonth <- as.numeric(format(timestamp_vector[i], "%m"))+12
+      }else{
+        month <- as.numeric(format(timestamp_vector[i-1], "%m"))
+        nextmonth <- as.numeric(format(timestamp_vector[i], "%m"))+12
+      }
     }
     pattern <- nextmonth - month
     print(pattern)

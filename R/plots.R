@@ -49,6 +49,7 @@ plot_detect_date_pattern <- function(timestamp_vector) {
   }
 
   # the pattern is returned
+  print(paste0("Patrón detectado: ", pattern, " mes"))
   return(pattern)
 
 }

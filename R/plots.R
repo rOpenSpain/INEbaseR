@@ -5,51 +5,34 @@
 
 plot_detect_date_pattern <- function(timestamp_vector) {
 
+  pattern <- c()
   # search in vector of time stamp
-  for (i in 1:length(timestamp_vector)){
+  for (i in 1:(length(timestamp_vector)-1)){
 
     # GET A PATTERN
     month <- as.numeric(format(timestamp_vector[i], "%m")) ## get numeric month
 
     # if is not out of vector
     if (i + 1 <= length(timestamp_vector)) {
-      if (month == 12){
+      nextmonth <- as.numeric(format(timestamp_vector[i+1], "%m"))
+      if (nextmonth-month <= 0){
         nextmonth <- as.numeric(format(timestamp_vector[i+1], "%m"))+12 # if next month is 1 (january) and this month is 12 (december)
-      }else{
-        nextmonth <- as.numeric(format(timestamp_vector[i+1], "%m"))
       }
     }
 
-    # latest date of vector
-    else{
-      if (month == 12){
-        month <- as.numeric(format(timestamp_vector[i-1], "%m"))
-        nextmonth <- as.numeric(format(timestamp_vector[i], "%m"))
-      }else{
-        month <- as.numeric(format(timestamp_vector[i-1], "%m"))
-        nextmonth <- as.numeric(format(timestamp_vector[i], "%m"))+12 # if next month is 1 (january) and this month is 12 (december)
-      }
-    }
+    pattern <- c(pattern, nextmonth - month) # pattern vector
 
-    pattern <- nextmonth - month # pattern
+  }
 
-    # GET IF THE PATTERN IS ALWAYS THE SAME
-    if (i != 1) {
-      if (pattern == pattern_prev){
-        pattern_prev <- pattern # save previous pattern
-      }
-      else {
-        return(-1) # if there isn't the same pattern in all dates
-      }
-    }
-    # first date pattern of vector
-    else {
-      pattern_prev <- pattern # in first vector element: previous pattern = pattern
-    }
+  # check if the pattern values are all equals
+  if(ifelse(length(unique(pattern)) == 1, TRUE, FALSE)) {
+    pattern <- pattern[1]
+  }
+  else {
+    pattern <- -1
   }
 
   # the pattern is returned
-  print(paste0("Patrón detectado: ", pattern, " mes"))
   return(pattern)
 
 }
@@ -74,7 +57,7 @@ plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0,
   data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
   if (is.na(type))
     type = "p"
-  timestamp_vector <- as.POSIXct((data$Fecha+0.1)/1000, origin = "1960-01-01", tz = "GMT")
+  timestamp_vector <- as.POSIXct((data$Fecha+0.1)/1000, origin = "1970-01-01", tz = "CET")
   plot_detect_date_pattern(timestamp_vector)
   plot(x = timestamp_vector, y = data$Valor, xlab = "", ylab = "", type = type)
   title(main = paste("Datos de la serie", code), xlab = "Fechas", ylab = "Valores de la serie")

@@ -15,7 +15,7 @@ install.packages("devtools")
 To get this package from this repository, type the command:
 
 ```
-devtools::install_github("oddworldng/RLibINE")
+devtools::install_github("oddworldng/INEbaseR")
 ```
 
 ## Dependencies

@@ -5,6 +5,8 @@
 
 plot_detect_date_pattern <- function(timestamp_vector) {
 
+  # get periodicity
+
   pattern <- c()
   # search in vector of time stamp
   for (i in 1:(length(timestamp_vector)-1)){
@@ -58,7 +60,8 @@ plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0,
   if (is.na(type))
     type = "p"
   timestamp_vector <- as.POSIXct((data$Fecha+0.1)/1000, origin = "1970-01-01", tz = "CET")
-  plot_detect_date_pattern(timestamp_vector)
+  #plot_detect_date_pattern(timestamp_vector)
+  # obtener T3 preiodicidad con get_serie("IPC206449")$T3_Periodicidad
   plot(x = timestamp_vector, y = data$Valor, xlab = "", ylab = "", type = type)
   title(main = paste("Datos de la serie", code), xlab = "Fechas", ylab = "Valores de la serie")
 }

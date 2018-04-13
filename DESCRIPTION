@@ -1,4 +1,4 @@
-Package: INEBaseR
+Package: INEbaseR
 Type: Package
 Title: INE (Instituto Nacional de Estadistica) API
 Version: 0.1.0

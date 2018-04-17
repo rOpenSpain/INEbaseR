@@ -4,4 +4,5 @@
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
 #' @import jsonlite
+#' @import highcharter
 NULL

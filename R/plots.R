@@ -66,3 +66,24 @@ plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0,
   title(main = paste("Datos de la serie", code), xlab = "Fechas", ylab = "Valores de la serie")
 }
 
+#' @title Highcharts series
+#' @description This function draws a highchart with data of a series from an id and/or from a date or date range
+#' @param code identification code of a serie (e.g. "IPC206449")
+#' @param date_start start date in format (string) \code{YYYY-MM-DD}
+#' @param date_end end date in format (string) \code{YYYY-MM-DD}
+#' @param nult last \code{n} values
+#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
+#' @param lang language used to obtain information
+#' @examples
+#' highcharts_series("IPC206449", nult = 1) # Get the latest data of a series
+#' highcharts_series("IPC206449", nult = 5) # Get the \code{n} last data of a series
+#' highcharts_series("IPC206449", "2013-01-01", "2016-01-01") # Get data of a series between two dates
+#' highcharts_series("IPC206449", "2010-01-01") # Get data from a series from a date
+#' @export
+highcharts_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0, type = NA, lang = "ES") {
+  data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
+  data_ts <- ts(data = data$Valor, start = data$Anyo[[1]], frequency = 12)
+  hchart(data_ts) # represent time series
+  return(data_ts)
+}
+

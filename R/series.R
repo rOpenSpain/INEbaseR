@@ -14,6 +14,7 @@
 #' @examples
 #' get_serie("IPC206449")
 #' get_serie("IPC206449", det = 2, tip = "M")
+#' get_serie("IPC206449", det = 2, tip = "M", cache = FALSE, benchmark = TRUE)
 #' @export
 get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, benchmark = FALSE) {
 

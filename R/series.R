@@ -13,7 +13,7 @@
 #' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
 #' @examples
 #' get_serie("IPC206449")
-#' get_serie("IPC206449", 2, "M")
+#' get_serie("IPC206449", det = 2, tip = "M")
 #' @export
 get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, benchmark = FALSE) {
 
@@ -26,8 +26,8 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, bench
 
   # Start the clock!
   if (benchmark) {
-    g <- rnorm(100000)
-    h <- rep(NA, 100000)
+    rnorm(100000)
+    rep(NA, 100000)
     ptm <- proc.time()
   }
 
@@ -36,7 +36,7 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, bench
 
   # Get data from cache
   if (cache) {
-    if (check_cache("SERIE", code)){
+    if (check_cache("SERIE", code)) {
       data <- get_cache("SERIE", code)
     }
     else {
@@ -46,7 +46,16 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, bench
 
   # Get data from API
   else {
+
+    # Get data
     data <- fromJSON(url)
+
+    # Update cache file
+    if (check_cache("SERIE", code)) {
+      clean_cache("SERIE", code)
+    }
+
+    # Build cache file
     build_cache(data, "SERIE", code)
   }
 

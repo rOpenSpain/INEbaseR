@@ -21,6 +21,7 @@ devtools::install_github("oddworldng/INEbaseR")
 ## Dependencies
 
 * [jsonlite](https://cran.r-project.org/web/packages/jsonlite/index.html)
+* [highcharter](https://cran.r-project.org/web/packages/highcharter/index.html)
 
 ## Social media
 

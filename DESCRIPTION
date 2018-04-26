@@ -9,6 +9,10 @@ Description: R library for obtaining and analyzing open data from
 License: GNU General Public License version 3
 Encoding: UTF-8
 LazyData: true
-Imports: jsonlite
-Depends: jsonlite
+Imports: 
+    jsonlite,
+    highcharter
+Depends:
+    jsonlite,
+    highcharter
 RoxygenNote: 6.0.1

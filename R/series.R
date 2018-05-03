@@ -37,24 +37,13 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES", cache = FALSE, bench
 
   # Get data from cache
   if (cache) {
-    if (check_cache("SERIE", code)) {
-      data <- get_cache("SERIE", code)
-    }
-    else {
-      stop("No cache file found in cache folder.")
-    }
+    data <- get_cache("SERIE", code)
   }
 
   # Get data from API
   else {
-
     # Get data
     data <- fromJSON(url)
-
-    # Update cache file
-    if (check_cache("SERIE", code)) {
-      clean_cache("SERIE", code)
-    }
 
     # Build cache file
     build_cache(data, "SERIE", code)
@@ -114,12 +103,7 @@ get_series_operation <- function(code, det = 0, tip = NA, page = 1, ioe = FALSE,
 
   # Get data from cache
   if (cache) {
-    if (check_cache("SERIE_OPERATION", code)){
-      data <- get_cache("SERIE_OPERATION", code)
-    }
-    else {
-      stop("No cache file found in cache folder.")
-    }
+    data <- get_cache("SERIE_OPERATION", code)
   }
 
   # Get data from API

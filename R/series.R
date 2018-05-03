@@ -103,13 +103,13 @@ get_series_operation <- function(code, det = 0, tip = NA, page = 1, ioe = FALSE,
 
   # Get data from cache
   if (cache) {
-    data <- get_cache("SERIE_OPERATION", code)
+    data <- get_cache("SERIEOPERATION", code)
   }
 
   # Get data from API
   else {
     data <- fromJSON(url)
-    build_cache(data, "SERIE_OPERATION", code)
+    build_cache(data, "SERIEOPERATION", code)
   }
 
   # Stop the clock

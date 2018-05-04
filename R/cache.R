@@ -20,8 +20,8 @@ check_cache <- function(data_type, code){
 }
 
 # Clean out of date cache files (see expiration_date parameter)
-# Example: update_cache("SERIE", "IPC206449", expiration_date = 2)
-update_cache <- function(data_type, code, path = "cache", expiration_date = 7){
+# Example: clean_outofdate_cache("SERIE", "IPC206449", expiration_date = 2)
+clean_outofdate_cache <- function(data_type, code, path = "cache", expiration_date = 7){
 
   if (!dir.exists(path)) {
     build_cache_directory()
@@ -64,7 +64,7 @@ build_cache <- function(data, data_type, code){
   }
 
   # Clean out of date cache files
-  update_cache(data_type, code)
+  clean_outofdate_cache(data_type, code)
 
   # Save data into cache
   file_name <- get_cache_file_name(data_type, code)
@@ -74,15 +74,24 @@ build_cache <- function(data, data_type, code){
 
 }
 
-clean_cache <- function(data_type, code, sys_date = Sys.Date()){
-  file_name <- get_cache_file_name(data_type, code, sys_date = sys_date)
-  file.remove(file_name)
+clean_cache <- function(data_type = NA, code = NA, sys_date = Sys.Date(), path = "cache", all = FALSE){
+  if (all) {
+    files <- list.files(path = path, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
+    for (i in 1:length(files)) {
+      file_name <- paste0(path, "/", files[i])
+      file.remove(file_name)
+      print(paste0("Removed ", files[i]))
+    }
+  } else {
+    file_name <- get_cache_file_name(data_type, code, sys_date = sys_date)
+    file.remove(file_name)
+  }
 }
 
 get_cache <- function(data_type, code){
 
   # Clean out of date cache files
-  update_cache(data_type, code)
+  clean_outofdate_cache(data_type, code)
 
   if (check_cache(data_type, code)) {
     file_name <- get_cache_file_name(data_type, code)
@@ -95,4 +104,60 @@ get_cache <- function(data_type, code){
       "\n\nNOTE: It is possible that this data were in cache but has been expired. By default expiration date is 7 days."
     ))
   }
+}
+
+# Examples: update_cache()
+# Examples: update_cache(code = 25)
+# Examples: update_cache(code = 25, page = NULL)
+# Examples: update_cache(n = 10)
+update_cache <- function(code = 0, n = 0, page = 1, benchmark = TRUE) {
+
+  if (n < 0)
+    stop("You have defined 'n' parameter with an incorrect value.")
+  if (code < 0)
+    stop("You have defined 'code' parameter with an incorrect value.")
+
+  # Start the clock!
+  if (benchmark) {
+    rnorm(100000)
+    rep(NA, 100000)
+    ptm <- proc.time()
+  }
+
+  message("Note: update all cache may take much time, please be patient ...")
+
+  # Get all operations
+  operations <- get_operations_all()
+
+  if (code > 0) {
+    series_operation <- get_series_operation(code = code, det = 2, tip = "M", page = page)
+    if (length(series_operation) == 0) {
+      clean_cache("SERIEOPERATION", code)
+      stop("No operations founds for code = ", code)
+    } else {
+      print(paste0("Operation '", operations[operations$Id == code,][["Nombre"]], "(", operations[operations$Id == code,][["Id"]], ")", "' has been cached"))
+    }
+  } else {
+    # Get number of series to be the cached
+    if (n > 0) {
+      if (n > nrow(operations)) {
+        stop("There are only ", nrow(operations), " operations.")
+      } else {
+        iterations <- n
+      }
+    } else {
+      iterations <- nrow(operations)
+    }
+    # Cache all operations
+    for (i in 1:iterations) {
+      series_operation <- get_series_operation(code = operations$Id[i], det = 2, tip = "M", page = page)
+      print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
+    }
+  }
+
+  # Stop the clock
+  if (benchmark) {
+    print(proc.time() - ptm)
+  }
+
 }

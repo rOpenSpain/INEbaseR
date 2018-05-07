@@ -4,8 +4,15 @@
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
 get_cache_file_name <- function(data_type, code, path = "cache", sys_date = Sys.Date()) {
-  file_name <- paste0(path, "/", data_type, "-", code, "_", sys_date, ".RData")
+  directory_root <- get_cache_directory()
+  file_name <- paste0(directory_root, "/", data_type, "-", code, "_", sys_date, ".RData")
   return(file_name)
+}
+
+get_cache_directory <- function(package = "INEbaseR", path = "cache") {
+  directory_root_path <- find.package(package)
+  directory_path <- paste0(directory_root_path, "/", path)
+  return(directory_path)
 }
 
 build_cache_directory <- function(path = "cache") {

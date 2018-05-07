@@ -80,7 +80,7 @@ plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0,
 #' highcharts_series("IPC206449", "2013-01-01", "2016-01-01") # Get data of a series between two dates
 #' highcharts_series("IPC206449", "2010-01-01") # Get data from a series from a date
 #' @export
-highcharts_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0, type = NA, lang = "ES") {
+highcharts_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0, lang = "ES") {
   data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
   data_ts <- ts(data = data$Valor, start = data$Anyo[[1]], frequency = 12)
   # Represent time series

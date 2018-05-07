@@ -4,16 +4,16 @@
 \alias{get_series_table}
 \title{Get series table}
 \usage{
-get_series_table(id, det = 0, tip = NA, lang = "ES")
+get_series_table(code, det = 0, tip = NA, lang = "ES")
 }
 \arguments{
+\item{code}{table identification}
+
 \item{det}{\code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default}
 
 \item{tip}{\code{tip = M} to obtain the metadata (crossing variables-values) of the series.}
 
 \item{lang}{language used to obtain information}
-
-\item{code}{table identification}
 }
 \description{
 This function returns a data frame with all series of a table from an id or code

@@ -119,12 +119,12 @@ get_series_values <- function(code, det = 0, lang = "ES") {
 #' get_series_table(22350)
 #' get_series_table(22350, 2, "M")
 #' @export
-get_series_table <- function(id, det = 0, tip = NA, lang = "ES") {
+get_series_table <- function(code, det = 0, tip = NA, lang = "ES") {
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
   if ((tip != "M") && (!is.na(tip)))
     stop("You have defined 'tip' parameter with an incorrect value.")
-  return(fromJSON(paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_TABLA/", id, "?det=", det, "&tip=", tip)))
+  return(fromJSON(paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_TABLA/", code, "?det=", det, "&tip=", tip)))
 }
 
 #' @title Get series metadata operation

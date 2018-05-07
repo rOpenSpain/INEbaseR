@@ -5,7 +5,7 @@
 \title{Highcharts series}
 \usage{
 highcharts_series(code, date_start = NA, date_end = NA, nult = 0,
-  det = 0, type = NA, lang = "ES")
+  det = 0, lang = "ES")
 }
 \arguments{
 \item{code}{identification code of a serie (e.g. "IPC206449")}

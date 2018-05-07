@@ -3,21 +3,22 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-get_cache_file_name <- function(data_type, code, path = "cache", sys_date = Sys.Date()) {
-  directory_root <- get_cache_directory()
+get_cache_file_name <- function(data_type, code, sys_date = Sys.Date()) {
+  directory_root <- get_cache_directory_path()
   file_name <- paste0(directory_root, "/", data_type, "-", code, "_", sys_date, ".RData")
   return(file_name)
 }
 
-get_cache_directory <- function(package = "INEbaseR", path = "cache") {
+get_cache_directory_path <- function(package = "INEbaseR", path = "cache") {
   directory_root_path <- find.package(package)
   directory_path <- paste0(directory_root_path, "/", path)
   return(directory_path)
 }
 
-build_cache_directory <- function(path = "cache") {
-  if (!dir.exists(path)) {
-    dir.create(path, showWarnings = TRUE, recursive = FALSE, mode = "0755")
+build_cache_directory <- function() {
+  directory_root <- get_cache_directory_path()
+  if (!dir.exists(directory_root)) {
+    dir.create(directory_root, showWarnings = TRUE, recursive = FALSE, mode = "0755")
   }
 }
 
@@ -28,14 +29,16 @@ check_cache <- function(data_type, code){
 
 # Clean out of date cache files (see expiration_date parameter)
 # Example: clean_outofdate_cache("SERIE", "IPC206449", expiration_date = 2)
-clean_outofdate_cache <- function(data_type, code, path = "cache", expiration_date = 7){
+clean_outofdate_cache <- function(data_type, code, expiration_date = 7){
 
-  if (!dir.exists(path)) {
+  directory_root <- get_cache_directory_path()
+
+  if (!dir.exists(directory_root)) {
     build_cache_directory()
-  } else {
 
+  } else {
     # Get all files in cache dir
-    files <- list.files(path = path, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
+    files <- list.files(path = directory_root, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
     if (length(files) > 0) {
       for (i in 1:length(files)) {
 
@@ -82,10 +85,12 @@ build_cache <- function(data, data_type, code){
 }
 
 clean_cache <- function(data_type = NA, code = NA, sys_date = Sys.Date(), path = "cache", all = FALSE){
+
+  directory_root <- get_cache_directory_path()
   if (all) {
-    files <- list.files(path = path, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
+    files <- list.files(path = directory_root, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
     for (i in 1:length(files)) {
-      file_name <- paste0(path, "/", files[i])
+      file_name <- paste0(directory_root, "/", files[i])
       file.remove(file_name)
       print(paste0("Removed ", files[i]))
     }

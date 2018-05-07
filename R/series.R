@@ -50,8 +50,9 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES") {
 #' get_series_operation(25, 2, "M")
 #' get_series_operation(30138, ioe = TRUE)
 #' get_series_operation(30138, 2, "M", ioe = TRUE)
+#' get_series_operation("IPC", det = 2, tip = "M")
 #' @export
-get_series_operation <- function(code, det = 0, tip = NA, page = 1, ioe = FALSE, lang = "ES", cache = FALSE, benchmark = FALSE) {
+get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, ioe = FALSE, lang = "ES", cache = FALSE, benchmark = FALSE) {
 
   # Checking options
   if ((det < 0) || (det > 2))
@@ -62,17 +63,9 @@ get_series_operation <- function(code, det = 0, tip = NA, page = 1, ioe = FALSE,
 
   # Start the clock!
   if (benchmark) {
-    g <- rnorm(100000)
-    h <- rep(NA, 100000)
+    rnorm(100000)
+    rep(NA, 100000)
     ptm <- proc.time()
-  }
-
-  # URL definition
-  if (ioe) {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
-  }
-  else {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
   }
 
   # Get data from cache
@@ -82,8 +75,60 @@ get_series_operation <- function(code, det = 0, tip = NA, page = 1, ioe = FALSE,
 
   # Get data from API
   else {
-    data <- fromJSON(url)
+
+    data <- data.frame(matrix(ncol = 11, nrow = 0))
+
+    if (pagination) {
+      empty_content <- FALSE
+
+      names(data) <- c(
+        "Id", "COD", "Operacion", "Nombre", "Decimales", "Periodicidad", "Publicacion", "FK_Clasificacion", "Escala", "Unidad", "MetaData"
+      )
+
+      page <- 1
+      while (!empty_content) {
+
+        # URL definition
+        if (ioe) {
+          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
+        }
+        else {
+          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
+        }
+
+        print(url)
+
+        content <- fromJSON(url)
+        content <- data.frame(content)
+        page_end <- 500 * page
+        page_start <- page_end - 499
+        rownames(content) <- c(page_start:page_end)
+
+        if (length(content) == 0) {
+          empty_content <- TRUE
+        } else {
+          data <- rbind(content, data)
+          rownames(data) <- c(page:page_end)
+        }
+
+        page <- page + 1
+      }
+
+    # Get all data
+    } else {
+      # URL definition
+      if (ioe) {
+        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", NULL, "&det=", det, "&tip=", tip)
+      }
+      else {
+        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", NULL, "&det=", det, "&tip=", tip)
+      }
+      data <- fromJSON(url)
+    }
+
+
     build_cache(data, "SERIEOPERATION", code)
+
   }
 
   # Stop the clock

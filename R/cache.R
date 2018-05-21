@@ -9,7 +9,7 @@ get_cache_file_name <- function(data_type, code, sys_date = Sys.Date()) {
   return(file_name)
 }
 
-get_cache_directory_path <- function(package = "INEbaseR", path = "cache") {
+get_cache_directory_path <- function(package = "INEbaseR", path = "data") {
   directory_root_path <- find.package(package)
   directory_path <- paste0(directory_root_path, "/", path)
   return(directory_path)
@@ -35,31 +35,31 @@ clean_outofdate_cache <- function(data_type, code, expiration_date = 7){
 
   if (!dir.exists(directory_root)) {
     build_cache_directory()
-
-  } else {
-    # Get all files in cache dir
-    files <- list.files(path = directory_root, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
-    if (length(files) > 0) {
-      for (i in 1:length(files)) {
-
-        # Split data from file name
-        file_splited <- strsplit(files[i], split = "_")
-        file_splited_date <- strsplit(file_splited[[1]][2], split = "[.]")[[1]][1]
-        file_splited_name <- strsplit(file_splited[[1]][1], split = "-") # "SERIE", "IPC206449"
-
-        # If file cache data is out of date
-        if (file_splited_date <= Sys.Date() - expiration_date) {
-          if ((data_type == file_splited_name[[1]][1]) && (code == file_splited_name[[1]][2])) {
-            clean_cache(data_type, code, sys_date = Sys.Date() - expiration_date)
-          } else {
-            clean_cache(data_type, code, sys_date = Sys.Date() - expiration_date)
-          }
-        }
-
-      }
-    }
-
   }
+
+  # Get all files in cache dir
+  files <- list.files(path = directory_root, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
+  if (length(files) > 0) {
+    for (i in 1:length(files)) {
+
+      # Split data from file name
+      file_splited <- strsplit(files[i], split = "_")
+      file_splited_date <- strsplit(file_splited[[1]][2], split = "[.]")[[1]][1]
+      file_splited_name <- strsplit(file_splited[[1]][1], split = "-") # "SERIE", "IPC206449"
+
+      # If file cache data is out of date
+      if (file_splited_date <= Sys.Date() - expiration_date) {
+        code <- file_splited_name[[1]][2]
+        if ((data_type == file_splited_name[[1]][1]) && (code == file_splited_name[[1]][2])) {
+          clean_cache(data_type, code, sys_date = file_splited_date)
+        } else {
+          clean_cache(data_type, code, sys_date = file_splited_date)
+        }
+      }
+
+    }
+  }
+
 
 }
 
@@ -74,7 +74,7 @@ build_cache <- function(data, data_type, code){
   }
 
   # Clean out of date cache files
-  clean_outofdate_cache(data_type, code)
+  # clean_outofdate_cache(data_type, code)
 
   # Save data into cache
   file_name <- get_cache_file_name(data_type, code)
@@ -84,9 +84,10 @@ build_cache <- function(data, data_type, code){
 
 }
 
-clean_cache <- function(data_type = NA, code = NA, sys_date = Sys.Date(), path = "cache", all = FALSE){
+clean_cache <- function(data_type = NA, code = NA, sys_date = Sys.Date(), all = FALSE){
 
   directory_root <- get_cache_directory_path()
+
   if (all) {
     files <- list.files(path = directory_root, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
     for (i in 1:length(files)) {

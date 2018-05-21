@@ -52,7 +52,7 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES") {
 #' get_series_operation(30138, 2, "M", ioe = TRUE)
 #' get_series_operation("IPC", det = 2, tip = "M")
 #' @export
-get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, ioe = FALSE, lang = "ES", cache = FALSE, benchmark = FALSE) {
+get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, page = 1, ioe = FALSE, lang = "ES", cache = FALSE, benchmark = FALSE) {
 
   # Checking options
   if ((det < 0) || (det > 2))
@@ -118,10 +118,10 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, io
     } else {
       # URL definition
       if (ioe) {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", NULL, "&det=", det, "&tip=", tip)
+        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
       }
       else {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", NULL, "&det=", det, "&tip=", tip)
+        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
       }
       data <- fromJSON(url)
     }

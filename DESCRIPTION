@@ -7,7 +7,8 @@ Maintainer: Andres Nacimiento <andresnacimiento@gmail.com>
 Description: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API
 License: GNU General Public License version 3
 Encoding: UTF-8
-LazyData: true
+LazyData: no
+BuildResaveData: no
 Imports: 
     jsonlite,
     highcharter

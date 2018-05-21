@@ -4,8 +4,9 @@
 \alias{get_series_operation}
 \title{Get series operation}
 \usage{
-get_series_operation(code, det = 0, tip = NA, page = 1, ioe = FALSE,
-  lang = "ES", cache = FALSE, benchmark = FALSE)
+get_series_operation(code, det = 0, tip = NA, pagination = FALSE,
+  page = 1, ioe = FALSE, lang = "ES", cache = FALSE,
+  benchmark = FALSE)
 }
 \arguments{
 \item{code}{operation identification}
@@ -37,4 +38,5 @@ get_series_operation(25)
 get_series_operation(25, 2, "M")
 get_series_operation(30138, ioe = TRUE)
 get_series_operation(30138, 2, "M", ioe = TRUE)
+get_series_operation("IPC", det = 2, tip = "M")
 }

@@ -28,6 +28,11 @@ devtools::install_github("oddworldng/INEbaseR")
 * Blog: [INEbaseR](https://inebaser.wordpress.com/) 
 * Twitter: [@INEbaseR](https://twitter.com/INEbaseR)
 
+## Awards and honours
+
+* Winner of award to the best research project of XII Concurso Universitario de Software Libre (nacional) (may of 2018)
+* Winner of special award to the best project of VIII Concurso Universitario de Software Libre of University of La Laguna (apr. of 2018)
+
 ## Authors
 * **Andrés Nacimiento García**, computer engineer at [University of La Laguna](https://ull.es/). <andresnacimiento@gmail.com>
 * **Carlos J. Pérez González**, project director. <cpgonzal@ull.es>

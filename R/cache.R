@@ -119,11 +119,19 @@ get_cache <- function(data_type, code){
   }
 }
 
-# Examples: update_cache()
-# Examples: update_cache(code = 25)
-# Examples: update_cache(code = 25, page = NULL)
-# Examples: update_cache(n = 10)
-update_cache <- function(code = 0, n = 0, page = 1, benchmark = TRUE) {
+#' @title Update cache
+#' @description This function allow update specific or all cache data
+#' @param code operation identificator
+#' @param n number of operation to update starting from first operation getted from \code{get_operations_all()} function.
+#' @param page \code{page = 1} to obtain data of an specific page (to use this, \code{pagination = FALSE}).
+#' @param pagination \code{TRUE} to obtain data page by page and \code{FALSE} by default.
+#' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
+#' @examples
+#' update_cache(code = 249)
+#' update_cache(code = 249, page = NULL)
+#' update_cache(n = 3)
+#' @export
+update_cache <- function(code = 0, n = 0, page = 1, pagination = FALSE, benchmark = TRUE) {
 
   if (n < 0)
     stop("You have defined 'n' parameter with an incorrect value.")
@@ -143,7 +151,7 @@ update_cache <- function(code = 0, n = 0, page = 1, benchmark = TRUE) {
   operations <- get_operations_all()
 
   if (code > 0) {
-    series_operation <- get_series_operation(code = code, det = 2, tip = "M", page = page)
+    series_operation <- get_series_operation(code = code, det = 2, tip = "M", pagination = pagination, page = page)
     if (length(series_operation) == 0) {
       clean_cache("SERIEOPERATION", code)
       stop("No operations founds for code = ", code)

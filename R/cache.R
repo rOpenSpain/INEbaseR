@@ -151,7 +151,7 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = FALSE, benchma
   operations <- get_operations_all()
 
   if (code > 0) {
-    series_operation <- get_series_operation(code = code, det = 2, tip = "M", pagination = pagination, page = page, cache = FALSE)
+    series_operation <- get_series_operation(code = code, pagination = pagination, page = page, cache = FALSE)
     if (length(series_operation) == 0) {
       clean_cache("SERIEOPERATION", code)
       stop("No operations founds for code = ", code)
@@ -171,7 +171,7 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = FALSE, benchma
     }
     # Cache all operations
     for (i in 1:iterations) {
-      series_operation <- get_series_operation(code = operations$Id[i], det = 2, tip = "M", pagination = pagination, page = page, cache = FALSE)
+      series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, cache = FALSE)
       print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
     }
   }

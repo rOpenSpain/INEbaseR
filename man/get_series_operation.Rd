@@ -5,8 +5,8 @@
 \title{Get series operation}
 \usage{
 get_series_operation(code, det = 0, tip = NA, pagination = FALSE,
-  page = 1, ioe = FALSE, lang = "ES", cache = FALSE,
-  benchmark = FALSE)
+  page = NA, page_start = NA, page_end = NA, ioe = FALSE, lang = "ES",
+  cache = TRUE, benchmark = FALSE)
 }
 \arguments{
 \item{code}{operation identification}
@@ -15,7 +15,13 @@ get_series_operation(code, det = 0, tip = NA, pagination = FALSE,
 
 \item{tip}{\code{tip = M} to obtain the metadata (crossing variables-values) of the series.}
 
-\item{page}{pagination}
+\item{pagination}{\code{TRUE} to obtain data page by page and \code{FALSE} by default.}
+
+\item{page}{\code{page = 1} to obtain data of an specific page (to use this, \code{pagination = FALSE}).}
+
+\item{page_start}{\code{page_start = 1} start page range to obtain data (to use this, \code{pagination = TRUE}).}
+
+\item{page_end}{\code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).}
 
 \item{ioe}{\code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default}
 
@@ -39,4 +45,6 @@ get_series_operation(25, 2, "M")
 get_series_operation(30138, ioe = TRUE)
 get_series_operation(30138, 2, "M", ioe = TRUE)
 get_series_operation("IPC", det = 2, tip = "M")
+get_series_operation(25, pagination = FALSE, page = 1, cache = FALSE)
+get_series_operation(25, pagination = TRUE, page_start = 1, page_end = 2, cache = FALSE)
 }

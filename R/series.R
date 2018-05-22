@@ -36,7 +36,10 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES") {
 #' @param code operation identification
 #' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
 #' @param tip \code{tip = M} to obtain the metadata (crossing variables-values) of the series.
-#' @param page pagination
+#' @param pagination \code{TRUE} to obtain data page by page and \code{FALSE} by default.
+#' @param page \code{page = 1} to obtain data of an specific page (to use this, \code{pagination = FALSE}).
+#' @param page_start \code{page_start = 1} start page range to obtain data (to use this, \code{pagination = TRUE}).
+#' @param page_end \code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).
 #' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
 #' @param lang language used to obtain information
 #' @param cache used to load data from local cache instead API, \code{cache = FALSE} by default.
@@ -51,8 +54,10 @@ get_serie <- function(code, det = 0, tip = NA, lang = "ES") {
 #' get_series_operation(30138, ioe = TRUE)
 #' get_series_operation(30138, 2, "M", ioe = TRUE)
 #' get_series_operation("IPC", det = 2, tip = "M")
+#' get_series_operation(25, pagination = FALSE, page = 1, cache = FALSE)
+#' get_series_operation(25, pagination = TRUE, page_start = 1, page_end = 2, cache = FALSE)
 #' @export
-get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, page = 1, ioe = FALSE, lang = "ES", cache = FALSE, benchmark = FALSE) {
+get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, page = NA, page_start = NA, page_end = NA, ioe = FALSE, lang = "ES", cache = TRUE, benchmark = FALSE) {
 
   # Checking options
   if ((det < 0) || (det > 2))
@@ -76,16 +81,21 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
   # Get data from API
   else {
 
-    data <- data.frame(matrix(ncol = 11, nrow = 0))
+    data <- NULL
 
     if (pagination) {
+
       empty_content <- FALSE
-
-      names(data) <- c(
-        "Id", "COD", "Operacion", "Nombre", "Decimales", "Periodicidad", "Publicacion", "FK_Clasificacion", "Escala", "Unidad", "MetaData"
-      )
-
       page <- 1
+
+      if (!is.na(page_start)) {
+        if (page_start <= 0) {
+          stop("You have defined 'page_start' parameter with an incorrect value.")
+        } else {
+          page <- page_start
+        }
+      }
+
       while (!empty_content) {
 
         # URL definition
@@ -99,30 +109,56 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
         print(url)
 
         content <- fromJSON(url)
-        content <- data.frame(content)
-        page_end <- 500 * page
-        page_start <- page_end - 499
-        rownames(content) <- c(page_start:page_end)
-
         if (length(content) == 0) {
           empty_content <- TRUE
+          print(paste0("No content found in page", page))
         } else {
-          data <- rbind(content, data)
-          rownames(data) <- c(page:page_end)
+          for (i in 1:nrow(content)) {
+            data$COD <- rbind(data$COD, content$COD[i])
+            data$T3_Operacion <- rbind(data$T3_Operacion, content$T3_Operacion[i])
+            data$Nombre <- rbind(data$Nombre, content$Nombre[i])
+            data$Decimales <- rbind(data$Decimales, content$Decimales[i])
+            data$T3_Periodicidad <- rbind(data$T3_Periodicidad, content$T3_Periodicidad[i])
+            data$T3_Publicacion <- rbind(data$T3_Publicacion, content$T3_Publicacion[i])
+            data$T3_Clasificacion <- rbind(data$T3_Clasificacion, content$T3_Clasificacion[i])
+            data$T3_Escala <- rbind(data$T3_Escala, content$T3_Escala[i])
+            data$T3_Unidad <- rbind(data$T3_Unidad, content$T3_Unidad[i])
+          }
+        }
+
+        if (!is.na(page_end)) {
+          if (page == page_end)
+            break
         }
 
         page <- page + 1
       }
 
+      # Convert to data frame
+      data <- data.frame(data, stringsAsFactors = FALSE)
+
     # Get all data
     } else {
-      # URL definition
-      if (ioe) {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
+
+      if (!is.na(page)) {
+        # URL definition
+        if (ioe) {
+          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
+        }
+        else {
+          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
+        }
+      } else {
+        # URL definition
+        if (ioe) {
+          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
+        }
+        else {
+          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
+        }
       }
-      else {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
-      }
+      print(url)
+
       data <- fromJSON(url)
     }
 

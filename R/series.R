@@ -141,16 +141,24 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
     } else {
 
       if (is.na(page)) {
-        page <- NULL # Get all pages
+        # URL definition
+        if (ioe) {
+          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", NULL, "&det=", det, "&tip=", tip)
+        }
+        else {
+          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", NULL, "&det=", det, "&tip=", tip)
+        }
+      } else {
+        # URL definition
+        if (ioe) {
+          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
+        }
+        else {
+          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
+        }
       }
 
-      # URL definition
-      if (ioe) {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
-      }
-      else {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
-      }
+
 
       data <- fromJSON(url)
     }

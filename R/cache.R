@@ -151,7 +151,7 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = FALSE, page_st
   operations <- get_operations_all()
 
   if (code > 0) {
-    series_operation <- get_series_operation(code = code, pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE)
+    series_operation <- get_series_operation(code = code, pagination = pagination, page = page, cache = FALSE)
     if (length(series_operation) == 0) {
       clean_cache("SERIEOPERATION", code)
       stop("No operations founds for code = ", code)

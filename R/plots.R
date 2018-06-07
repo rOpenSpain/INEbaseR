@@ -82,15 +82,17 @@ plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0,
 #' highcharts_series("IPC206449", "2010-01-01") # Get data from a series from a date
 #' @export
 highcharts_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0, lang = "ES") {
+
   data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
   serie <- get_serie(code)
-  data_ts <- ts(data = data$Valor, names = c("a"), start = data$Anyo[[1]], frequency = 12)
+  data_ts <- ts(data = data$Valor, start = data$Anyo[[1]], frequency = 12)
+
   # Represent time series
   highchart() %>%
     hc_title(text = serie$Nombre) %>%
     hc_subtitle(text = paste0("Serie (", code, ")")) %>%
-    hc_xAxis(title = list(text = "Fechas")) %>%
     hc_yAxis(title = list(text = "Valores de la serie")) %>%
-    hc_series(list(name = paste0("Serie ", code), data = data_ts))
+    hc_xAxis(type = "datetime", title = list(text = "Fechas")) %>%
+    hc_add_series(data = data_ts, name = paste0("Serie ", code))
 }
 

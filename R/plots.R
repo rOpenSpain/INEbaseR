@@ -57,13 +57,14 @@ plot_detect_date_pattern <- function(timestamp_vector) {
 #' @export
 plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0, type = NA, lang = "ES") {
   data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
+  serie <- get_serie(code)
   if (is.na(type))
     type = "p"
-  timestamp_vector <- as.POSIXct((data$Fecha+0.1)/1000, origin = "1970-01-01", tz = "CET")
+  timestamp_vector <- as.POSIXct((data$Fecha + 0.1) / 1000, origin = "1970-01-01", tz = "CET")
   #plot_detect_date_pattern(timestamp_vector)
   # obtener T3 preiodicidad con get_serie("IPC206449")$T3_Periodicidad
   plot(x = timestamp_vector, y = data$Valor, xlab = "", ylab = "", type = type)
-  title(main = paste("Datos de la serie", code), xlab = "Fechas", ylab = "Valores de la serie")
+  title(main = paste0(serie$Nombre, "\n", "Serie (", code, ")"), xlab = "Fechas", ylab = "Valores de la serie")
 }
 
 #' @title Highcharts series
@@ -82,8 +83,14 @@ plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0,
 #' @export
 highcharts_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0, lang = "ES") {
   data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
-  data_ts <- ts(data = data$Valor, start = data$Anyo[[1]], frequency = 12)
+  serie <- get_serie(code)
+  data_ts <- ts(data = data$Valor, names = c("a"), start = data$Anyo[[1]], frequency = 12)
   # Represent time series
-  hchart(data_ts)
+  highchart() %>%
+    hc_title(text = serie$Nombre) %>%
+    hc_subtitle(text = paste0("Serie (", code, ")")) %>%
+    hc_xAxis(title = list(text = "Fechas")) %>%
+    hc_yAxis(title = list(text = "Valores de la serie")) %>%
+    hc_series(list(name = paste0("Serie ", code), data = data_ts))
 }
 

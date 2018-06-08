@@ -16,6 +16,10 @@ update_cache(code = 0, n = 0, page = NA, pagination = FALSE,
 
 \item{pagination}{\code{TRUE} to obtain data page by page and \code{FALSE} by default.}
 
+\item{page_start}{\code{page_start = 1} start page range to obtain data (to use this, \code{pagination = TRUE}).}
+
+\item{page_end}{\code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).}
+
 \item{benchmark}{used to measure the performance of the system, \code{benchmark = FALSE} by default.}
 }
 \description{

@@ -105,6 +105,7 @@ get_cache <- function(data_type, code){
 
   # Clean out of date cache files
   clean_outofdate_cache(data_type, code)
+  content <- NULL
 
   if (check_cache(data_type, code)) {
     file_name <- get_cache_file_name(data_type, code)
@@ -125,6 +126,8 @@ get_cache <- function(data_type, code){
 #' @param n number of operation to update starting from first operation getted from \code{get_operations_all()} function.
 #' @param page \code{page = 1} to obtain data of an specific page (to use this, \code{pagination = FALSE}).
 #' @param pagination \code{TRUE} to obtain data page by page and \code{FALSE} by default.
+#' @param page_start \code{page_start = 1} start page range to obtain data (to use this, \code{pagination = TRUE}).
+#' @param page_end \code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).
 #' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
 #' @examples
 #' update_cache(code = 249)

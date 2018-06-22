@@ -33,6 +33,26 @@ devtools::install_github("oddworldng/INEbaseR")
 * Winner of award to the best research project of XII Concurso Universitario de Software Libre (nacional) (may of 2018)
 * Winner of special award to the best project of VIII Concurso Universitario de Software Libre of University of La Laguna (apr. of 2018)
 
+## References and citations
+
+**To cite package ‘INEbaseR’ in publications use:**
+
+```
+Andres Nacimiento (2018). INEbaseR: R package for obtaining and analyzing open data from
+INE (Instituto Nacional de Estadistica) API. R package version 0.1.0.
+```
+
+**A BibTeX entry for LaTeX users is**
+
+```
+@Manual{,
+  title = {INEbaseR: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API},
+  author = {Andres Nacimiento},
+  year = {2018},
+  note = {R package version 0.1.0},
+}
+```
+
 ## Authors
 * **Andrés Nacimiento García**, computer engineer at [University of La Laguna](https://ull.es/). <andresnacimiento@gmail.com>
 * **Carlos J. Pérez González**, project director. <cpgonzal@ull.es>

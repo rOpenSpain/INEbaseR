@@ -2,6 +2,7 @@ Package: INEbaseR
 Type: Package
 Title: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API
 Version: 0.1.0
+Date: 2018-01-01
 Author: Andres Nacimiento <andresnacimiento@gmail.com>
 Maintainer: Andres Nacimiento <andresnacimiento@gmail.com>
 Description: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API

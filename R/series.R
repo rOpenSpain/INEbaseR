@@ -230,11 +230,11 @@ get_series_table <- function(code, det = 0, tip = NA, lang = "ES") {
 #' @examples
 #' get_series_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
 #' @export
-get_series_metadataoperation <- function(code, query = NULL, p = 1, det = 0, tip = NA, ioe = FALSE, lang = "ES"){
+get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, tip = NA, ioe = FALSE, lang = "ES"){
 
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
-  if (p <= 0)
+  if ((p <= 0) && (!is.null(p)))
     stop("You have defined 'p' (periodicity) parameter with an incorrect value.")
   if ((tip != "M") && (!is.na(tip)))
     stop("You have defined 'tip' parameter with an incorrect value.")
@@ -242,9 +242,9 @@ get_series_metadataoperation <- function(code, query = NULL, p = 1, det = 0, tip
   # Split query
   df_queries <- NULL
   queries <- strsplit(query, split = "AND")
-  for (queries_splited in queries){
+  for (queries_splited in queries) {
     var_val <- strsplit(queries_splited, split = "=")
-    for (string in var_val){
+    for (string in var_val) {
       df_queries <- rbind(df_queries, data.frame(string))
     }
   }
@@ -254,17 +254,18 @@ get_series_metadataoperation <- function(code, query = NULL, p = 1, det = 0, tip
   result <- NULL
   count <- 0
   g <- 1
-  for (qvalue in df_queries$string){
+  for (qvalue in df_queries$string) {
     qvalue <- trimws(as.character(qvalue))
     if (count %% 2 == 0) { # variables
       variableId <- variables[match(qvalue, variables[["Nombre"]]),][["Id"]]
       variable <- paste0("g", g, "=", variableId, ":")
       result <- rbind(result, variable)
       g <- g + 1
-    } else { # values
+    # values
+    } else {
       value <- get_values_variableoperation(variableId, code)
       value <- value[match(qvalue, value[["Nombre"]]),][["Id"]]
-      if (is.na(value)){
+      if (is.na(value)) {
         value <- ""
       }
       value <- paste0(value, "&")
@@ -276,9 +277,21 @@ get_series_metadataoperation <- function(code, query = NULL, p = 1, det = 0, tip
   # Join query
   urlStr <- paste0(result, collapse = "")
 
-  if (ioe)
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/IOE", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det)
-  else
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det)
+  # Build URL
+  if (ioe) {
+    if (is.null(p)) {
+      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/IOE", code, "?", urlStr, "tip=", tip, "&det=", det)
+    } else {
+      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/IOE", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det)
+    }
+  } else {
+    if (is.null(p)) {
+      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "tip=", tip, "&det=", det)
+    } else {
+      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det)
+    }
+  }
+
   return(fromJSON(url))
+
 }

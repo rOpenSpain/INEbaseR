@@ -81,14 +81,24 @@ get_frequency <- function(periodicity) {
 #' plot_series("IPC206449", "2010-01-01") # Get data from a series from a date
 #' @export
 plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0, type = NA, lang = "ES") {
-  data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
-  serie <- get_serie(code)
+
   if (is.na(type))
     type = "p"
-  timestamp_vector <- as.POSIXct((data$Fecha + 0.1) / 1000, origin = "1970-01-01", tz = "CET")
-  #plot_detect_date_pattern(timestamp_vector)
-  # obtener T3 preiodicidad con get_serie("IPC206449")$T3_Periodicidad
-  plot(x = timestamp_vector, y = data$Valor, xlab = "", ylab = "", type = type)
+  #timestamp_vector <- as.POSIXct((data$Fecha + 0.1) / 1000, origin = "1970-01-01", tz = "CET")
+
+  data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
+  serie <- get_serie(code)
+  frequency <- get_frequency(serie$T3_Periodicidad)
+
+  if (frequency == 12) {
+    xValues <- as.Date(paste0(data$Anyo, "/", data$FK_Periodo, "/01"))
+  } else {
+    if (frequency == 1) {
+      xValues <- data$Anyo
+    }
+  }
+
+  plot(x = xValues, y =  data$Valor, xlab = "", ylab = "", type = type)
   title(main = paste0(serie$Nombre, "\n", "Serie (", code, ")"), xlab = "Fechas", ylab = "Valores de la serie")
 }
 

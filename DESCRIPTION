@@ -5,7 +5,7 @@ Version: 0.1.0
 Date: 2018-01-01
 Authors@R: c(
   person("Andres", "Nacimiento", email = "andresnacimiento@gmail.com", role = c("aut", "prg", "cre")),
-  person("Carlos J.", "Perez", email = "cpgonzal@ull.es", role = c("drt", "pdr")))
+  person("Carlos J.", "Perez", email = "cpgonzal@ull.es", role = c("aut", "drt", "pdr")))
 Maintainer: Andres Nacimiento <andresnacimiento@gmail.com>
 Description: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API
 License: GPL-3

@@ -134,7 +134,7 @@ get_cache <- function(data_type, code){
 #' update_cache(code = 249, page = 1)
 #' update_cache(n = 3)
 #' @export
-update_cache <- function(code = 0, n = 0, page = NA, pagination = FALSE, page_start = NA, page_end = NA, benchmark = TRUE) {
+update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_start = NA, page_end = NA, benchmark = TRUE) {
 
   if (n < 0)
     stop("You have defined 'n' parameter with an incorrect value.")

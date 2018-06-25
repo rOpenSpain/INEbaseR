@@ -73,6 +73,16 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
     ptm <- proc.time()
   }
 
+  # Convert code to ID
+  operations <- get_operations_all()
+  if (class(code) == "character") {
+    code <- operations[operations$Codigo == code,]$Id
+  } else {
+    if (ioe) {
+      code <- operations[operations$Cod_IOE == code,]$Id
+    }
+  }
+
   # Get data from cache
   if (cache) {
     data <- get_cache("SERIEOPERATION", code)

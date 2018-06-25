@@ -113,18 +113,26 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
           empty_content <- TRUE
           # print(paste0("No content found in page ", page))
         } else {
+
+          data_content <- NULL
           for (i in 1:nrow(content)) {
-            data$COD <- rbind(data$COD, content$COD[i])
-            data$T3_Operacion <- rbind(data$T3_Operacion, content$T3_Operacion[i])
-            data$Nombre <- rbind(data$Nombre, content$Nombre[i])
-            data$Decimales <- rbind(data$Decimales, content$Decimales[i])
-            data$T3_Periodicidad <- rbind(data$T3_Periodicidad, content$T3_Periodicidad[i])
-            data$T3_Publicacion <- rbind(data$T3_Publicacion, content$T3_Publicacion[i])
-            data$T3_Clasificacion <- rbind(data$T3_Clasificacion, content$T3_Clasificacion[i])
-            data$T3_Escala <- rbind(data$T3_Escala, content$T3_Escala[i])
-            data$T3_Unidad <- rbind(data$T3_Unidad, content$T3_Unidad[i])
+            data_content$COD <- rbind(data_content$COD, content$COD[i])
+            data_content$T3_Operacion <- rbind(data_content$T3_Operacion, content$T3_Operacion[i])
+            data_content$Nombre <- rbind(data_content$Nombre, content$Nombre[i])
+            data_content$Decimales <- rbind(data_content$Decimales, content$Decimales[i])
+            data_content$T3_Periodicidad <- rbind(data_content$T3_Periodicidad, content$T3_Periodicidad[i])
+            data_content$T3_Publicacion <- rbind(data_content$T3_Publicacion, content$T3_Publicacion[i])
+            data_content$T3_Clasificacion <- rbind(data_content$T3_Clasificacion, content$T3_Clasificacion[i])
+            data_content$T3_Escala <- rbind(data_content$T3_Escala, content$T3_Escala[i])
+            data_content$T3_Unidad <- rbind(data_content$T3_Unidad, content$T3_Unidad[i])
           }
         }
+
+        # Convert to data frame
+        data_content <- data.frame(data_content, stringsAsFactors = FALSE)
+
+        # Build data content
+        data <- rbind(data, data_content)
 
         if (!is.na(page_end)) {
           if (page == page_end)
@@ -132,6 +140,7 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
         }
 
         page <- page + 1
+
       }
 
       # Convert to data frame
@@ -158,11 +167,8 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
         }
       }
 
-
-
       data <- fromJSON(url)
     }
-
 
     build_cache(data, "SERIEOPERATION", code)
 

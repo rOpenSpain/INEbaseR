@@ -47,7 +47,7 @@ plot_detect_date_pattern <- function(timestamp_vector) {
 #' get_frequency("Trimestral")
 #' get_frequency("Anual")
 #' @export
-get_frequency <- function(periodicity) {
+get_frequency <- function(periodicity, data = NULL) {
 
   switch(periodicity,
     "Mensual" = {
@@ -63,6 +63,30 @@ get_frequency <- function(periodicity) {
       frequency <- 0
     }
   )
+
+  if (!is.null(data)) {
+
+    if (frequency == 12) {
+      return(paste0(data$Anyo, "/", data$FK_Periodo, "/01"))
+    }
+
+    if (frequency == 4) {
+      cont <- 0
+      for (i in 1:length(data$FK_Periodo)) {
+        month <- as.numeric(data$FK_Periodo[i]) - 13 - (3 * 1) + 0 * i + cont - 2
+        frequency[i] <- paste0(data$Anyo[i], "/", month, "/01")
+        cont <- cont + 2
+        if (data$FK_Periodo[i] == 22) cont <- 0
+      }
+      return(frequency)
+    }
+
+    if (frequency == 1) {
+      return(paste0(data$Anyo, "/01/01"))
+
+    }
+
+  }
 
   return(frequency)
 
@@ -92,17 +116,9 @@ plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0,
 
   data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
   serie <- get_serie(code)
-  frequency <- get_frequency(serie$T3_Periodicidad)
+  frequency <- get_frequency(serie$T3_Periodicidad, data)
 
-  if (frequency == 12) {
-    xValues <- as.Date(paste0(data$Anyo, "/", data$FK_Periodo, "/01"))
-  } else {
-    if (frequency == 1) {
-      xValues <- data$Anyo
-    }
-  }
-
-  plot(x = xValues, y =  data$Valor, xlab = "", ylab = "", type = type)
+  plot(x = as.Date(frequency), y =  data$Valor, xlab = "", ylab = "", type = type)
   title(main = paste0(serie$Nombre, "\n", "Serie (", code, ")"), xlab = "Fechas", ylab = "Valores de la serie")
 }
 

@@ -39,6 +39,24 @@ plot_detect_date_pattern <- function(timestamp_vector) {
 
 }
 
+get_frequency <- function(periodicity) {
+
+  switch(periodicity,
+    "Mensual" = {
+      frequency <- 12
+    },
+    "Anual" = {
+      frequency <- 1
+    },
+    {
+      frequency <- 0
+    }
+  )
+
+  return(frequency)
+
+}
+
 
 #' @title Plot series
 #' @description This function draws a plot with data of a series from an id and/or from a date or date range
@@ -85,7 +103,8 @@ highcharts_series <- function(code, date_start = NA, date_end = NA, nult = 0, de
 
   data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
   serie <- get_serie(code)
-  data_ts <- ts(data = data$Valor, start = data$Anyo[[1]], frequency = 12)
+  frequency <- get_frequency(serie$T3_Periodicidad)
+  data_ts <- ts(data = data$Valor, start = data$Anyo[[1]], frequency = frequency)
 
   # Represent time series
   highchart() %>%

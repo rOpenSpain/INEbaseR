@@ -47,7 +47,7 @@ INE (Instituto Nacional de Estadistica) API. R package version 0.1.0.
 ```
 @Manual{,
   title = {INEbaseR: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API},
-  author = {Andres Nacimiento},
+  author = {Andres Nacimiento and Carlos J. Perez},
   year = {2018},
   note = {R package version 0.1.0},
 }

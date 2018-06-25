@@ -3,20 +3,20 @@ Type: Package
 Title: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API
 Version: 0.1.0
 Date: 2018-01-01
-Author: Andres Nacimiento <andresnacimiento@gmail.com>
+Author: Andres Nacimiento ["aut", "prg", "cre"]
 Authors@R: c(
-    person("Andrés", "Nacimiento", email = "andresnacimiento@gmail.com", role = c("aut", "prg", "cre")),
-    person("Carlos J.", "Pérez", email = "cpgonzal@ull.es", role = c("drt", "pdr"))
+  person("Andres", "Nacimiento", email = "andresnacimiento@gmail.com", role = c("aut", "prg", "cre")),
+  person("Carlos J.", "Perez", email = "cpgonzal@ull.es", role = c("drt", "pdr")))
 Maintainer: Andres Nacimiento <andresnacimiento@gmail.com>
 Description: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API
-License: GNU General Public License version 3
+License: GPL-3
 Encoding: UTF-8
 LazyData: false
 BuildResaveData: false
 Imports: 
-    jsonlite,
-    highcharter
+  jsonlite,
+  highcharter
 Depends:
-    jsonlite,
-    highcharter
+  jsonlite,
+  highcharter
 RoxygenNote: 6.0.1

@@ -4,7 +4,7 @@
 \alias{get_series_metadataoperation}
 \title{Get series metadata operation}
 \usage{
-get_series_metadataoperation(code, query = NULL, p = 1, det = 0,
+get_series_metadataoperation(code, query = NULL, p = NULL, det = 0,
   tip = NA, ioe = FALSE, lang = "ES")
 }
 \arguments{

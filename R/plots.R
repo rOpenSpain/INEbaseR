@@ -42,11 +42,11 @@ plot_detect_date_pattern <- function(timestamp_vector) {
 #' @title Get frequency
 #' @description This function return the periodicity (number) of a time serie
 #' @param periodicity string with a periodicity
+#' @param data result of \code{get_data_serie()$Data} call
 #' @examples
 #' get_frequency("Mensual")
 #' get_frequency("Trimestral")
 #' get_frequency("Anual")
-#' @export
 get_frequency <- function(periodicity, data = NULL) {
 
   switch(periodicity,

@@ -38,7 +38,7 @@ devtools::install_github("oddworldng/INEbaseR")
 **To cite package ‘INEbaseR’ in publications use:**
 
 ```
-Andres Nacimiento (2018). INEbaseR: R package for obtaining and analyzing open data from
+Andres Nacimiento and Carlos J. Perez (2018). INEbaseR: R package for obtaining and analyzing open data from
 INE (Instituto Nacional de Estadistica) API. R package version 0.1.0.
 ```
 

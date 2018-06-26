@@ -22,9 +22,29 @@ build_cache_directory <- function() {
   }
 }
 
-check_cache <- function(data_type, code){
-  file_name <- get_cache_file_name(data_type, code)
-  file_test("-f", file_name)
+# Example: check_cache("SERIEOPERATION", 4, get_file_name = TRUE)
+check_cache <- function(data_type, code, get_file_name = FALSE, expiration_date = 30){
+
+  for (i in 1:expiration_date) {
+
+    file_name <- get_cache_file_name(data_type, code, sys_date = (Sys.Date() - i))
+
+    if (file_test("-f", file_name)) {
+      if (get_file_name) {
+        return(data.frame(condition = TRUE, file = file_name, stringsAsFactors = FALSE))
+      } else {
+        return(TRUE)
+      }
+    }
+
+  }
+
+  if (get_file_name) {
+    return(data.frame(condition = FALSE, file = file_name, stringsAsFactors = FALSE))
+  } else {
+    return(FALSE)
+  }
+
 }
 
 # Clean out of date cache files (see expiration_date parameter)
@@ -107,8 +127,8 @@ get_cache <- function(data_type, code){
   clean_outofdate_cache(data_type, code)
   content <- NULL
 
-  if (check_cache(data_type, code)) {
-    file_name <- get_cache_file_name(data_type, code)
+  if (check_cache(data_type, code, get_file_name = TRUE)$condition) {
+    file_name <- check_cache(data_type, code, get_file_name = TRUE)$file
     load(file_name)
     return(content)
   }

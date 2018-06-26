@@ -25,7 +25,7 @@ build_cache_directory <- function() {
 # Example: check_cache("SERIEOPERATION", 4, get_file_name = TRUE)
 check_cache <- function(data_type, code, get_file_name = FALSE, expiration_date = 30){
 
-  for (i in 1:expiration_date) {
+  for (i in 0:expiration_date) {
 
     file_name <- get_cache_file_name(data_type, code, sys_date = (Sys.Date() - i))
 

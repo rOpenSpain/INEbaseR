@@ -197,8 +197,11 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
     }
     # Cache all operations
     for (i in 1:iterations) {
-      series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE)
-      print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
+      # Update only outdated caché
+      if (!check_cache("SERIEOPERATION", operations$Id[i])) {
+        series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE)
+        print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
+      }
     }
   }
 

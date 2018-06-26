@@ -135,7 +135,7 @@ get_cache <- function(data_type, code){
   else {
     stop(paste0(
       "\nNo cache data found to: ", data_type, " ", code, ". Use parameter cache = FALSE",
-      "\n\nNOTE: It is possible that this data were in cache but has been expired. By default expiration date is 7 days."
+      "\n\nNOTE: It is possible that this data were in cache but has been expired. By default expiration date is 30 days."
     ))
   }
 }

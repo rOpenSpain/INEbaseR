@@ -28,8 +28,8 @@ check_cache <- function(data_type, code){
 }
 
 # Clean out of date cache files (see expiration_date parameter)
-# Example: clean_outofdate_cache("SERIE", "IPC206449", expiration_date = 2)
-clean_outofdate_cache <- function(data_type, code, expiration_date = 7){
+# Example: clean_outofdate_cache("SERIEOPERATION", 4, expiration_date = 15)
+clean_outofdate_cache <- function(data_type, code, expiration_date = 30){
 
   directory_root <- get_cache_directory_path()
 

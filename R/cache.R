@@ -174,11 +174,8 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
     }
     # Cache all operations
     for (i in 1:iterations) {
-      # La operación 16 da problemas de servidor
-      if (operations$Id[i] != 16) {
-        series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, cache = FALSE)
-        print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
-      }
+      series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, cache = FALSE)
+      print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
     }
   }
 

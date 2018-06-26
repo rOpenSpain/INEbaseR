@@ -154,7 +154,7 @@ get_cache <- function(data_type, code){
 #' update_cache(code = 249, page = 1)
 #' update_cache(n = 3)
 #' @export
-update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_start = NULL, page_end = NULL, benchmark = TRUE) {
+update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_start = NULL, page_end = NULL, benchmark = TRUE, force = FALSE) {
 
   if (n < 0)
     stop("You have defined 'n' parameter with an incorrect value.")
@@ -195,15 +195,24 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
     } else {
       iterations <- nrow(operations)
     }
-    # Cache all operations
+
     for (i in 1:iterations) {
-      # Update only outdated caché
-      if (!check_cache("SERIEOPERATION", operations$Id[i])) {
+
+      # Cache all operations
+      if (force) {
         series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE)
         print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
+
+      # Update only outdated caché files
       } else {
-        print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (already is updated)"))
+        if (!check_cache("SERIEOPERATION", operations$Id[i])) {
+          series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE)
+          print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
+        } else {
+          print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (already is updated)"))
+        }
       }
+
     }
   }
 

@@ -179,7 +179,7 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
 
     if (length(series_operation) == 0) {
       clean_cache("SERIEOPERATION", code)
-      stop("No operations founds for code = ", code)
+      message(paste0("No operations founds for ", operations[operations$Id == code,][["Nombre"]], " (", code, ")"))
     } else {
       print(paste0("Operation '", operations[operations$Id == code,][["Nombre"]], "(", operations[operations$Id == code,][["Id"]], ")", "' has been cached"))
     }

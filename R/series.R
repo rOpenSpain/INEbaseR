@@ -121,6 +121,7 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
         content <- fromJSON(url)
         if (length(content) == 0) {
           empty_content <- TRUE
+          next
           # print(paste0("No content found in page ", page))
         } else {
 

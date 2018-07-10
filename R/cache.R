@@ -160,12 +160,13 @@ get_cache <- function(data_type, code){
 #' @param page_end \code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).
 #' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
 #' @param force (boolean) to force to update all cache data, \code{force = FALSE} by default.
+#' @param ignore_series (int) list of operation identificators to ignore. More slow series to cache are: 16, 49, 330 and 334
 #' @examples
 #' update_cache(code = 249)
 #' update_cache(code = 249, page = 1)
 #' update_cache(n = 3)
 #' @export
-update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_start = NA, page_end = NA, benchmark = TRUE, force = FALSE) {
+update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_start = NA, page_end = NA, benchmark = TRUE, force = FALSE, ignore_series = NULL) {
 
   if (n < 0)
     stop("You have defined 'n' parameter with an incorrect value.")
@@ -211,19 +212,53 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
 
       # Cache all operations
       if (force) {
-        series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE)
-        print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
+
+        # Ignore series
+        if (!is.null(ignore_series)) {
+
+          if (operations$Id[i] %in% ignore_series) {
+            print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (by user)"))
+
+          } else {
+            series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE)
+            print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
+          }
+
+        # Don't ignore series
+        } else {
+          series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE)
+          print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
+        }
 
       # Update only outdated caché files
       } else {
-        if (!check_cache("SERIEOPERATION", operations$Id[i])) {
-          series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE)
-          print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
+
+        # Ignore series
+        if (!is.null(ignore_series)) {
+
+          if (operations$Id[i] %in% ignore_series) {
+            print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (by user)"))
+          } else {
+            if (!check_cache("SERIEOPERATION", operations$Id[i])) {
+              series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE)
+              print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
+            } else {
+              print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (already is updated)"))
+            }
+          }
+
+        # Don't ignore series
         } else {
-          print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (already is updated)"))
+
+          if (!check_cache("SERIEOPERATION", operations$Id[i])) {
+            series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE)
+            print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
+          } else {
+            print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (already is updated)"))
+          }
+
         }
       }
-
     }
   }
 

@@ -21,6 +21,8 @@ update_cache(code = 0, n = 0, page = NA, pagination = TRUE,
 \item{page_end}{\code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).}
 
 \item{benchmark}{used to measure the performance of the system, \code{benchmark = FALSE} by default.}
+
+\item{force}{(boolean) to force to update all cache data, \code{force = FALSE} by default.}
 }
 \description{
 This function allow update specific or all cache data

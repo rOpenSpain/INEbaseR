@@ -8,6 +8,8 @@ get_frequency(periodicity, data = NULL)
 }
 \arguments{
 \item{periodicity}{string with a periodicity}
+
+\item{data}{result of \code{get_data_serie()$Data} call}
 }
 \description{
 This function return the periodicity (number) of a time serie

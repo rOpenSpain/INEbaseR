@@ -48,7 +48,7 @@ check_cache <- function(data_type, code, get_file_name = FALSE, expiration_date 
 }
 
 # Clean out of date cache files (see expiration_date parameter)
-# Example: clean_outofdate_cache("SERIEOPERATION", 4, expiration_date = 15)
+# Example: clean_outofdate_cache("SERIEOPERATION", 4, expiration_date = 30)
 clean_outofdate_cache <- function(data_type, code, expiration_date = 30){
 
   directory_root <- get_cache_directory_path()
@@ -104,21 +104,27 @@ build_cache <- function(data, data_type, code){
 
 }
 
+# Example: clean_cache("SERIEOPERATION", 104)
 clean_cache <- function(data_type = NA, code = NA, sys_date = Sys.Date(), all = FALSE){
 
   directory_root <- get_cache_directory_path()
 
-  if (all) {
-    files <- list.files(path = directory_root, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
-    for (i in 1:length(files)) {
-      file_name <- paste0(directory_root, "/", files[i])
+  if (check_cache(data_type, code)) {
+
+    if (all) {
+      files <- list.files(path = directory_root, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
+      for (i in 1:length(files)) {
+        file_name <- paste0(directory_root, "/", files[i])
+        file.remove(file_name)
+        print(paste0("Removed ", files[i]))
+      }
+    } else {
+      file_name <- check_cache(data_type, code, get_file_name = TRUE)$file
       file.remove(file_name)
-      print(paste0("Removed ", files[i]))
     }
-  } else {
-    file_name <- get_cache_file_name(data_type, code, sys_date = sys_date)
-    file.remove(file_name)
+
   }
+
 }
 
 get_cache <- function(data_type, code){
@@ -127,16 +133,20 @@ get_cache <- function(data_type, code){
   clean_outofdate_cache(data_type, code)
   content <- NULL
 
-  if (check_cache(data_type, code, get_file_name = TRUE)$condition) {
+  if (check_cache(data_type, code)) {
+
     file_name <- check_cache(data_type, code, get_file_name = TRUE)$file
     load(file_name)
+
     return(content)
-  }
-  else {
+
+  } else {
+
     stop(paste0(
       "\nNo cache data found to: ", data_type, " ", code, ". Use parameter cache = FALSE",
       "\n\nNOTE: It is possible that this data were in cache but has been expired. By default expiration date is 30 days."
     ))
+
   }
 }
 
@@ -149,6 +159,7 @@ get_cache <- function(data_type, code){
 #' @param page_start \code{page_start = 1} start page range to obtain data (to use this, \code{pagination = TRUE}).
 #' @param page_end \code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).
 #' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
+#' @param force (boolean) to force to update all cache data, \code{force = FALSE} by default.
 #' @examples
 #' update_cache(code = 249)
 #' update_cache(code = 249, page = 1)

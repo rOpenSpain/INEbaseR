@@ -5,7 +5,7 @@
 \title{Update cache}
 \usage{
 update_cache(code = 0, n = 0, page = NA, pagination = TRUE,
-  page_start = NA, page_end = NA, benchmark = TRUE)
+  page_start = NA, page_end = NA, benchmark = TRUE, force = FALSE)
 }
 \arguments{
 \item{code}{operation identificator}

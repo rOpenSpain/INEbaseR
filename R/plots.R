@@ -47,6 +47,7 @@ plot_detect_date_pattern <- function(timestamp_vector) {
 #' get_frequency("Mensual")
 #' get_frequency("Trimestral")
 #' get_frequency("Anual")
+#' @export
 get_frequency <- function(periodicity, data = NULL) {
 
   switch(periodicity,

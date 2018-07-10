@@ -28,5 +28,5 @@ get_data_metadataoperation(code, query = NULL, p = 1, nult = 1, det = 0,
 This function returns a data frame with latest \code{n} series data by crossing metadata from an id or code
 }
 \examples{
-get_data_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL", nult = 1)
+get_data_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variacion mensual AND Grupos ECOICOP = NULL", nult = 1)
 }

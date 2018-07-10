@@ -70,7 +70,7 @@ get_data_table <- function(id, nult = 0, det = 0, tip = NA, lang = "ES") {
 #' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
 #' @param lang language used to obtain information
 #' @examples
-#' get_data_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL", nult = 1)
+#' get_data_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variacion mensual AND Grupos ECOICOP = NULL", nult = 1)
 #' @export
 get_data_metadataoperation <- function(code, query = NULL, p = 1, nult = 1, det = 0, tip = NA, ioe = FALSE, lang = "ES") {
 

@@ -3,6 +3,7 @@
 export(get_data_metadataoperation)
 export(get_data_serie)
 export(get_data_table)
+export(get_frequency)
 export(get_operation)
 export(get_operations_all)
 export(get_publications)

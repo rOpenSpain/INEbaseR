@@ -7,14 +7,17 @@ Authors@R: c(
   person("Andres", "Nacimiento", email = "andresnacimiento@gmail.com", role = c("aut", "prg", "cre")),
   person("Carlos J.", "Perez", email = "cpgonzal@ull.es", role = c("aut", "drt", "pdr")))
 Maintainer: Andres Nacimiento <andresnacimiento@gmail.com>
-Description: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API
+Description: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API.
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
 BuildResaveData: false
 Imports: 
   jsonlite,
-  highcharter
+  highcharter,
+  graphics,
+  stats,
+  utils
 Depends:
   jsonlite,
   highcharter

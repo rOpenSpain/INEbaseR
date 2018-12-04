@@ -54,5 +54,5 @@ INE (Instituto Nacional de Estadistica) API. R package version 0.1.0.
 ```
 
 ## Authors
-* **Andrés Nacimiento García**, computer engineer at [University of La Laguna](https://ull.es/). <andresnacimiento@gmail.com>
-* **Carlos J. Pérez González**, project director. <cpgonzal@ull.es>
+* **Andrés Nacimiento García**, computer engineer at [University of La Laguna](https://ull.es/). <andresnacimiento[at]gmail[dot]com>
+* **Carlos J. Pérez González**, project director. <cpgonzal[at]ull[dot]es>

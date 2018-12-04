@@ -5,6 +5,7 @@ Version: 0.1.0
 Date: 2018-01-01
 Authors@R: c(
   person("Andres", "Nacimiento", email = "andresnacimiento@gmail.com", role = c("aut", "prg", "cre")),
+  person("Mariano", "Sanz", email = "majafrades@gmail.com", role = c("ctg")),
   person("Carlos J.", "Perez", email = "cpgonzal@ull.es", role = c("aut", "drt", "pdr")))
 Maintainer: Andres Nacimiento <andresnacimiento@gmail.com>
 Description: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API.
@@ -21,4 +22,4 @@ Imports:
 Depends:
   jsonlite,
   highcharter
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1

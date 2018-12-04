@@ -4,8 +4,8 @@
 \alias{get_data_serie}
 \title{Get data serie}
 \usage{
-get_data_serie(code, date_start = NA, date_end = NA, nult = 0, det = 0,
-  lang = "ES")
+get_data_serie(code, date_start = NA, date_end = NA, nult = 0,
+  det = 0, lang = "ES")
 }
 \arguments{
 \item{code}{operation identification}

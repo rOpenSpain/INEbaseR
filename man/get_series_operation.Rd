@@ -5,8 +5,8 @@
 \title{Get series operation}
 \usage{
 get_series_operation(code, det = 0, tip = NA, pagination = FALSE,
-  page = NA, page_start = NA, page_end = NA, ioe = FALSE, lang = "ES",
-  cache = TRUE, benchmark = FALSE)
+  page = NA, page_start = NA, page_end = NA, ioe = FALSE,
+  lang = "ES", cache = TRUE, benchmark = FALSE)
 }
 \arguments{
 \item{code}{operation identification}

@@ -4,7 +4,8 @@
 \alias{get_values_variableoperation}
 \title{Get values from variable operation}
 \usage{
-get_values_variableoperation(id, op, det = 0, ioe = FALSE, lang = "ES")
+get_values_variableoperation(id, op, det = 0, ioe = FALSE,
+  lang = "ES")
 }
 \arguments{
 \item{id}{variable identification}

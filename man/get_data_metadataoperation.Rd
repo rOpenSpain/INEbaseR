@@ -4,8 +4,8 @@
 \alias{get_data_metadataoperation}
 \title{Get data metadata-operation}
 \usage{
-get_data_metadataoperation(code, query = NULL, p = 1, nult = 1, det = 0,
-  tip = NA, ioe = FALSE, lang = "ES")
+get_data_metadataoperation(code, query = NULL, p = 1, nult = 1,
+  det = 0, tip = NA, ioe = FALSE, lang = "ES")
 }
 \arguments{
 \item{code}{table identification}

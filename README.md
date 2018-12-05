@@ -58,4 +58,4 @@ INE (Instituto Nacional de Estadistica) API. R package version 0.1.0.
 * **Carlos J. Pérez González**, project director. <cpgonzal[at]ull[dot]es>
 
 ## Contributors
-* **Mariano Sanz**, Cartographer. <majafrades[at]gmail[dot]com>
+* **Mariano Sanz**, cartographer. <majafrades[at]gmail[dot]com>

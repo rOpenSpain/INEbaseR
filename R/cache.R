@@ -130,7 +130,7 @@ clean_cache <- function(data_type = NA, code = NA, sys_date = Sys.Date(), all = 
 get_cache <- function(data_type, code){
 
   # Clean out of date cache files
-  clean_outofdate_cache(data_type, code)
+  # clean_outofdate_cache(data_type, code)
   content <- NULL
 
   if (check_cache(data_type, code)) {

@@ -23,7 +23,7 @@ draw_serie <- function(serie, geographical_granularity) {
     )
 }
 
-get_operations_with_granularity <- function(geographical_granularity = NULL, temporal_granularity = NULL) {
+get_operations_by_granularity <- function(geographical_granularity = NULL, temporal_granularity = NULL) {
 
   # Check geographical granularity
   if (!is.null(geographical_granularity)) {

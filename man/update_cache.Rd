@@ -6,7 +6,7 @@
 \usage{
 update_cache(code = 0, n = 0, page = NA, pagination = TRUE,
   page_start = NA, page_end = NA, benchmark = TRUE, force = FALSE,
-  ignore_series = NULL)
+  ignore_series = NULL, tip = "M", det = 2)
 }
 \arguments{
 \item{code}{operation identificator}
@@ -26,6 +26,10 @@ update_cache(code = 0, n = 0, page = NA, pagination = TRUE,
 \item{force}{(boolean) to force to update all cache data, \code{force = FALSE} by default.}
 
 \item{ignore_series}{(int) list of operation identificators to ignore. More slow series to cache are: 16, 49, 330 and 334}
+
+\item{tip}{\code{tip = M} to obtain the metadata (crossing variables-values) of the series.}
+
+\item{det}{\code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default}
 }
 \description{
 This function allow update specific or all cache data

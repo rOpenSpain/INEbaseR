@@ -161,6 +161,8 @@ get_cache <- function(data_type, code){
 #' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
 #' @param force (boolean) to force to update all cache data, \code{force = FALSE} by default.
 #' @param ignore_series (int) list of operation identificators to ignore. More slow series to cache are: 16, 49, 330 and 334
+#' @param tip \code{tip = M} to obtain the metadata (crossing variables-values) of the series.
+#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
 #' @examples
 #' update_cache(code = 249)
 #' update_cache(code = 249, page = 1)

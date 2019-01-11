@@ -27,11 +27,12 @@ draw_serie <- function(serie, geographical_granularity) {
 #' @description This function returns a list of all operations that have a temporal or geographic granularity specified by user
 #' @param geographical_granularity (string) geographical granularity
 #' @param temporal_granularity (string) temporal granularity
+#' @param verbose (boolean) show more information during the process
 #' @examples
 #' get_operations_by_granularity(geographical_granularity = "PROV")
 #' get_operations_by_granularity(temporal_granularity = "Anual")
 #' @export
-get_operations_by_granularity <- function(geographical_granularity = NULL, temporal_granularity = NULL) {
+get_operations_by_granularity <- function(geographical_granularity = NULL, temporal_granularity = NULL, verbose = TRUE) {
 
   if ((!is.null(geographical_granularity)) && (!is.null(temporal_granularity))) {
     stop("You only can specify one of these two parameters (geographical_granularity or temporal_granularity), but not both at the same time.")
@@ -63,7 +64,9 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
         if ((length(series$Periodicidad$Nombre) > 0) && (!is.null(series$Periodicidad$Nombre))) {
           if (temporal_granularity %in% series$Periodicidad$Nombre) {
             operations <- c(operations, operation)
-            print(paste0("Found (", temporal_granularity, ") in operation: ", operation))
+            if (verbose) {
+              print(paste0("Found (", temporal_granularity, ") in operation: ", operation))
+            }
           }
         }
       } else {
@@ -71,7 +74,9 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
         variables <- get_variables_operation(operation)
         if (geographical_granularity %in% variables$Codigo) {
           operations <- c(operations, operation)
-          print(paste0("Found (", geographical_granularity, ") in operation: ", operation))
+          if (verbose) {
+            print(paste0("Found (", geographical_granularity, ") in operation: ", operation))
+          }
         }
       }
 

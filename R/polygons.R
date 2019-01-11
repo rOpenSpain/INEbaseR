@@ -61,8 +61,8 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
       if (is.null(geographical_granularity)) {
         # Temporal granularity
         series <- get_series_operation(operation)
-        if (!is.null(series$Periodicidad$Nombre)) {
-          if (temporal_granularity %in% series$Periodicidad$Nombre) {
+        if (!is.null(series$Periodicidad)) {
+          if (temporal_granularity %in% series$Periodicidad) {
             operations <- c(operations, operation)
             if (verbose) {
               print(paste0("Found (", temporal_granularity, ") in operation: ", operation))

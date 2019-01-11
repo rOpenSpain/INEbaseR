@@ -136,6 +136,11 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
             data_content$T3_Clasificacion <- rbind(data_content$T3_Clasificacion, content$T3_Clasificacion[i])
             data_content$T3_Escala <- rbind(data_content$T3_Escala, content$T3_Escala[i])
             data_content$T3_Unidad <- rbind(data_content$T3_Unidad, content$T3_Unidad[i])
+            # Metadata
+            if ((tip == "M") && (!is.null(content$Periodicidad$Nombre))) {
+              data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[i])
+            }
+
           }
         }
 

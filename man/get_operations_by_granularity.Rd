@@ -5,12 +5,14 @@
 \title{Get operations by granularity}
 \usage{
 get_operations_by_granularity(geographical_granularity = NULL,
-  temporal_granularity = NULL)
+  temporal_granularity = NULL, verbose = TRUE)
 }
 \arguments{
 \item{geographical_granularity}{(string) geographical granularity}
 
 \item{temporal_granularity}{(string) temporal granularity}
+
+\item{verbose}{(boolean) show more information during the process}
 }
 \description{
 This function returns a list of all operations that have a temporal or geographic granularity specified by user

@@ -23,6 +23,8 @@ draw_serie <- function(serie, geographical_granularity) {
     )
 }
 
+# Example: get_operations_by_granularity(geographical_granularity = "PROV")
+# Example: get_operations_by_granularity(temporal_granularity = "Anual")
 get_operations_by_granularity <- function(geographical_granularity = NULL, temporal_granularity = NULL) {
 
   # Check geographical granularity
@@ -34,8 +36,8 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
 
   # Check temporal granularity
   if (!is.null(temporal_granularity)) {
-    if ((temporal_granularity != "Anual") && (temporal_granularity != "mensual") && (temporal_granularity != "trimestral")) {
-      stop("temporal_granularity must be one of these options: anual, mensual or trimestral")
+    if ((temporal_granularity != "Anual") && (temporal_granularity != "Mensual") && (temporal_granularity != "Trimestral")) {
+      stop("temporal_granularity must be one of these options: Anual, Mensual or Trimestral")
     }
   }
 
@@ -44,15 +46,25 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
   for (operation in all_operations$Codigo) {
     # Operation "ETR" (334): Error in open.connection(con, "rb") : HTTP error 500.
     if (operation != "ETR") {
-      # Temporal granularity
-      series <- get_series_operation(operation)
-      # series$Periodicidad$Nombre
-      # Geographical granularity
-      variables <- get_variables_operation(operation)
-      if (geographical_granularity %in% variables$Codigo) {
-        operations <- c(operations, operation)
-        print(paste0("Found (", geographical_granularity, ") in: ", operation))
+
+      if (is.null(geographical_granularity)) {
+        # Temporal granularity
+        series <- get_series_operation(operation)
+        if ((length(series$Periodicidad$Nombre) > 0) && (!is.null(series$Periodicidad$Nombre))) {
+          if (temporal_granularity %in% series$Periodicidad$Nombre) {
+            operations <- c(operations, operation)
+            print(paste0("Found (", temporal_granularity, ") in operation: ", operation))
+          }
+        }
+      } else {
+        # Geographical granularity
+        variables <- get_variables_operation(operation)
+        if (geographical_granularity %in% variables$Codigo) {
+          operations <- c(operations, operation)
+          print(paste0("Found (", geographical_granularity, ") in operation: ", operation))
+        }
       }
+
     }
   }
 

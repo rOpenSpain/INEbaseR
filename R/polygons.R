@@ -23,9 +23,19 @@ draw_serie <- function(serie, geographical_granularity) {
     )
 }
 
-# Example: get_operations_by_granularity(geographical_granularity = "PROV")
-# Example: get_operations_by_granularity(temporal_granularity = "Anual")
+#' @title Get operations by granularity
+#' @description This function returns a list of all operations that have a temporal or geographic granularity specified by user
+#' @param geographical_granularity (string) geographical granularity
+#' @param temporal_granularity (string) temporal granularity
+#' @examples
+#' get_operations_by_granularity(geographical_granularity = "PROV")
+#' get_operations_by_granularity(temporal_granularity = "Anual")
+#' @export
 get_operations_by_granularity <- function(geographical_granularity = NULL, temporal_granularity = NULL) {
+
+  if ((!is.null(geographical_granularity)) && (!is.null(temporal_granularity))) {
+    stop("You only can specify one of these two parameters (geographical_granularity or temporal_granularity), but not both at the same time.")
+  }
 
   # Check geographical granularity
   if (!is.null(geographical_granularity)) {

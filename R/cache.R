@@ -270,3 +270,56 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
   }
 
 }
+
+# ------------------ Polygons (GeoJSON) ------------------
+
+# Example: get_polygon_file_name("provincias")
+# Example: get_polygon_file_name("comunidades_autonomas")
+# Example: get_polygon_file_name("municipios")
+get_polygon_file_name <- function(geographical_granularity, extension = ".rds") {
+
+  directory_root <- get_cache_directory_path(path = "data/geojson")
+  file_name <- paste0(directory_root, "/", geographical_granularity, extension)
+
+  return(file_name)
+
+}
+
+
+# Example: save_polygon_geojson_to_rds("provincias")
+# Example: save_polygon_geojson_to_rds("comunidades_autonomas")
+# Example: save_polygon_geojson_to_rds("municipios")
+save_polygon_geojson_to_rds <- function(geographical_granularity) {
+
+  # File name to save (RDS)
+  file_name_rds <- get_polygon_file_name(geographical_granularity, extension = ".rds")
+  # File name to read (GeoJSON)
+  file_name_geojson <- get_polygon_file_name(geographical_granularity)
+
+  # Get GeoJSON content from file_name (GeoJSON)
+  content <- fromJSON(file_name_geojson, simplifyVector = FALSE)
+
+  # Save an object to a file
+  saveRDS(content, file = file_name_rds)
+
+  # Output messege
+  message(paste0("Notification: GeoJSON '",  geographical_granularity, "' compressed successfully to RDS format."))
+
+}
+
+
+# Example: get_polygon_rds_to_geojson("provincias")
+# Example: get_polygon_rds_to_geojson("comunidades_autonomas")
+# Example: get_polygon_rds_to_geojson("municipios")
+get_polygon_rds_to_geojson <- function(geographical_granularity) {
+
+  # File name to save (RDS)
+  file_name_rds <- get_polygon_file_name(geographical_granularity, extension = ".rds")
+
+  # Read RDS
+  content <- readRDS(file = file_name_rds)
+
+  return(content)
+
+}
+

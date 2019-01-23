@@ -3,8 +3,11 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-# Example: draw_serie(25, "provincias")
+# Example: draw_serie(25, "comunidades_autonomas")
 draw_serie <- function(serie, geographical_granularity) {
+
+  # Message
+  message("Note: represent all polygons may take much time, please be patient ...")
 
   # Get polygon from cache
   map <- get_polygon_rds_to_geojson("provincias")

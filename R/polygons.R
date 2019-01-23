@@ -10,7 +10,7 @@ draw_serie <- function(serie, geographical_granularity) {
   message("Note: represent all polygons may take much time, please be patient ...")
 
   # Get polygon from cache
-  map <- get_polygon_rds_to_geojson("provincias")
+  map <- get_polygon_rds_to_geojson(geographical_granularity)
 
   # Represent map and series
   highchart(type = "map") %>%

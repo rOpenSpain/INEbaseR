@@ -278,8 +278,8 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
 # Example: get_polygon_file_name("municipios")
 get_polygon_file_name <- function(geographical_granularity, extension = ".rds") {
 
-  directory_root <- get_cache_directory_path(path = "data/geojson")
-  file_name <- paste0(directory_root, "/", geographical_granularity, extension)
+  directory_root <- get_cache_directory_path(path = "data")
+  file_name <- paste0(directory_root, "/POLYGONS-", geographical_granularity, extension)
 
   return(file_name)
 
@@ -308,9 +308,9 @@ save_polygon_geojson_to_rds <- function(geographical_granularity) {
 }
 
 
-# Example: get_polygon_rds_to_geojson("provincias")
-# Example: get_polygon_rds_to_geojson("comunidades_autonomas")
-# Example: get_polygon_rds_to_geojson("municipios")
+# Example: get_polygon_rds_to_geojson("Provincias")
+# Example: get_polygon_rds_to_geojson("Comunidades_autonomas")
+# Example: get_polygon_rds_to_geojson("Municipios")
 get_polygon_rds_to_geojson <- function(geographical_granularity) {
 
   # File name to save (RDS)

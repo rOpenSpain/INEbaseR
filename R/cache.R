@@ -308,9 +308,9 @@ save_polygon_geojson_to_rds <- function(geographical_granularity) {
 }
 
 
-# Example: get_polygon_rds_to_geojson("Provincias")
-# Example: get_polygon_rds_to_geojson("Comunidades_autonomas")
-# Example: get_polygon_rds_to_geojson("Municipios")
+# Example: get_polygon_rds_to_geojson("provincias")
+# Example: get_polygon_rds_to_geojson("comunidades_autonomas")
+# Example: get_polygon_rds_to_geojson("municipios")
 get_polygon_rds_to_geojson <- function(geographical_granularity) {
 
   # File name to save (RDS)

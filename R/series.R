@@ -322,3 +322,26 @@ get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, 
   return(fromJSON(url))
 
 }
+
+get_serie_nult <- function(serie) {
+
+  # Last "n"
+  nult <- 0
+
+  # Get metadata serie
+  serie_metadata <- get_serie(serie, det = 2, tip = "M")
+
+  periodicity <- serie_metadata$Periodicidad$Nombre
+  if (periodicity == "Mensual") {
+    nult <- 12
+  } else {
+    if (periodicity == "Anual") {
+      nult <- 1
+    } else {
+      nult <- 10
+    }
+  }
+
+  return(nult)
+
+}

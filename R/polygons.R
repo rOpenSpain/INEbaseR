@@ -3,8 +3,57 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
+# Example: get_natcode("IPC251541", 115)
+# Example: get_natcode(all)
+get_natcode <- function(serie = NULL, variable_id = NULL, all = TRUE) {
+
+  # Natcode
+  natcode <- "34" # Spain prefix: 34
+
+  # Get natcode table from cache
+  natcode_list <- get_rds_content("natcodes", type = "/DATATABLE-")
+  natcode_df <- data.frame(natcode_list)
+
+  # Get all natcode
+  if (all) {
+    return(natcode_df)
+  }
+
+  # Get serie metadata
+  serie_metadata <- get_serie(serie, det = 2, tip = "M")
+
+  variable_codigo <- serie_metadata$MetaData[serie_metadata$MetaData$Variable$Id == variable_id,]$Variable$Codigo
+  variable_id <- serie_metadata$MetaData[serie_metadata$MetaData$Variable$Id == variable_id,]$Id
+
+  # Provincias
+  if (variable_codigo == "PROV") {
+    lista_ccaa <- natcode_df[natcode_df$CPRO == variable_id,]$CODAUTO
+    cod_ccaa <- unique(lista_ccaa)
+
+    if (length(cod_ccaa) > 1) {
+      cod_ccaa <- cod_ccaa[1]
+    }
+
+    natcode <- paste0(natcode, cod_ccaa, variable_id, "000", "00")
+
+  } else {
+    # Comunidades autónomas
+    if (variable_codigo == "CCAA") {
+      natcode <- paste0(natcode, variable_id, "00", "000", "00")
+    # Municipios
+    } else {
+      lista_mun <- natcode_df[natcode_df$CMUN == variable_id,]$CMUN
+      natcode <- paste0(natcode, variable_id, "00", variable_id, "00")
+
+    }
+  }
+
+  return(natcode)
+
+}
+
 # Example: draw_serie("IPC251541", "provincias")
-draw_serie <- function(serie, geographical_granularity) {
+draw_serie <- function(serie, geographical_granularity, nult = 0) {
 
   # Message
   message("Note: represent all polygons may take much time, please be patient ...")
@@ -14,9 +63,36 @@ draw_serie <- function(serie, geographical_granularity) {
 
   # Get serie metadata
   serie_metadata <- get_serie(serie, det = 2, tip = "M")
+  serie_variables_id <- serie_metadata$MetaData$Variable$Id
+  # Variables (from: get_variables_all())
+  #  - 70 > Comunidades y Ciudades Autónomas > CCAA
+  #  - 115 > Provincias > PROV
+  #  - 19 > Municipios > MUN
+  geographical_variables <- c(115, 19, 70)
 
-  # Get natcode table from cache
-  natcodes <- get_rds_content("natcodes", type = "/DATATABLE-")
+  # Find variable data
+  variable_data <- NULL
+  for (variable_id in serie_variables_id) {
+    if (variable_id %in% geographical_variables) {
+      variables <- get_variables_all()
+      variable_data <- variables[variables$Id == variable_id,]
+    }
+  }
+
+  if (is.null(variable_data)) {
+    stop(paste0("No geographical variables found "))
+  }
+
+  # Calculate last n serie data
+  if (nult == 0) {
+    nult <- get_serie_nult(serie)
+  }
+
+  # Get serie data
+  serie_data <- get_data_serie(serie, det = 2, nult = nult)
+
+  # Get natcode
+  serie_natcode <- get_natcode(serie, variable_data)
 
   # Represent map and series
   highchart(type = "map") %>%

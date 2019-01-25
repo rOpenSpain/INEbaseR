@@ -3,18 +3,24 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-# Example: draw_serie(25, "comunidades_autonomas")
+# Example: draw_serie("IPC251541", "provincias")
 draw_serie <- function(serie, geographical_granularity) {
 
   # Message
   message("Note: represent all polygons may take much time, please be patient ...")
 
   # Get polygon from cache
-  map <- get_polygon_rds_to_geojson(geographical_granularity)
+  map <- get_rds_content(geographical_granularity)
+
+  # Get serie metadata
+  serie_metadata <- get_serie(serie, det = 2, tip = "M")
+
+  # Get natcode table from cache
+  natcodes <- get_rds_content("natcodes", type = "/DATATABLE-")
 
   # Represent map and series
   highchart(type = "map") %>%
-    hc_chart(backgroundColor = "#161C20") %>%
+    hc_chart(backgroundColor = "#161C20", zoomType = "xy") %>%
     hc_add_series(mapData = map, showInLegend = FALSE, nullColor = "#424242", borderWidth = 0)
 
 }

@@ -22,8 +22,12 @@ get_natcode <- function(serie = NULL, variable_id = NULL, all = TRUE) {
   natcode_df <- data.frame(natcode_list)
 
   # Get all natcode
-  if (all) {
-    return(natcode_df)
+  if ((is.null(serie)) &&  (is.null(variable_id))) {
+    if (all) {
+      return(natcode_df)
+    } else {
+      stop(paste0("ERROR: Please, use all = TRUE option."))
+    }
   }
 
   # Get serie metadata

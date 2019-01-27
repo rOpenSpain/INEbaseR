@@ -323,6 +323,13 @@ get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, 
 
 }
 
+
+#' @title Get serie last-n
+#' @description This function returns the auto-calculated last-n series
+#' @param serie (string) serie identificator
+#' @examples
+#' get_serie_nult("IPC251541")
+#' @export
 get_serie_nult <- function(serie) {
 
   # Last "n"

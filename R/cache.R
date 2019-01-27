@@ -312,10 +312,16 @@ get_rds_file_name <- function(object, extension = ".rds", type = "/POLYGONS-") {
 }
 
 
-# Example: get_rds_content("provincias")
-# Example: get_rds_content("comunidades_autonomas")
-# Example: get_rds_content("municipios")
-# Example: get_rds_content("natcodes", type = "/DATATABLE-")
+#' @title Get rds content (cache)
+#' @description This function returns the content of a RDS file in cache
+#' @param object (string) an object of the "type" option
+#' @param type (string) type of content do you want to read, \code{type = "/POLYGONS-"} by default
+#' @examples
+#' get_rds_content("provincias")
+#' get_rds_content("comunidades_autonomas")
+#' get_rds_content("municipios")
+#' get_rds_content("natcodes", type = "/DATATABLE-")
+#' @export
 get_rds_content <- function(object, type = "/POLYGONS-") {
 
   # File name to load (RDS)

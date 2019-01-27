@@ -3,8 +3,15 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-# Example: get_natcode("IPC251541", 115)
-# Example: get_natcode(all)
+#' @title Get natcode
+#' @description This function allows get all natcodes or calculate a natcode from a serie and a geographical granularity
+#' @param serie (string) serie identificator
+#' @param variable_id (int) variable identificator
+#' @param all (bool) if \code{all = TRUE} you will get all natcodes
+#' @examples
+#' get_natcode(all)
+#' get_natcode("IPC251541", 115)
+#' @export
 get_natcode <- function(serie = NULL, variable_id = NULL, all = TRUE) {
 
   # Natcode
@@ -52,7 +59,14 @@ get_natcode <- function(serie = NULL, variable_id = NULL, all = TRUE) {
 
 }
 
-# Example: draw_serie("IPC251541", "provincias")
+#' @title Draw serie
+#' @description This function allows representing series data into a map
+#' @param serie (string) serie identificator
+#' @param geographical_granularity (string) can be one of this: \code{comunidades_autonomas}, \code{provincias} or \code{municipios}
+#' @param nult (int) last \code{n} serie data, if \code{nult = 0} this value will be auto-calculated
+#' @examples
+#' draw_serie("IPC251541", "provincias")
+#' @export
 draw_serie <- function(serie, geographical_granularity, nult = 0) {
 
   # Message

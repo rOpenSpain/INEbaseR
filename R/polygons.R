@@ -9,10 +9,39 @@
 #' @param variable_id (int) variable identificator
 #' @param all (bool) if \code{all = TRUE} you will get all natcodes
 #' @examples
-#' get_natcode(all)
+#' get_natcode()
 #' get_natcode("IPC251541", 115)
+#' get_natcode("DPOP37286", 19)
+#' get_natcode("IPC251522", 70)
 #' @export
 get_natcode <- function(serie = NULL, variable_id = NULL, all = TRUE) {
+
+  # Checking errors
+  if ((all) && (!is.null(serie)) && (is.null(variable_id))) {
+    stop("ERROR: parameter variable_id is NULL.")
+  }
+
+  if ((all) && (!is.null(variable_id)) && (is.null(serie))) {
+    stop("ERROR: parameter serie is NULL.")
+  }
+
+  geographical_variables <- c(115, 19, 70)
+
+  if (!is.null(variable_id)) {
+    if (!variable_id %in% geographical_variables) {
+      stop(paste0("ERROR: variable_id is ", variable_id, ", and should be one of this: 115, 19, 70"))
+    }
+  }
+
+  # Natcode format (map):
+  # (2 digits): 34 (Spain)
+  # CAUTO:
+  # (2 digits): CAUTO
+  # CPRO:
+  # (2 digits): CPRO
+  # MUN:
+  # (2 digits): CPRO
+  # (3 digits): CMUN
 
   # Natcode
   natcode <- "34" # Spain prefix: 34
@@ -34,7 +63,13 @@ get_natcode <- function(serie = NULL, variable_id = NULL, all = TRUE) {
   serie_metadata <- get_serie(serie, det = 2, tip = "M")
 
   variable_codigo <- serie_metadata$MetaData[serie_metadata$MetaData$Variable$Id == variable_id,]$Variable$Codigo
-  variable_id <- serie_metadata$MetaData[serie_metadata$MetaData$Variable$Id == variable_id,]$Id
+
+  if (length(variable_codigo) == 0) {
+    variables <- get_variables_all()
+    stop(paste0("ERROR: maybe serie ", serie, ", has not this geograhpical granularity (", variables[variables$Id == variable_id,]$Nombre, ")"))
+  }
+
+  variable_id <- serie_metadata$MetaData[serie_metadata$MetaData$Variable$Id == variable_id,]$Codigo
 
   # Provincias
   if (variable_codigo == "PROV") {
@@ -45,16 +80,40 @@ get_natcode <- function(serie = NULL, variable_id = NULL, all = TRUE) {
       cod_ccaa <- cod_ccaa[1]
     }
 
-    natcode <- paste0(natcode, cod_ccaa, variable_id, "000", "00")
+    # Adding "0" to fill up blank digits
+    if (nchar(trunc(cod_ccaa)) == 1) {
+      cod_ccaa <- paste0("0", cod_ccaa)
+    }
+
+    natcode <- paste0(natcode, cod_ccaa, variable_id, "00", "000")
 
   } else {
     # Comunidades autónomas
     if (variable_codigo == "CCAA") {
-      natcode <- paste0(natcode, variable_id, "00", "000", "00")
+      cod_ccaa <- variable_id
+      natcode <- paste0(natcode, cod_ccaa, "00", "00", "000")
     # Municipios
     } else {
-      lista_mun <- natcode_df[natcode_df$CMUN == variable_id,]$CMUN
-      natcode <- paste0(natcode, variable_id, "00", variable_id, "00")
+
+      cod_prov <- strsplit(as.character(variable_id), "")[[1]][1:2]
+      cod_prov <- paste(cod_prov, collapse = '')
+
+      cod_mun <- strsplit(as.character(variable_id), "")[[1]][3:5]
+      cod_mun <- paste(cod_mun, collapse = '')
+
+      lista_ccaa <- natcode_df[natcode_df$CPRO == as.numeric(cod_prov) & natcode_df$CMUN == as.numeric(cod_mun),]$CODAUTO
+      cod_ccaa <- unique(lista_ccaa)
+
+      if (length(cod_ccaa) > 1) {
+        cod_ccaa <- cod_ccaa[1]
+      }
+
+      # Adding "0" to fill up blank digits
+      if (nchar(trunc(cod_ccaa)) == 1) {
+        cod_ccaa <- paste0("0", cod_ccaa)
+      }
+
+      natcode <- paste0(natcode, cod_ccaa, cod_prov, cod_prov, cod_mun)
 
     }
   }
@@ -110,7 +169,7 @@ draw_serie <- function(serie, geographical_granularity, nult = 0) {
   serie_data <- get_data_serie(serie, det = 2, nult = nult)
 
   # Get natcode
-  serie_natcode <- get_natcode(serie, variable_data)
+  serie_natcode <- get_natcode(serie, variable_data$Id)
 
   # Represent map and series
   highchart(type = "map") %>%
@@ -181,5 +240,84 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
   }
 
   return(operations)
+
+}
+
+#' @title Get series by granularity
+#' @description This function returns a list of all series of an operation that has a temporal or geographic granularity specified by the user
+#' @param operation (string) operation identification
+#' @param geographical_granularity (string) geographical granularity
+#' @param temporal_granularity (string) temporal granularity
+#' @param verbose (boolean) show more information during the process
+#' @examples
+#' get_series_by_granularity("IPC", geographical_granularity = "PROV")
+#' get_series_by_granularity("IPC", temporal_granularity = "Mensual")
+#' get_series_by_granularity("IPC", geographical_granularity = "PROV", temporal_granularity = "Mensual")
+#' @export
+get_series_by_granularity <- function(operation, geographical_granularity = NULL, temporal_granularity = NULL, verbose = TRUE) {
+
+  # Get series list
+  series <- get_series_operation(operation)
+  series_list <- c()
+
+  for (serie in series$COD) {
+
+    # Get serie metadata
+    serie_metadata <- get_serie(serie, det = 2, tip = "M")
+
+    # Temporal and geographical granularity
+    if ((!is.null(geographical_granularity)) && (!is.null(temporal_granularity))) {
+
+      # Get geographical variable code: PROV, MUN, CCAA
+      code <- serie_metadata$MetaData[serie_metadata$MetaData$Variable$Codigo == geographical_granularity,]$Variable$Codigo
+
+      # Get temporal variable: Mensual, Anual ...
+      periodicity <- serie_metadata$Periodicidad$Nombre
+
+      if (length(code) > 0) {
+        if ((code == geographical_granularity) && (periodicity == temporal_granularity)) {
+          series_list <- c(series_list, serie)
+          if (verbose) {
+            print(paste0("Found (", geographical_granularity, " and ", temporal_granularity, ") in serie: ", serie, " > ", series[series$COD == serie,]$Nombre))
+          }
+        }
+      }
+
+    } else {
+
+      # Geographical granularity
+      if (!is.null(geographical_granularity)) {
+
+        # Get geographical variable code: PROV, MUN, CCAA
+        code <- serie_metadata$MetaData[serie_metadata$MetaData$Variable$Codigo == geographical_granularity,]$Variable$Codigo
+
+        if (length(code) > 0) {
+          if (code == geographical_granularity) {
+            series_list <- c(series_list, serie)
+            if (verbose) {
+              print(paste0("Found (", geographical_granularity, ") in serie: ", serie, " > ", series[series$COD == serie,]$Nombre))
+            }
+          }
+        }
+
+      } else {
+        # Temporal granularity
+        if (!is.null(temporal_granularity)) {
+          # Get temporal variable: Mensual, Anual ...
+          periodicity <- serie_metadata$Periodicidad$Nombre
+          if (periodicity == temporal_granularity) {
+            series_list <- c(series_list, serie)
+            if (verbose) {
+              print(paste0("Found (", temporal_granularity, ") in serie: ", serie, " > ", series[series$COD == serie,]$Nombre))
+            }
+          }
+        }
+      }
+
+    }
+
+  }
+
+  return(series_list)
 
 }

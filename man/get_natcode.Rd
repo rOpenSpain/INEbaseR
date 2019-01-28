@@ -17,6 +17,8 @@ get_natcode(serie = NULL, variable_id = NULL, all = TRUE)
 This function allows get all natcodes or calculate a natcode from a serie and a geographical granularity
 }
 \examples{
-get_natcode(all)
+get_natcode()
 get_natcode("IPC251541", 115)
+get_natcode("DPOP37286", 19)
+get_natcode("IPC251522", 70)
 }

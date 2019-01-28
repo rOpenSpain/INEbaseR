@@ -321,3 +321,55 @@ get_series_by_granularity <- function(operation, geographical_granularity = NULL
   return(series_list)
 
 }
+
+#' @title Get series by classification
+#' @description This function returns a list of all series of an operation that are in the same classification of a specific serie
+#' @param serie (string) serie identification
+#' @param classification (string) serie classification
+#' @examples
+#' get_series_by_classification("IPC251539", classification = "Base 2016")
+#' @export
+get_series_by_classification <- function(serie, classification = NULL) {
+
+  # Get serie metadata
+  serie_metadata <- get_serie(serie, det = 2, tip = "M")
+
+  # Get classification name
+  name_splited <- strsplit(serie_metadata$Nombre, "[.] ")[[1]]
+  name <- NULL
+  for (i in 1:length(name_splited)) {
+    if (i > 1) {
+      name <- paste0(name, name_splited[i], ". ")
+    }
+
+  }
+
+  # Get operation
+  operacion <- serie_metadata$Operacion$Id
+
+  # Variable ID
+  geographical_variables <- c(115, 19, 70)
+  variable_id <- serie_metadata$MetaData$Variable$Id
+  geographical_id <- 0
+  for (variable in variable_id) {
+    if (variable %in% geographical_variables) {
+      geographical_id <- variable
+    }
+  }
+
+  # Get series operation
+  series <- get_series_operation(operacion)
+  series_list <- c()
+  # Get serie
+  for (i in 1:nrow(series)) {
+    if (grepl(pattern = name, x = series$Nombre[i])) {
+      if ((series$MetaData[[i]]$Variable$Id == geographical_id) && (series$Clasificacion$Nombre[i] == classification)) {
+        series_list <- c(series_list, series$COD[i])
+        print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
+      }
+    }
+  }
+
+  return(series_list)
+
+}

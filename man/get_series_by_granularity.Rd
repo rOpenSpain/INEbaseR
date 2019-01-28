@@ -22,4 +22,5 @@ This function returns a list of all series of an operation that has a temporal o
 \examples{
 get_series_by_granularity("IPC", geographical_granularity = "PROV")
 get_series_by_granularity("IPC", temporal_granularity = "Mensual")
+get_series_by_granularity("IPC", geographical_granularity = "PROV", temporal_granularity = "Mensual")
 }

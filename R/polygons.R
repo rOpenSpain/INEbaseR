@@ -73,7 +73,7 @@ get_natcode <- function(serie = NULL, variable_id = NULL, all = TRUE) {
 
   # Provincias
   if (variable_codigo == "PROV") {
-    lista_ccaa <- natcode_df[natcode_df$CPRO == variable_id,]$CODAUTO
+    lista_ccaa <- natcode_df[natcode_df$CPRO == as.numeric(variable_id),]$CODAUTO
     cod_ccaa <- unique(lista_ccaa)
 
     if (length(cod_ccaa) > 1) {
@@ -124,57 +124,88 @@ get_natcode <- function(serie = NULL, variable_id = NULL, all = TRUE) {
 
 #' @title Draw serie
 #' @description This function allows representing series data into a map
-#' @param serie (string) serie identificator
+#' @param series (list) series to represent
 #' @param geographical_granularity (string) can be one of this: \code{comunidades_autonomas}, \code{provincias} or \code{municipios}
 #' @param nult (int) last \code{n} serie data, if \code{nult = 0} this value will be auto-calculated
 #' @examples
 #' draw_serie("IPC251541", "provincias")
 #' @export
-draw_serie <- function(serie, geographical_granularity, nult = 0) {
+draw_serie <- function(series, geographical_granularity, nult = 0) {
 
   # Message
   message("Note: represent all polygons may take much time, please be patient ...")
 
   # Get polygon from cache
   map <- get_rds_content(geographical_granularity)
+  data <- NULL
 
-  # Get serie metadata
-  serie_metadata <- get_serie(serie, det = 2, tip = "M")
-  serie_variables_id <- serie_metadata$MetaData$Variable$Id
-  # Variables (from: get_variables_all())
-  #  - 70 > Comunidades y Ciudades Autónomas > CCAA
-  #  - 115 > Provincias > PROV
-  #  - 19 > Municipios > MUN
-  geographical_variables <- c(115, 19, 70)
+  message("Getting data ...")
+  for (i in 1:length(series)) {
 
-  # Find variable data
-  variable_data <- NULL
-  for (variable_id in serie_variables_id) {
-    if (variable_id %in% geographical_variables) {
-      variables <- get_variables_all()
-      variable_data <- variables[variables$Id == variable_id,]
+    # Get serie metadata
+    serie_metadata <- get_serie(series[i], det = 2, tip = "M")
+    serie_variables_id <- serie_metadata$MetaData$Variable$Id
+    # Variables (from: get_variables_all())
+    #  - 70 > Comunidades y Ciudades Autónomas > CCAA
+    #  - 115 > Provincias > PROV
+    #  - 19 > Municipios > MUN
+    geographical_variables <- c(115, 19, 70)
+
+    # Find variable data
+    variable_data <- NULL
+    for (variable_id in serie_variables_id) {
+      if (variable_id %in% geographical_variables) {
+        variables <- get_variables_all()
+        variable_data <- variables[variables$Id == variable_id,]
+      }
     }
+
+    if (is.null(variable_data)) {
+      stop(paste0("No geographical variables found "))
+    }
+
+    # Calculate last n serie data
+    if (nult == 0) {
+      nult <- get_serie_nult(series[i])
+    }
+
+    # Get serie data
+    #serie_data <- get_data_serie(serie, det = 2, nult = nult)
+    serie_data <- get_data_serie(series[i], det = 2, nult = 1)
+
+    # Get natcode
+    serie_natcode <- get_natcode(series[i], variable_data$Id)
+
+    # Generate dataframe with necesary data
+    data$name <- rbind(data$name, series[i])
+    data$value <- rbind(data$value, serie_data$Data$Valor)
+    data$natcode <- rbind(data$natcode, serie_natcode)
+
   }
 
-  if (is.null(variable_data)) {
-    stop(paste0("No geographical variables found "))
-  }
+  # Conert to data frame
+  data <- data.frame(data, stringsAsFactors = FALSE)
 
-  # Calculate last n serie data
-  if (nult == 0) {
-    nult <- get_serie_nult(serie)
-  }
-
-  # Get serie data
-  serie_data <- get_data_serie(serie, det = 2, nult = nult)
-
-  # Get natcode
-  serie_natcode <- get_natcode(serie, variable_data$Id)
+  View(data)
+  message("Building polygons ...")
 
   # Represent map and series
   highchart(type = "map") %>%
     hc_chart(backgroundColor = "#161C20", zoomType = "xy") %>%
-    hc_add_series(mapData = map, showInLegend = FALSE, nullColor = "#424242", borderWidth = 0)
+    hc_mapNavigation(enabled = TRUE) %>%
+    hc_title(text = "Instituto Nacional de Estadística (INE)") %>%
+    hc_add_series(
+      mapData = map,
+      showInLegend = FALSE,
+      nullColor = "#424242",
+      borderWidth = 0
+    ) %>%
+    hc_add_series(
+      data = data,
+      keys = c('name', 'value', 'natcode'),
+      name = 'name',
+      joinBy = 'natcode'
+    )
 
 }
 

@@ -4,16 +4,20 @@
 \alias{get_series_by_classification}
 \title{Get series by classification}
 \usage{
-get_series_by_classification(serie, classification = NULL)
+get_series_by_classification(serie, classification = NULL,
+  verbose = TRUE)
 }
 \arguments{
 \item{serie}{(string) serie identification}
 
-\item{classification}{(string) serie classification}
+\item{classification}{(string) serie classification, if \code{classification = NULL} this value will be auto-detected}
+
+\item{verbose}{(boolean) to show more information about this process, \code{verbose = TRUE} by default}
 }
 \description{
 This function returns a list of all series of an operation that are in the same classification of a specific serie
 }
 \examples{
-get_series_by_classification("IPC251539", classification = "Base 2016")
+get_series_by_classification("IPC251539", classification = "Base 1992")
+get_series_by_classification("IPC251539")
 }

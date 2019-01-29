@@ -4,14 +4,17 @@
 \alias{draw_serie}
 \title{Draw serie}
 \usage{
-draw_serie(serie, geographical_granularity, nult = 0)
+draw_serie(serie, geographical_granularity, nult = 0,
+  classification = NULL)
 }
 \arguments{
-\item{serie}{(string) serie identificator}
-
 \item{geographical_granularity}{(string) can be one of this: \code{comunidades_autonomas}, \code{provincias} or \code{municipios}}
 
 \item{nult}{(int) last \code{n} serie data, if \code{nult = 0} this value will be auto-calculated}
+
+\item{classification}{(string) serie classification, if \code{classification = NULL} this value will be auto-detected}
+
+\item{series}{(list) series to represent}
 }
 \description{
 This function allows representing series data into a map

@@ -127,10 +127,11 @@ get_natcode <- function(serie = NULL, variable_id = NULL, all = TRUE) {
 #' @param series (list) series to represent
 #' @param geographical_granularity (string) can be one of this: \code{comunidades_autonomas}, \code{provincias} or \code{municipios}
 #' @param nult (int) last \code{n} serie data, if \code{nult = 0} this value will be auto-calculated
+#' @param classification (string) serie classification, if \code{classification = NULL} this value will be auto-detected
 #' @examples
 #' draw_serie("IPC251541", "provincias")
 #' @export
-draw_serie <- function(series, geographical_granularity, nult = 0) {
+draw_serie <- function(serie, geographical_granularity, nult = 0, classification = NULL) {
 
   # Message
   message("Note: represent all polygons may take much time, please be patient ...")
@@ -138,6 +139,10 @@ draw_serie <- function(series, geographical_granularity, nult = 0) {
   # Get polygon from cache
   map <- get_rds_content(geographical_granularity)
   data <- NULL
+  variable_data <- NULL
+
+  # Get all related series from a serie
+  series <- get_series_by_classification(serie, classification = classification, verbose = FALSE)
 
   message("Getting data ...")
   for (i in 1:length(series)) {
@@ -152,7 +157,6 @@ draw_serie <- function(series, geographical_granularity, nult = 0) {
     geographical_variables <- c(115, 19, 70)
 
     # Find variable data
-    variable_data <- NULL
     for (variable_id in serie_variables_id) {
       if (variable_id %in% geographical_variables) {
         variables <- get_variables_all()
@@ -186,25 +190,24 @@ draw_serie <- function(series, geographical_granularity, nult = 0) {
   # Conert to data frame
   data <- data.frame(data, stringsAsFactors = FALSE)
 
-  View(data)
   message("Building polygons ...")
 
   # Represent map and series
   highchart(type = "map") %>%
-    hc_chart(backgroundColor = "#161C20", zoomType = "xy") %>%
+    hc_chart(backgroundColor = "#161C20") %>%
     hc_mapNavigation(enabled = TRUE) %>%
+    hc_colorAxis(min = min(data$value), max = max(data$value), type = 'logarithmic') %>%
     hc_title(text = "Instituto Nacional de Estadística (INE)") %>%
     hc_add_series(
       mapData = map,
+      data = data,
       showInLegend = FALSE,
       nullColor = "#424242",
-      borderWidth = 0
-    ) %>%
-    hc_add_series(
-      data = data,
-      keys = c('name', 'value', 'natcode'),
-      name = 'name',
-      joinBy = 'natcode'
+      borderWidth = 0,
+      keys = c("name", "value", "natcode"),
+      name = "name",
+      joinBy = "natcode",
+      dataLabels = list(enabled = TRUE, format = '{point.name}')
     )
 
 }
@@ -356,11 +359,13 @@ get_series_by_granularity <- function(operation, geographical_granularity = NULL
 #' @title Get series by classification
 #' @description This function returns a list of all series of an operation that are in the same classification of a specific serie
 #' @param serie (string) serie identification
-#' @param classification (string) serie classification
+#' @param classification (string) serie classification, if \code{classification = NULL} this value will be auto-detected
+#' @param verbose (boolean) to show more information about this process, \code{verbose = TRUE} by default
 #' @examples
-#' get_series_by_classification("IPC251539", classification = "Base 2016")
+#' get_series_by_classification("IPC251539", classification = "Base 1992")
+#' get_series_by_classification("IPC251539")
 #' @export
-get_series_by_classification <- function(serie, classification = NULL) {
+get_series_by_classification <- function(serie, classification = NULL, verbose = TRUE) {
 
   # Get serie metadata
   serie_metadata <- get_serie(serie, det = 2, tip = "M")
@@ -390,13 +395,30 @@ get_series_by_classification <- function(serie, classification = NULL) {
 
   # Get series operation
   series <- get_series_operation(operacion)
+
+  # Autoselect classification if is NULL
+  if (is.null(classification)) {
+    # If there is more than one classification for this serie
+    if (nrow(series[series$Nombre == serie_metadata$Nombre,]) > 1) {
+      list_classification <- series[series$Nombre == serie_metadata$Nombre,]
+      # Get the last classification
+      classification <- list_classification[nrow(list_classification),]$Clasificacion$Nombre
+      message(paste0("Note: we've found more of one classification in serie ", serie, ", but we've selected the last classification (", classification, ") for you"))
+    } else {
+      # If there is only one classification for this serie
+      classification <- series[series$Nombre == serie_metadata$Nombre,]
+    }
+  }
+
   series_list <- c()
   # Get serie
   for (i in 1:nrow(series)) {
     if (grepl(pattern = name, x = series$Nombre[i])) {
       if ((series$MetaData[[i]]$Variable$Id == geographical_id) && (series$Clasificacion$Nombre[i] == classification)) {
         series_list <- c(series_list, series$COD[i])
-        print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
+        if (verbose) {
+          print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
+        }
       }
     }
   }

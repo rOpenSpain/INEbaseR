@@ -20,4 +20,5 @@ This function returns a list of all operations that have a temporal or geographi
 \examples{
 get_operations_by_granularity(geographical_granularity = "PROV")
 get_operations_by_granularity(temporal_granularity = "Anual")
+get_operations_by_granularity(geographical_granularity = "PROV", temporal_granularity = "Mensual")
 }

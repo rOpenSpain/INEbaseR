@@ -4,12 +4,10 @@
 \alias{get_natcode}
 \title{Get natcode}
 \usage{
-get_natcode(serie = NULL, variable_id = NULL, all = TRUE)
+get_natcode(serie = NULL, all = TRUE)
 }
 \arguments{
 \item{serie}{(string) serie identificator}
-
-\item{variable_id}{(int) variable identificator}
 
 \item{all}{(bool) if \code{all = TRUE} you will get all natcodes}
 }
@@ -18,7 +16,7 @@ This function allows get all natcodes or calculate a natcode from a serie and a 
 }
 \examples{
 get_natcode()
-get_natcode("IPC251541", 115)
-get_natcode("DPOP37286", 19)
-get_natcode("IPC251522", 70)
+get_natcode("IPC251522")
+get_natcode("IPC251541")
+get_natcode("DPOP37286")
 }

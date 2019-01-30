@@ -231,12 +231,9 @@ draw_serie <- function(serie, nult = 0, classification = NULL) {
 #' @examples
 #' get_operations_by_granularity(geographical_granularity = "PROV")
 #' get_operations_by_granularity(temporal_granularity = "Anual")
+#' get_operations_by_granularity(geographical_granularity = "PROV", temporal_granularity = "Mensual")
 #' @export
 get_operations_by_granularity <- function(geographical_granularity = NULL, temporal_granularity = NULL, verbose = TRUE) {
-
-  if ((!is.null(geographical_granularity)) && (!is.null(temporal_granularity))) {
-    stop("You only can specify one of these two parameters (geographical_granularity or temporal_granularity), but not both at the same time.")
-  }
 
   # Check geographical granularity
   if (!is.null(geographical_granularity)) {
@@ -255,28 +252,47 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
   operations <- NULL
   all_operations <- get_operations_all()
   for (operation in all_operations$Codigo) {
+
     # Operation "ETR" (334): Error in open.connection(con, "rb") : HTTP error 500.
     if (operation != "ETR") {
 
-      if (is.null(geographical_granularity)) {
-        # Temporal granularity
+      # Geographical and temporal granularity
+      if ((!is.null(geographical_granularity)) && (!is.null(temporal_granularity))) {
+
         series <- get_series_operation(operation)
-        # Check if column "Nombre" exists
+        variables <- get_variables_operation(operation)
+
         if ("Nombre" %in% names(series$Periodicidad)) {
-          if (temporal_granularity %in% series$Periodicidad$Nombre) {
+          if ((temporal_granularity %in% series$Periodicidad$Nombre) && (geographical_granularity %in% variables$Codigo)) {
             operations <- c(operations, operation)
             if (verbose) {
-              print(paste0("Found (", temporal_granularity, ") in operation: ", operation))
+              print(paste0("Found (", geographical_granularity, " and ", temporal_granularity, ") in operation: ", operation))
             }
           }
         }
+
       } else {
-        # Geographical granularity
-        variables <- get_variables_operation(operation)
-        if (geographical_granularity %in% variables$Codigo) {
-          operations <- c(operations, operation)
-          if (verbose) {
-            print(paste0("Found (", geographical_granularity, ") in operation: ", operation))
+
+        # Temporal granularity
+        if (is.null(geographical_granularity)) {
+          series <- get_series_operation(operation)
+          # Check if column "Nombre" exists
+          if ("Nombre" %in% names(series$Periodicidad)) {
+            if (temporal_granularity %in% series$Periodicidad$Nombre) {
+              operations <- c(operations, operation)
+              if (verbose) {
+                print(paste0("Found (", temporal_granularity, ") in operation: ", operation))
+              }
+            }
+          }
+        } else {
+          # Geographical granularity
+          variables <- get_variables_operation(operation)
+          if (geographical_granularity %in% variables$Codigo) {
+            operations <- c(operations, operation)
+            if (verbose) {
+              print(paste0("Found (", geographical_granularity, ") in operation: ", operation))
+            }
           }
         }
       }

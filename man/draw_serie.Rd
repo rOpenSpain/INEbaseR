@@ -4,12 +4,14 @@
 \alias{draw_serie}
 \title{Draw serie}
 \usage{
-draw_serie(serie, nult = 0, classification = NULL)
+draw_serie(serie, nult = 0, classification = NULL, verbose = FALSE)
 }
 \arguments{
 \item{nult}{(int) last \code{n} serie data, if \code{nult = 0} this value will be auto-calculated}
 
 \item{classification}{(string) serie classification, if \code{classification = NULL} this value will be auto-detected}
+
+\item{verbose}{(boolean) show more information during the process}
 
 \item{series}{(list) series to represent}
 }

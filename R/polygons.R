@@ -136,10 +136,11 @@ get_natcode <- function(serie = NULL, all = TRUE) {
 #' @param series (list) series to represent
 #' @param nult (int) last \code{n} serie data, if \code{nult = 0} this value will be auto-calculated
 #' @param classification (string) serie classification, if \code{classification = NULL} this value will be auto-detected
+#' @param verbose (boolean) show more information during the process
 #' @examples
 #' draw_serie("IPC251541")
 #' @export
-draw_serie <- function(serie, nult = 0, classification = NULL) {
+draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) {
 
   # Variables
   geographical_granularity <- NULL
@@ -149,7 +150,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL) {
   message("Note: represent all polygons may take much time, please be patient ...")
 
   # Get all related series from a serie
-  series <- get_series_by_classification(serie, classification = classification, verbose = FALSE)
+  series <- get_series_by_classification(serie, classification = classification, verbose = verbose)
 
   # DATA
   message("Getting data ...")
@@ -391,8 +392,10 @@ get_series_by_granularity <- function(operation, geographical_granularity = NULL
 #' @examples
 #' get_series_by_classification("IPC251539", classification = "Base 1992")
 #' get_series_by_classification("IPC251539")
+#' get_series_by_classification("DPOP37286")
 #' @export
 get_series_by_classification <- function(serie, classification = NULL, verbose = TRUE) {
+
 
   # Get serie metadata
   serie_metadata <- get_serie(serie, det = 2, tip = "M")
@@ -406,6 +409,8 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
     }
 
   }
+
+  message(paste0("Getting series for '", name, "' ..."))
 
   # Get operation
   operacion <- serie_metadata$Operacion$Id
@@ -440,13 +445,43 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
   series_list <- c()
   # Get serie
   for (i in 1:nrow(series)) {
+
     if (grepl(pattern = name, x = series$Nombre[i])) {
-      if ((series$MetaData[[i]]$Variable$Id == geographical_id) && (series$Clasificacion$Nombre[i] == classification)) {
-        series_list <- c(series_list, series$COD[i])
-        if (verbose) {
-          print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
+
+      serie_variables_id <- serie_metadata$MetaData$Variable$Id
+
+      # Variables (from: get_variables_all())
+      #  - 70 > Comunidades y Ciudades Autónomas > CCAA
+      #  - 115 > Provincias > PROV
+      #  - 19 > Municipios > MUN
+      geographical_variables <- c(115, 19, 70)
+
+      # Find variable data
+      for (variable_id in serie_variables_id) {
+        if (variable_id %in% geographical_variables) {
+          variables <- get_variables_all()
+          variable_data <- variables[variables$Id == variable_id,]
         }
       }
+
+      variable_id <- variable_data$Id
+
+      if (is.null(series$Clasificacion$Nombre[i])) {
+        if (variable_id == geographical_id) {
+          series_list <- c(series_list, series$COD[i])
+          if (verbose) {
+            print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
+          }
+        }
+      } else {
+        if ((variable_id == geographical_id) && (series$Clasificacion$Nombre[i] == classification)) {
+          series_list <- c(series_list, series$COD[i])
+          if (verbose) {
+            print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
+          }
+        }
+      }
+
     }
   }
 

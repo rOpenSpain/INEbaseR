@@ -31,13 +31,14 @@ get_geographical_variable <- function(serie) {
 #' @description This function allows get all natcodes or calculate a natcode from a serie and a geographical granularity
 #' @param serie (string) serie identificator
 #' @param all (bool) if \code{all = TRUE} you will get all natcodes
+#' @param verbose (boolean) show more information during the process
 #' @examples
 #' get_natcode()
 #' get_natcode("IPC251522")
 #' get_natcode("IPC251541")
 #' get_natcode("DPOP37286")
 #' @export
-get_natcode <- function(serie = NULL, all = TRUE) {
+get_natcode <- function(serie = NULL, all = TRUE, verbose = TRUE) {
 
   # Natcode format:
   # (2 digits): 34 (Spain)
@@ -74,10 +75,21 @@ get_natcode <- function(serie = NULL, all = TRUE) {
 
   if (length(variable_codigo) == 0) {
     variables <- get_variables_all()
-    stop(paste0("ERROR: maybe serie ", serie, ", has not this geograhpical granularity (", variables[variables$Id == variable_id,]$Nombre, ")"))
+    if (verbose) {
+      message(paste0("WARNING: maybe serie ", serie, ", has not this geograhpical granularity (", variables[variables$Id == variable_id,]$Nombre, ")"))
+    }
+
+    natcode <- paste0(natcode, "00", "00", "00", "000")
+    return(natcode)
+
   }
 
   variable_id <- serie_metadata$MetaData[serie_metadata$MetaData$Variable$Id == variable_id,]$Codigo
+
+  # Some variables has no code, for example: serie DPOP36914
+  if ((variable_id == "") || (length(variable_id) == 0)){
+    variable_id <- "00000"
+  }
 
   # Provincias
   if (variable_codigo == "PROV") {
@@ -117,9 +129,16 @@ get_natcode <- function(serie = NULL, all = TRUE) {
       }
 
       # Adding "0" to fill up blank digits
-      if (nchar(trunc(cod_ccaa)) == 1) {
-        cod_ccaa <- paste0("0", cod_ccaa)
+      # If there is not code for this MUN
+      if (length(cod_ccaa) == 0) {
+        natcode <- paste0(natcode, "00", "00", "00", "000")
+        return(natcode)
+      } else {
+        if (nchar(trunc(cod_ccaa)) == 1) {
+          cod_ccaa <- paste0("0", cod_ccaa)
+        }
       }
+
 
       natcode <- paste0(natcode, cod_ccaa, cod_prov, cod_prov, cod_mun)
 
@@ -139,11 +158,13 @@ get_natcode <- function(serie = NULL, all = TRUE) {
 #' @param verbose (boolean) show more information during the process
 #' @examples
 #' draw_serie("IPC251541")
+#' draw_serie("IPC251521")
 #' @export
 draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) {
 
   # Variables
   geographical_granularity <- NULL
+  serie_name <- NULL
   data <- NULL
 
   # Message
@@ -168,7 +189,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) 
     serie_data <- get_data_serie(series[i], det = 2, nult = 1)
 
     # Get natcode
-    serie_natcode <- get_natcode(series[i])
+    serie_natcode <- get_natcode(series[i], verbose = verbose)
 
     # Generate dataframe with necesary data
     data$name <- rbind(data$name, series[i])
@@ -200,6 +221,17 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) 
     }
   }
 
+
+  # Get serie name
+  name_splited <- strsplit(serie_metadata$Nombre, "[.] ")[[1]]
+  for (i in 1:length(name_splited)) {
+    if (i > 1) {
+      serie_name <- paste0(serie_name, name_splited[i], ". ")
+    }
+  }
+
+  operation_name <- serie_metadata$Operacion$Nombre
+
   # Get polygon from cache
   map <- get_rds_content(geographical_granularity)
 
@@ -208,7 +240,8 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) 
     hc_chart(backgroundColor = "#161C20", zoomType = "xy") %>%
     hc_mapNavigation(enabled = TRUE) %>%
     hc_colorAxis(min = min(data$value), max = max(data$value), type = 'logarithmic') %>%
-    hc_title(text = "Instituto Nacional de Estadística (INE)") %>%
+    hc_title(text = operation_name) %>%
+    hc_subtitle(text = serie_name) %>%
     hc_add_series(
       mapData = map,
       data = data,
@@ -219,7 +252,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) 
       name = serie_metadata$MetaData[serie_metadata$MetaData$Variable$Id == variable_id,]$Variable$Nombre,
       joinBy = "natcode",
       dataLabels = list(enabled = TRUE, format = '{point.properties.nameunit}'),
-      tooltip = list(pointFormat = "{point.properties.nameunit}: <b>{point.value}</b>")
+      tooltip = list(pointFormat = paste0("{point.properties.nameunit}: <b>{point.value}</b> (", serie_metadata$Unidad$Nombre, ")"))
     )
 
 }
@@ -443,12 +476,14 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
   }
 
   series_list <- c()
+  variables <- get_variables_all()
+
   # Get serie
   for (i in 1:nrow(series)) {
 
     if (grepl(pattern = name, x = series$Nombre[i])) {
 
-      serie_variables_id <- serie_metadata$MetaData$Variable$Id
+      serie_variables_id <- series$MetaData[[i]]$Variable$Id
 
       # Variables (from: get_variables_all())
       #  - 70 > Comunidades y Ciudades Autónomas > CCAA
@@ -459,7 +494,6 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
       # Find variable data
       for (variable_id in serie_variables_id) {
         if (variable_id %in% geographical_variables) {
-          variables <- get_variables_all()
           variable_data <- variables[variables$Id == variable_id,]
         }
       }

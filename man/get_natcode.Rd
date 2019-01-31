@@ -4,12 +4,14 @@
 \alias{get_natcode}
 \title{Get natcode}
 \usage{
-get_natcode(serie = NULL, all = TRUE)
+get_natcode(serie = NULL, all = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{serie}{(string) serie identificator}
 
 \item{all}{(bool) if \code{all = TRUE} you will get all natcodes}
+
+\item{verbose}{(boolean) show more information during the process}
 }
 \description{
 This function allows get all natcodes or calculate a natcode from a serie and a geographical granularity

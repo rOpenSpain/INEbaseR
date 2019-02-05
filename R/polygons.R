@@ -162,7 +162,7 @@ get_natcode <- function(serie = NULL, all = TRUE, verbose = TRUE) {
 
 #' @title Draw serie
 #' @description This function allows representing series data into a map
-#' @param series (list) series to represent
+#' @param serie (string) serie id
 #' @param nult (int) last \code{n} serie data, if \code{nult = 0} this value will be auto-calculated
 #' @param classification (string) serie classification, if \code{classification = NULL} this value will be auto-detected
 #' @param verbose (boolean) show more information during the process

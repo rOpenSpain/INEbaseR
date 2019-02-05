@@ -21,4 +21,5 @@ This function returns a list of all series of an operation that are in the same 
 get_series_by_classification("IPC251539", classification = "Base 1992")
 get_series_by_classification("IPC251539")
 get_series_by_classification("DPOP37286")
+get_series_by_classification("UA42121")
 }

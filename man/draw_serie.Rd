@@ -21,4 +21,5 @@ This function allows representing series data into a map
 \examples{
 draw_serie("IPC251541")
 draw_serie("IPC251521")
+draw_serie("UA42121")
 }

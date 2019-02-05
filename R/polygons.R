@@ -3,6 +3,16 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
+# Example: parse_param("Población residente (Personas). ")
+parse_param <- function(param) {
+
+  param <- trimws(param) # Remove white spaces
+  param <- gsub("[(]", "[(]", param) # Replace ( for [(]
+  param <- gsub("[)]", "[)]", param) # Replace ) for [)]
+
+  return(param)
+}
+
 #' @title Get geographical variable
 #' @description This function returns the geographical variable of a serie
 #' @param serie (string) serie id
@@ -169,6 +179,7 @@ get_natcode <- function(serie = NULL, all = TRUE, verbose = TRUE) {
 #' @examples
 #' draw_serie("IPC251541")
 #' draw_serie("IPC251521")
+#' draw_serie("UA42121")
 #' @export
 draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) {
 
@@ -436,6 +447,7 @@ get_series_by_granularity <- function(operation, geographical_granularity = NULL
 #' get_series_by_classification("IPC251539", classification = "Base 1992")
 #' get_series_by_classification("IPC251539")
 #' get_series_by_classification("DPOP37286")
+#' get_series_by_classification("UA42121")
 #' @export
 get_series_by_classification <- function(serie, classification = NULL, verbose = TRUE) {
 
@@ -454,6 +466,9 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
   }
 
   message(paste0("Getting series for '", name, "' ..."))
+
+  # Parse name
+  name <- parse_param(name)
 
   # Get operation
   operacion <- serie_metadata$Operacion$Id

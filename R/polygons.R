@@ -3,11 +3,21 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-# Example: get_geographical_variable("IPC251522")
+#' @title Get geographical variable
+#' @description This function returns the geographical variable of a serie
+#' @param serie (string) serie id
+#' @examples
+#' get_geographical_variable("IPC251522")
+#' @export
 get_geographical_variable <- function(serie) {
 
+  # Variables
+  variable_data <- NULL
+
+  # Get serie metadata
   serie_metadata <- get_serie(serie, det = 2, tip = "M")
 
+  # Get serie variables (id)
   serie_variables_id <- serie_metadata$MetaData$Variable$Id
 
   # Variables (from: get_variables_all())

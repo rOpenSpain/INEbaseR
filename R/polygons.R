@@ -483,6 +483,11 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
     }
   }
 
+  # Get geographical varaibles
+  geographical_name <- serie_metadata$MetaData$Variable[serie_metadata$MetaData$Variable$Id == geographical_id,]$Nombre
+  geographical_code <- serie_metadata$MetaData$Variable[serie_metadata$MetaData$Variable$Id == geographical_id,]$Codigo
+  message(paste0("Note: serie ", serie," has '", geographical_name, " (", geographical_code, ")' as geographical granularity."))
+
   # Get series operation
   series <- get_series_operation(operacion)
 

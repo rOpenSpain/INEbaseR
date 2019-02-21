@@ -23,7 +23,7 @@ build_cache_directory <- function() {
 }
 
 # Example: check_cache("SERIEOPERATION", 4, get_file_name = TRUE)
-check_cache <- function(data_type, code, get_file_name = FALSE, expiration_date = 30){
+check_cache <- function(data_type, code, get_file_name = FALSE, expiration_date = 120){
 
   for (i in 0:expiration_date) {
 
@@ -48,8 +48,8 @@ check_cache <- function(data_type, code, get_file_name = FALSE, expiration_date 
 }
 
 # Clean out of date cache files (see expiration_date parameter)
-# Example: clean_outofdate_cache("SERIEOPERATION", 4, expiration_date = 30)
-clean_outofdate_cache <- function(data_type, code, expiration_date = 30){
+# Example: clean_outofdate_cache("SERIEOPERATION", 4, expiration_date = 120)
+clean_outofdate_cache <- function(data_type, code, expiration_date = 120){
 
   directory_root <- get_cache_directory_path()
 
@@ -144,7 +144,7 @@ get_cache <- function(data_type, code){
 
     stop(paste0(
       "\nNo cache data found to: ", data_type, " ", code, ". Use parameter cache = FALSE",
-      "\n\nNOTE: It is possible that this data were in cache but has been expired. By default expiration date is 30 days."
+      "\n\nNOTE: It is possible that this data were in cache but has been expired. By default expiration date is 120 days."
     ))
 
   }

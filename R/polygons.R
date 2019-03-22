@@ -258,7 +258,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) 
 
   # Represent map and series
   highchart(type = "map") %>%
-    hc_chart(backgroundColor = "#161C20", zoomType = "xy") %>%
+    hc_chart(backgroundColor = "#ffffff", zoomType = "xy") %>%
     hc_mapNavigation(enabled = TRUE) %>%
     hc_colorAxis(min = min(data$value), max = max(data$value), type = 'logarithmic') %>%
     hc_title(text = operation_name) %>%
@@ -267,7 +267,6 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) 
       mapData = map,
       data = data,
       showInLegend = FALSE,
-      nullColor = "#424242",
       borderWidth = 0,
       keys = c("name", "value", "natcode"),
       name = serie_metadata$MetaData[serie_metadata$MetaData$Variable$Id == variable_id,]$Variable$Nombre,

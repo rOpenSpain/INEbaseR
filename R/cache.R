@@ -5,7 +5,7 @@
 
 get_cache_file_name <- function(data_type, code, sys_date = Sys.Date()) {
   directory_root <- get_cache_directory_path()
-  file_name <- paste0(directory_root, "/", data_type, "-", code, "_", sys_date, ".RData")
+  file_name <- paste0(directory_root, "/", data_type, "-", code, "_", sys_date, ".rds")
   return(file_name)
 }
 
@@ -273,39 +273,32 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
 
 # ------------------ Polygons (GeoJSON) ------------------
 
-# Example: save_polygon_geojson_to_rds("provincias")
-# Example: save_polygon_geojson_to_rds("comunidades_autonomas")
-# Example: save_polygon_geojson_to_rds("municipios")
-save_polygon_geojson_to_rds <- function(geographical_granularity) {
+# Example: save_to_rds("provincias", type = "POLYGONS")
+# Example: save_to_rds("comunidades_autonomas")
+# Example: save_to_rds("municipios")
+save_to_rds <- function(data, object, type = "SERIEOPERATION") {
 
   # File name to save (RDS)
-  file_name_rds <- get_rds_file_name(geographical_granularity)
-  # File name to read (GeoJSON)
-  file_name_geojson <- get_rds_file_name(geographical_granularity)
-
-  # Get GeoJSON content from file_name (GeoJSON)
-  content <- fromJSON(file_name_geojson, simplifyVector = FALSE)
+  file_name_rds <- get_rds_file_name(object, type = type)
 
   # Save an object to a file
-  saveRDS(content, file = file_name_rds)
+  saveRDS(data, file = file_name_rds)
 
   # Output messege
-  message(paste0("Notification: GeoJSON '",  geographical_granularity, "' compressed successfully to RDS format."))
+  message(paste0("Notification: ",  object, "' compressed successfully to RDS format."))
 
 }
 
-# Example: get_rds_file_name("provincias")
-# Example: get_rds_file_name("comunidades_autonomas")
-# Example: get_rds_file_name("municipios")
-# Example: get_rds_file_name("natcodes", type = "/DATATABLE-")
-get_rds_file_name <- function(object, extension = ".rds", type = "/POLYGONS-") {
+# Example: get_rds_file_name("provincias", type = "POLYGONS")
+# Example: get_rds_file_name("comunidades_autonomas", type = "POLYGONS")
+# Example: get_rds_file_name("municipios", type = "POLYGONS")
+# Example: get_rds_file_name("natcodes", type = "DATATABLE")
+# Example: get_rds_file_name(25, type = "SERIESOPERATION")
+get_rds_file_name <- function(object, extension = ".rds", type = "SERIESOPERATION") {
 
   directory_root <- get_cache_directory_path(path = "data")
+  type <- paste0("/", type, "-")
   file_name <- paste0(directory_root, type, object, extension)
-
-  if (!file_test("-f", file_name)) {
-    stop(paste0("File not found: ", file_name))
-  }
 
   return(file_name)
 
@@ -317,15 +310,17 @@ get_rds_file_name <- function(object, extension = ".rds", type = "/POLYGONS-") {
 #' @param object (string) an object of the "type" option
 #' @param type (string) type of content do you want to read, \code{type = "/POLYGONS-"} by default
 #' @examples
-#' get_rds_content("provincias")
-#' get_rds_content("comunidades_autonomas")
-#' get_rds_content("municipios")
-#' get_rds_content("natcodes", type = "/DATATABLE-")
+#' get_cache_rds("provincias", type = "POLYGONS")
+#' get_cache_rds("comunidades_autonomas", type = "POLYGONS")
+#' get_cache_rds("municipios", type = "POLYGONS")
+#' get_cache_rds("natcodes", type = "DATATABLE")
+#' get_cache_rds(25, type = "SERIEOPERATION")
 #' @export
-get_rds_content <- function(object, type = "/POLYGONS-") {
+get_cache_rds <- function(object, type = "SERIEOPERATION") {
 
   # File name to load (RDS)
   file_name_rds <- get_rds_file_name(object, type = type)
+  print(file_name_rds)
 
   # Read RDS
   content <- readRDS(file = file_name_rds)

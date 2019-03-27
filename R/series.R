@@ -85,7 +85,8 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
 
   # Get data from cache
   if (cache) {
-    data <- get_cache("SERIEOPERATION", code)
+    data <- get_cache_rds(code, type = "SERIEOPERATION")
+    #data <- get_cache("SERIEOPERATION", code)
   }
 
   # Get data from API
@@ -124,7 +125,6 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
           next
           # print(paste0("No content found in page ", page))
         } else {
-
           data_content <- NULL
           for (i in 1:nrow(content)) {
             # Id
@@ -143,10 +143,16 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
             # Periodicidad (nomrbe) y Metadata
             if ((tip == "M") && (det == 2)) {
               data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[i])
-              data_content$Metadata <- c(data_content, content$Metadata[i])
+              # Revisar Metadata
+              # data_content$Metadata <- c(data_content, content$Metadata[i])
+              metadata <- content$Metadata[[i]]
+              data_content$Metadata <- rbind(data_content$Metadata, metadata)
             }
 
           }
+
+          View(data_content$Metadata)
+          stop()
         }
 
         # Convert to data frame
@@ -191,7 +197,7 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
       data <- fromJSON(url)
     }
 
-    build_cache(data, "SERIEOPERATION", code)
+    save_to_rds(data, code, type = "SERIEOPERATION")
 
   }
 

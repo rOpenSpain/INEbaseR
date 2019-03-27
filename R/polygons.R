@@ -74,7 +74,7 @@ get_natcode <- function(serie = NULL, all = TRUE, verbose = TRUE) {
   natcode <- "34" # Spain prefix: 34
 
   # Get natcode table from cache
-  natcode_list <- get_rds_content("natcodes", type = "/DATATABLE-")
+  natcode_list <- get_cache_rds("natcodes", type = "DATATABLE")
   natcode_df <- data.frame(natcode_list)
 
   # Get all natcode
@@ -254,7 +254,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) 
   operation_name <- serie_metadata$Operacion$Nombre
 
   # Get polygon from cache
-  map <- get_rds_content(geographical_granularity)
+  map <- get_cache_rds(geographical_granularity)
 
   # Represent map and series
   highchart(type = "map") %>%

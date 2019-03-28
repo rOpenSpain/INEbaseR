@@ -127,6 +127,7 @@ clean_cache <- function(data_type = NA, code = NA, sys_date = Sys.Date(), all = 
 
 }
 
+# Example: get_cache("SERIEOPERATION", 4)
 get_cache <- function(data_type, code){
 
   # Clean out of date cache files
@@ -314,7 +315,7 @@ get_rds_file_name <- function(object, extension = ".rds", type = "SERIESOPERATIO
 #' get_cache_rds("comunidades_autonomas", type = "POLYGONS")
 #' get_cache_rds("municipios", type = "POLYGONS")
 #' get_cache_rds("natcodes", type = "DATATABLE")
-#' get_cache_rds(25, type = "SERIEOPERATION")
+#' get_cache_rds(4, type = "SERIEOPERATION")
 #' @export
 get_cache_rds <- function(object, type = "SERIEOPERATION") {
 

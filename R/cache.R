@@ -271,7 +271,7 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
 
 }
 
-# ------------------ Polygons (GeoJSON) ------------------
+# ------------------ RDS Cache ------------------
 
 # Example: save_to_rds("provincias", type = "POLYGONS")
 # Example: save_to_rds("comunidades_autonomas")
@@ -320,12 +320,28 @@ get_cache_rds <- function(object, type = "SERIEOPERATION") {
 
   # File name to load (RDS)
   file_name_rds <- get_rds_file_name(object, type = type)
-  print(file_name_rds)
 
   # Read RDS
   content <- readRDS(file = file_name_rds)
 
   return(content)
+
+}
+
+# Example: get_last_serie(4)
+get_last_serie <- function(operation) {
+
+  # Get all series operation from cache
+  series <- get_cache_rds(operation, type = "SERIEOPERATION")
+
+  # Get last serie metadata
+  last_serie_row <- head(series, 1)
+
+  # Get last serie COD
+  last_cod <- last_serie_row$COD
+
+  # Return
+  return(last_cod)
 
 }
 

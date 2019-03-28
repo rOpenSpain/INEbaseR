@@ -143,16 +143,11 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
             # Periodicidad (nomrbe) y Metadata
             if ((tip == "M") && (det == 2)) {
               data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[i])
-              # Revisar Metadata
-              # data_content$Metadata <- c(data_content, content$Metadata[i])
-              metadata <- content$Metadata[[i]]
-              data_content$Metadata <- rbind(data_content$Metadata, metadata)
+              data_content$Metadata <- rbind(data_content$Metadata, content$MetaData[i])
             }
 
           }
 
-          View(data_content$Metadata)
-          stop()
         }
 
         # Convert to data frame

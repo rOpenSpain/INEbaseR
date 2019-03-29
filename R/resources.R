@@ -6,6 +6,7 @@
 get_content <- function(url, loop = 1, max_iterations = 10, seconds = 60) {
 
   print(url)
+  content <- NULL
   # Get URL content and catch errors using tryCatch
   result <- tryCatch({
     content <- fromJSON(url)
@@ -18,7 +19,7 @@ get_content <- function(url, loop = 1, max_iterations = 10, seconds = 60) {
     if (loop == max_iterations) {
       return(NULL)
     } else {
-      get_content(url, loop + 1, max_iterations = max_iterations, seconds = seconds)
+      get_content(url, loop + 1, max_iterations, seconds)
     }
   }) # END tryCatch
 

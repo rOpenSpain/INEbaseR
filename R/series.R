@@ -3,6 +3,9 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
+# Add resources
+source("R/resources.R")
+
 #' @title Get serie
 #' @description This function returns a data frame with a serie from an id or code
 #' @param code serie identification
@@ -117,9 +120,10 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
           url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
         }
 
-        print(url)
+        #print(url)
+        # Get content
+        content <- get_content(url)
 
-        content <- fromJSON(url)
         if (length(content) == 0) {
           empty_content <- TRUE
           next

@@ -122,7 +122,7 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
 
         #print(url)
         # Get content
-        content <- get_content(url)
+        content <- get_content(url, max_iterations = 5, seconds = 60)
 
         if (length(content) == 0) {
           empty_content <- TRUE

@@ -12,7 +12,7 @@ get_cache_file_name <- function(data_type, code, sys_date = Sys.Date()) {
   return(file_name)
 }
 
-get_cache_directory_path <- function(package = "INEbaseR", path = "data") {
+get_cache_directory_path <- function(package = "INEbaseR", path = "extdata") {
   directory_root_path <- find.package(package)
   directory_path <- paste0(directory_root_path, "/", path)
   return(directory_path)

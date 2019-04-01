@@ -134,6 +134,7 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
             # Id
             if ((tip == "M") && (det == 2)) {
               data_content$Id <- rbind(data_content$Id, content$Id[i])
+              data_content$Operacion <- rbind(data_content$Operacion, content$Operacion$Id[i])
             }
             data_content$COD <- rbind(data_content$COD, content$COD[i])
             data_content$T3_Operacion <- rbind(data_content$T3_Operacion, content$T3_Operacion[i])
@@ -146,8 +147,10 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
             data_content$T3_Unidad <- rbind(data_content$T3_Unidad, content$T3_Unidad[i])
             # Periodicidad (nomrbe) y Metadata
             if ((tip == "M") && (det == 2)) {
+              data_content$Clasificacion <- rbind(data_content$Clasificacion, content$Clasificacion$Nombre[i])
+              data_content$Unidad <- rbind(data_content$Unidad, content$Unidad$Nombre[i])
               data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[i])
-              data_content$Metadata <- rbind(data_content$Metadata, content$MetaData[i])
+              data_content$MetaData <- rbind(data_content$MetaData, content$MetaData[i])
             }
 
           }

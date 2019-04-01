@@ -496,7 +496,7 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
     if (nrow(series[series$Nombre == serie_metadata$Nombre,]) > 1) {
       list_classification <- series[series$Nombre == serie_metadata$Nombre,]
       # Get the last classification
-      classification <- list_classification[nrow(list_classification),]$Clasificacion$Nombre
+      classification <- list_classification[nrow(list_classification),]$Clasificacion
       message(paste0("Note: we've found more of one classification in serie ", serie, ", but we've selected the last classification (", classification, ") for you"))
     } else {
       # If there is only one classification for this serie
@@ -512,6 +512,7 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
 
     if (grepl(pattern = name, x = series$Nombre[i])) {
 
+      # Nota: si da problemas -> revisar MetaData o Metadata
       serie_variables_id <- series$MetaData[[i]]$Variable$Id
 
       # Variables (from: get_variables_all())
@@ -521,6 +522,7 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
       geographical_variables <- c(115, 19, 70)
 
       # Find variable data
+      variable_data <- NULL
       for (variable_id in serie_variables_id) {
         if (variable_id %in% geographical_variables) {
           variable_data <- variables[variables$Id == variable_id,]

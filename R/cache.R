@@ -3,6 +3,9 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
+# Add resources
+source("R/resources.R")
+
 get_cache_file_name <- function(data_type, code, sys_date = Sys.Date()) {
   directory_root <- get_cache_directory_path()
   file_name <- paste0(directory_root, "/", data_type, "-", code, "_", sys_date, ".rds")
@@ -272,6 +275,81 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
 
 }
 
+
+#' @title Update series
+#' @description This function allow update specific or all cache data
+#' @param serie serie identificator
+#' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
+#' @param page \code{page = 1} to obtain data of an specific page.
+#' @param tip \code{tip = M} to obtain the metadata (crossing variables-values) of the series.
+#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
+#' @param lang language used to obtain information
+#' @examples
+#' update_series()
+#' @export
+update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", det = 2, lang = "ES") {
+
+  message("Note: update all cache may take much time, please be patient ...")
+
+  # Update all operations
+  if (is.null(serie)) {
+
+    # Get all operations
+    operations <- get_operations_all()$Id
+    for (operation in operations) {
+
+      message(paste0("Updating operation ", operation, " ..."))
+      data_content <- NULL
+
+      series <- get_series_operation(operation)
+      last_serie <- get_last_serie(operation)
+
+      # From page 1, to page XX
+      page_start <- 1
+      page_end <- get_serie_page(last_serie, operation, page = page, det = det, tip = tip, lang = lang)
+
+      for (page in page_start:page_end) {
+
+        # Build URL
+        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
+        # Get content
+        content <- get_content(url, max_iterations = 3, seconds = 30)
+
+        # Build new content
+        for (i in 1:nrow(content)) {
+
+          if (content$COD[i] != last_serie) {
+
+            data_content$Id <- rbind(data_content$Id, content$Id[i])
+            data_content$Operacion <- rbind(data_content$Operacion, content$Operacion$Id[i])
+            data_content$COD <- rbind(data_content$COD, content$COD[i])
+            data_content$Nombre <- rbind(data_content$Nombre, content$Nombre[i])
+            data_content$Decimales <- rbind(data_content$Decimales, content$Decimales[i])
+            data_content$Clasificacion <- rbind(data_content$Clasificacion, content$Clasificacion$Nombre[i])
+            data_content$Unidad <- rbind(data_content$Unidad, content$Unidad$Nombre[i])
+            data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[i])
+            data_content$MetaData <- rbind(data_content$MetaData, content$MetaData[i])
+
+          }
+
+        }
+
+        # Convert to data frame
+        data_content <- data.frame(data_content, stringsAsFactors = FALSE)
+
+        # Build data content
+        series <- rbind(series, data_content)
+
+        # Save
+        save_to_rds(series, operation, type = "SERIEOPERATION")
+
+      }
+
+    }
+  }
+
+}
+
 # ------------------ RDS Cache ------------------
 
 # Example: save_to_rds("provincias", type = "POLYGONS")
@@ -343,6 +421,43 @@ get_last_serie <- function(operation) {
 
   # Return
   return(last_cod)
+
+}
+
+# Example: get_serie_page("IPC251541", 25)
+# Example: get_serie_page("IPC251603", 25)
+get_serie_page <- function(serie, operation, page = 1, det = 2, tip = "M", lang = "ES") {
+
+  # Flag
+  serie_found <- FALSE
+
+  while(!serie_found) {
+
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
+    content <- fromJSON(url)
+
+    # If not found: return 0
+    if (is.null(content)) {
+      return(0)
+
+    } else {
+
+      if (serie %in% content$COD) {
+
+        # Break the loop
+        serie_found <- TRUE
+
+      } else {
+        # Next page
+        print(paste0("Serie ", serie, " not found in page ", page))
+        page <- page + 1
+
+      }
+    }
+
+  }
+
+  return(page)
 
 }
 

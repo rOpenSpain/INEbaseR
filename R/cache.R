@@ -302,6 +302,10 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
       data_content <- NULL
 
       series <- get_series_operation(operation)
+      if (is.null(series)) {
+        message(paste0("Operation ", operation, " not found in cache ..."))
+        next
+      }
       last_serie <- get_last_serie(operation)
 
       # From page 1, to page XX
@@ -325,7 +329,12 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
             data_content$COD <- rbind(data_content$COD, content$COD[i])
             data_content$Nombre <- rbind(data_content$Nombre, content$Nombre[i])
             data_content$Decimales <- rbind(data_content$Decimales, content$Decimales[i])
-            data_content$Clasificacion <- rbind(data_content$Clasificacion, content$Clasificacion$Nombre[i])
+            # Check if classification is null
+            if (is.null(content$Clasificacion$Nombre[i])) {
+              data_content$Clasificacion <- rbind(data_content$Clasificacion, NA)
+            } else {
+              data_content$Clasificacion <- rbind(data_content$Clasificacion, content$Clasificacion$Nombre[i])
+            }
             data_content$Unidad <- rbind(data_content$Unidad, content$Unidad$Nombre[i])
             data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[i])
             data_content$MetaData <- rbind(data_content$MetaData, content$MetaData[i])

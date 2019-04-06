@@ -306,6 +306,8 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
         message(paste0("Operation ", operation, " not found in cache ..."))
         next
       }
+
+      # Get last serie in cache
       last_serie <- get_last_serie(operation)
 
       # From page 1, to page XX
@@ -321,6 +323,15 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
 
         # Build new content
         for (i in 1:nrow(content)) {
+          # Check if series are updated
+          if (i == 1) {
+            if (content$COD[i] == last_serie) {
+              message(paste0("OK. Operation ", operation, " was already updated"))
+              next
+            } else {
+              message(paste0("It seems that it's necessary to update series of the operation ", operation))
+            }
+          }
 
           if (content$COD[i] != last_serie) {
 

@@ -298,6 +298,7 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
     operations <- get_operations_all()$Id
     for (operation in operations) {
 
+      found <- FALSE
       message(paste0("Updating operation ", operation, " ..."))
       data_content <- NULL
 
@@ -333,7 +334,11 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
             }
           }
 
-          if (content$COD[i] != last_serie) {
+          if (content$COD[i] == last_serie) {
+            found <- TRUE
+          }
+
+          if (found) {
 
             data_content$Id <- rbind(data_content$Id, content$Id[i])
             data_content$Operacion <- rbind(data_content$Operacion, content$Operacion$Id[i])

@@ -254,7 +254,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) 
   operation_name <- serie_metadata$Operacion$Nombre
 
   # Get polygon from cache
-  map <- get_cache_rds(geographical_granularity)
+  map <- get_cache_rds(geographical_granularity, type = "POLYGONS")
 
   # Represent map and series
   highchart(type = "map") %>%

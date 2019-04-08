@@ -3,9 +3,13 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-get_content <- function(url, loop = 1, max_iterations = 10, seconds = 60) {
+get_content <- function(url, loop = 1, max_iterations = 10, seconds = 60, verbose = TRUE) {
 
-  print(url)
+  # Print URL
+  if (verbose) {
+    print(url)
+  }
+
   content <- NULL
   # Get URL content and catch errors using tryCatch
   result <- tryCatch({

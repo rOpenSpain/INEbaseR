@@ -298,13 +298,16 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
     operations <- get_operations_all()$Id
     for (operation in operations) {
 
+      # Flags
       found <- FALSE
+      already_updated <- FALSE
+
       message(paste0("Updating operation ", operation, " ..."))
       data_content <- NULL
 
       series <- get_series_operation(operation)
       if (is.null(series)) {
-        warning(paste0("Operation ", operation, " not found in cache ..."))
+        message(paste0("Operation ", operation, " not found in cache ..."))
         next
       }
 
@@ -320,14 +323,15 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
         # Build URL
         url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
         # Get content
-        content <- get_content(url, max_iterations = 3, seconds = 30)
+        content <- get_content(url, max_iterations = 3, seconds = 30, verbose = FALSE)
 
         # Build new content
         for (i in 1:nrow(content)) {
           # Check if series are updated
           if (i == 1) {
             if (content$COD[i] == last_serie) {
-              message(paste0("OK. Operation ", operation, " was already updated"))
+              message(paste0("Skipped: operation ", operation, " was already updated"))
+              already_updated <- TRUE
               next
             } else {
               message(paste0("It seems that it's necessary to update series of the operation ", operation))
@@ -336,6 +340,7 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
 
           if (content$COD[i] == last_serie) {
             found <- TRUE
+            next
           }
 
           if (found) {
@@ -359,14 +364,16 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
 
         }
 
-        # Convert to data frame
-        data_content <- data.frame(data_content, stringsAsFactors = FALSE)
+        if (!already_updated) {
+          # Convert to data frame
+          data_content <- data.frame(data_content, stringsAsFactors = FALSE)
 
-        # Build data content
-        series <- rbind(series, data_content)
+          # Build data content
+          series <- rbind(series, data_content)
 
-        # Save
-        save_to_rds(series, operation, type = "SERIEOPERATION")
+          # Save
+          save_to_rds(series, operation, type = "SERIEOPERATION")
+        }
 
       }
 

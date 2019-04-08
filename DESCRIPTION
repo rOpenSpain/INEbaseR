@@ -9,7 +9,7 @@ Authors@R: c(
   person("Carlos J.", "Perez", email = "cpgonzal@ull.es", role = c("aut", "drt", "pdr")))
 Maintainer: Andres Nacimiento <andresnacimiento@gmail.com>
 Description: R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadistica) API.
-License: GPL-3
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: false
 BuildResaveData: false
@@ -19,7 +19,4 @@ Imports:
   graphics,
   stats,
   utils
-Depends:
-  jsonlite,
-  highcharter
 RoxygenNote: 6.1.1

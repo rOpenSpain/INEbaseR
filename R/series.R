@@ -89,7 +89,9 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
   # Get data from cache
   if (cache) {
     data <- get_cache_rds(code, type = "SERIEOPERATION")
-    #data <- get_cache("SERIEOPERATION", code)
+    if (is.null(data)) {
+      return(NULL)
+    }
   }
 
   # Get data from API

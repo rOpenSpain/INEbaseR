@@ -6,9 +6,9 @@
 # Add resources
 source("R/resources.R")
 
-get_cache_file_name <- function(data_type, code, sys_date = Sys.Date()) {
+get_cache_file_name <- function(data_type, code, extension = ".rds") {
   directory_root <- get_cache_directory_path()
-  file_name <- paste0(directory_root, "/", data_type, "-", code, "_", sys_date, ".rds")
+  file_name <- paste0(directory_root, "/", data_type, "-", code, extension)
   return(file_name)
 }
 
@@ -26,63 +26,19 @@ build_cache_directory <- function() {
 }
 
 # Example: check_cache("SERIEOPERATION", 4, get_file_name = TRUE)
-check_cache <- function(data_type, code, get_file_name = FALSE, expiration_date = 120){
+check_cache <- function(data_type, code, get_file_name = FALSE){
 
-  for (i in 0:expiration_date) {
+  file_name <- get_cache_file_name(data_type, code)
 
-    file_name <- get_cache_file_name(data_type, code, sys_date = (Sys.Date() - i))
-
-    if (file_test("-f", file_name)) {
-      if (get_file_name) {
-        return(data.frame(condition = TRUE, file = file_name, stringsAsFactors = FALSE))
-      } else {
-        return(TRUE)
-      }
+  if (file_test("-f", file_name)) {
+    if (get_file_name) {
+      return(data.frame(condition = TRUE, file = file_name, stringsAsFactors = FALSE))
+    } else {
+      return(TRUE)
     }
-
-  }
-
-  if (get_file_name) {
-    return(data.frame(condition = FALSE, file = file_name, stringsAsFactors = FALSE))
   } else {
     return(FALSE)
   }
-
-}
-
-# Clean out of date cache files (see expiration_date parameter)
-# Example: clean_outofdate_cache("SERIEOPERATION", 4, expiration_date = 120)
-clean_outofdate_cache <- function(data_type, code, expiration_date = 120){
-
-  directory_root <- get_cache_directory_path()
-
-  if (!dir.exists(directory_root)) {
-    build_cache_directory()
-  }
-
-  # Get all files in cache dir
-  files <- list.files(path = directory_root, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
-  if (length(files) > 0) {
-    for (i in 1:length(files)) {
-
-      # Split data from file name
-      file_splited <- strsplit(files[i], split = "_")
-      file_splited_date <- strsplit(file_splited[[1]][2], split = "[.]")[[1]][1]
-      file_splited_name <- strsplit(file_splited[[1]][1], split = "-") # "SERIE", "IPC206449"
-
-      # If file cache data is out of date
-      if (file_splited_date <= Sys.Date() - expiration_date) {
-        code <- file_splited_name[[1]][2]
-        if ((data_type == file_splited_name[[1]][1]) && (code == file_splited_name[[1]][2])) {
-          clean_cache(data_type, code, sys_date = file_splited_date)
-        } else {
-          clean_cache(data_type, code, sys_date = file_splited_date)
-        }
-      }
-
-    }
-  }
-
 
 }
 
@@ -105,53 +61,6 @@ build_cache <- function(data, data_type, code){
   save(content, file = file_name, compress = TRUE, compression_level = 6)
   save.image()
 
-}
-
-# Example: clean_cache("SERIEOPERATION", 104)
-clean_cache <- function(data_type = NA, code = NA, sys_date = Sys.Date(), all = FALSE){
-
-  directory_root <- get_cache_directory_path()
-
-  if (check_cache(data_type, code)) {
-
-    if (all) {
-      files <- list.files(path = directory_root, all.files = TRUE, full.names = FALSE, recursive = FALSE, ignore.case = TRUE, include.dirs = FALSE, no.. = TRUE)
-      for (i in 1:length(files)) {
-        file_name <- paste0(directory_root, "/", files[i])
-        file.remove(file_name)
-        print(paste0("Removed ", files[i]))
-      }
-    } else {
-      file_name <- check_cache(data_type, code, get_file_name = TRUE)$file
-      file.remove(file_name)
-    }
-
-  }
-
-}
-
-# Example: get_cache("SERIEOPERATION", 4)
-get_cache <- function(data_type, code){
-
-  # Clean out of date cache files
-  # clean_outofdate_cache(data_type, code)
-  content <- NULL
-
-  if (check_cache(data_type, code)) {
-
-    file_name <- check_cache(data_type, code, get_file_name = TRUE)$file
-    load(file_name)
-
-    return(content)
-
-  } else {
-
-    stop(paste0(
-      "\nNo cache data found to: ", data_type, " ", code, ". Use parameter cache = FALSE",
-      "\n\nNOTE: It is possible that this data were in cache but has been expired. By default expiration date is 120 days."
-    ))
-
-  }
 }
 
 #' @title Update cache
@@ -432,8 +341,13 @@ get_cache_rds <- function(object, type = "SERIEOPERATION") {
   # File name to load (RDS)
   file_name_rds <- get_rds_file_name(object, type = type)
 
-  # Read RDS
-  content <- readRDS(file = file_name_rds)
+  # Check if file exists
+  if (check_cache(type, object)) {
+    # Read RDS
+    content <- readRDS(file = file_name_rds)
+  } else {
+    content <- NULL
+  }
 
   return(content)
 

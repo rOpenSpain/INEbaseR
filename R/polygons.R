@@ -531,7 +531,7 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
 
       variable_id <- variable_data$Id
 
-      if (is.null(series$Clasificacion$Nombre[i])) {
+      if (is.null(series$Clasificacion[i])) {
         if (variable_id == geographical_id) {
           series_list <- c(series_list, series$COD[i])
           if (verbose) {
@@ -539,12 +539,18 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
           }
         }
       } else {
-        if ((variable_id == geographical_id) && (series$Clasificacion$Nombre[i] == classification)) {
-          series_list <- c(series_list, series$COD[i])
-          if (verbose) {
-            print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
+        if (!is.null(variable_id)) {
+          if ((variable_id == geographical_id) && (series$Clasificacion[i] == classification)) {
+            series_list <- c(series_list, series$COD[i])
+            if (verbose) {
+              print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
+            }
           }
         }
+        #else {
+        #  print(paste0("No se han encontrado coincidencias geográficas en esta serie"))
+        #}
+
       }
 
     }

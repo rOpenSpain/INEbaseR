@@ -10,7 +10,15 @@
 #' get_operations_all()
 #' @export
 get_operations_all <- function(lang = "ES") {
-  return(fromJSON(paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACIONES_DISPONIBLES")))
+
+  # Build URL
+  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACIONES_DISPONIBLES")
+
+  # Get content
+  content <- get_content(url, verbose = FALSE)
+
+  return(content)
+
 }
 
 #' @title Get operation
@@ -28,9 +36,16 @@ get_operations_all <- function(lang = "ES") {
 #' get_operation(30138, ioe = TRUE)
 #' @export
 get_operation <- function(code, ioe = FALSE, lang = "ES") {
-  if (ioe)
+
+  # Build URL
+  if (ioe) {
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/IOE", code)
-  else
+  } else {
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/", code)
-  return(fromJSON(url))
+  }
+
+  # Get content
+  content <- get_content(url, verbose = FALSE)
+
+  return(content)
 }

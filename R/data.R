@@ -1,45 +1,60 @@
-# API INE (Datos)
-#
+# API INE (Data)
+
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
 #' @title Get data serie
 #' @description This function returns a data frame with data of a serie from an id or/and from a date or date range
-#' @param code operation identification
+#' @param serie serie identifier
 #' @param date_start start date in format (string) \code{YYYY-MM-DD}
 #' @param date_end end date in format (string) \code{YYYY-MM-DD}
 #' @param nult last \code{n} values
 #' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
 #' @param lang language used to obtain information
 #' @examples
-#' get_data_serie("IPC206449", nult = 1) # Get the latest data of a series
-#' get_data_serie("IPC206449", nult = 5) # Get the \code{n} last data of a series
-#' get_data_serie("IPC206449", "2013-01-01", "2016-01-01") # Get data of a series between two dates
-#' get_data_serie("IPC206449", "2010-01-01") # Get data from a series from a date
+#' get_data_serie("IPC206449", nult = 1)
+#' get_data_serie("IPC206449", nult = 5)
+#' get_data_serie("IPC206449", "2013-01-01", "2016-01-01")
+#' get_data_serie("IPC206449", "2010-01-01")
 #' @export
-get_data_serie <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0, lang = "ES") {
-  if (!is.na(date_end))
-    if (date_start > date_end)
+get_data_serie <- function(serie, date_start = NULL, date_end = NULL, nult = 0, det = 0, lang = "ES") {
+
+  # Checking options
+  if (!is.null(date_end)) {
+    if (date_start > date_end) {
       stop("Start date cannot be after the end date.")
+    }
+  }
+
+  # Date format
   date_start <- format.Date(date_start,'%Y%m%d')
   date_end <- format.Date(date_end,'%Y%m%d')
+
+  # Build URL
   if (nult == 0) {
-    if (is.na(date_end))
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", code, "?date=", date_start, ":&det=", det)
-    else
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", code, "?date=", date_start, ":", date_end, "&det=", det)
+    if (is.null(date_end)) {
+      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?date=", date_start, ":&det=", det)
+    } else {
+      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?date=", date_start, ":", date_end, "&det=", det)
+    }
   } else {
-    if (is.na(date_end))
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", code, "?nult=", nult, "&date=", date_start, ":&det=", det)
-    else
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", code, "?nult=", nult, "&date=", date_start, ":", date_end, "&det=", det)
+    if (is.null(date_end)) {
+      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?nult=", nult, "&date=", date_start, ":&det=", det)
+    } else {
+      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?nult=", nult, "&date=", date_start, ":", date_end, "&det=", det)
+    }
   }
-  return(fromJSON(url))
+
+  # Get content
+  content <- get_content(url, verbose = FALSE)
+
+  return(content)
+
 }
 
 #' @title Get data table
 #' @description This function returns a data frame with latest \code{n} data of a table from an id or code
-#' @param id table identification
+#' @param id table identifier
 #' @param nult last \code{n} values
 #' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
 #' @param tip \code{tip = AM} to obtain the metadata (crossing variables-values) of the series and a friendly output.
@@ -47,21 +62,34 @@ get_data_serie <- function(code, date_start = NA, date_end = NA, nult = 0, det =
 #' @examples
 #' get_data_table(22350, 4)
 #' @export
-get_data_table <- function(id, nult = 0, det = 0, tip = NA, lang = "ES") {
-  if ((det < 0) || (det > 2))
+get_data_table <- function(id, nult = 0, det = 0, tip = NULL, lang = "ES") {
+
+  # Checking det
+  if ((det < 0) || (det > 2)) {
     stop("You have defined 'det' parameter with an incorrect value.")
-  if ((tip != "AM") && (!is.na(tip)))
+  }
+  # Checking tip
+  if ((tip != "AM") && (!is.null(tip))) {
     stop("You have defined 'tip' parameter with an incorrect value.")
-  if (nult == 0)
+  }
+
+  # Build URL
+  if (nult == 0) {
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_TABLA/", id)
-  else
+  } else {
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_TABLA/", id, "?nult=", nult)
-  return(fromJSON(url))
+  }
+
+  # Get content
+  content <- get_content(url, verbose = FALSE)
+
+  return(content)
+
 }
 
 #' @title Get data metadata-operation
 #' @description This function returns a data frame with latest \code{n} series data by crossing metadata from an id or code
-#' @param code table identification
+#' @param operation operation identifier
 #' @param query string separated by \code{AND} with syntax \code{variable = value} using natural language
 #' @param p periodicity
 #' @param nult last \code{n} values
@@ -72,16 +100,24 @@ get_data_table <- function(id, nult = 0, det = 0, tip = NA, lang = "ES") {
 #' @examples
 #' get_data_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variacion mensual AND Grupos ECOICOP = NULL", nult = 1)
 #' @export
-get_data_metadataoperation <- function(code, query = NULL, p = 1, nult = 1, det = 0, tip = NA, ioe = FALSE, lang = "ES") {
+get_data_metadataoperation <- function(operation, query = NULL, p = 1, nult = 1, det = 0, tip = NULL, ioe = FALSE, lang = "ES") {
 
-  if ((det < 0) || (det > 2))
+  # Checking det
+  if ((det < 0) || (det > 2)) {
     stop("You have defined 'det' parameter with an incorrect value.")
-  if (p < 0)
+  }
+  # Checking p
+  if (p < 0) {
     stop("You have defined 'p' (periodicity) parameter with an incorrect value.")
-  if ((tip != "AM") && (!is.na(tip)))
+  }
+  # Checking tip
+  if ((tip != "AM") && (!is.null(tip))) {
     stop("You have defined 'tip' parameter with an incorrect value.")
-  if (nult < 1)
+  }
+  # Checking nult
+  if (nult < 1) {
     stop("You have defined 'nult' parameter with an incorrect value.")
+  }
 
   # Split query
   df_queries <- NULL
@@ -94,7 +130,7 @@ get_data_metadataoperation <- function(code, query = NULL, p = 1, nult = 1, det 
   }
 
   # Get variables and values id
-  variables <- get_variables_operation(code)
+  variables <- get_variables_operation(operation)
   result <- NULL
   count <- 0
   g <- 1
@@ -106,7 +142,7 @@ get_data_metadataoperation <- function(code, query = NULL, p = 1, nult = 1, det 
       result <- rbind(result, variable)
       g <- g + 1
     } else { # values
-      value <- get_values_variableoperation(variableId, code)
+      value <- get_values_variableoperation(variableId, operation)
       value <- value[match(qvalue, value[["Nombre"]]),][["Id"]]
       if (is.na(value)){
         value <- ""
@@ -120,11 +156,16 @@ get_data_metadataoperation <- function(code, query = NULL, p = 1, nult = 1, det 
   # Join query
   urlStr <- paste0(result, collapse = "")
 
-  # URL definition
-  if (ioe)
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_METADATAOPERACION/IOE", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det, "&nult=", nult)
-  else
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_METADATAOPERACION/", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det, "&nult=", nult)
+  # Build URL
+  if (ioe) {
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_METADATAOPERACION/IOE", operation, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det, "&nult=", nult)
+  } else {
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_METADATAOPERACION/", operation, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det, "&nult=", nult)
+  }
 
-  return(fromJSON(url))
+  # Get content
+  content <- get_content(url, verbose = FALSE)
+
+  return(content)
+
 }

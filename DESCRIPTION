@@ -15,8 +15,5 @@ LazyData: false
 BuildResaveData: false
 Imports: 
   jsonlite,
-  highcharter,
-  graphics,
-  stats,
-  utils
+  highcharter
 RoxygenNote: 6.1.1

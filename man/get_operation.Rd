@@ -4,10 +4,10 @@
 \alias{get_operation}
 \title{Get operation}
 \usage{
-get_operation(code, ioe = FALSE, lang = "ES")
+get_operation(operation, ioe = FALSE, lang = "ES")
 }
 \arguments{
-\item{code}{operation identification}
+\item{operation}{operation identificator}
 
 \item{ioe}{\code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default}
 
@@ -16,13 +16,8 @@ get_operation(code, ioe = FALSE, lang = "ES")
 \description{
 This function returns a data frame with all available statistical operations from an id or code
 }
-\details{
-Numeric code \code{id}
-Alphabetic code \code{IPC}
-\code{IOE} code (Inventario de Operaciones Estadísticas)
-}
 \examples{
-get_operation(25)
-get_operation("IPC")
-get_operation(30138, ioe = TRUE)
+get_operation(operation = 25)
+get_operation(operation = "IPC")
+get_operation(operation = 30138, ioe = TRUE)
 }

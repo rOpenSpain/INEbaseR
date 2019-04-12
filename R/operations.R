@@ -23,19 +23,15 @@ get_operations_all <- function(lang = "ES") {
 
 #' @title Get operation
 #' @description This function returns a data frame with all available statistical operations from an id or code
-#' @param code operation identification
+#' @param operation operation identificator
 #' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
 #' @param lang language used to obtain information
-#' @details
-#' Numeric code \code{id}
-#' Alphabetic code \code{IPC}
-#' \code{IOE} code (Inventario de Operaciones Estadísticas)
 #' @examples
-#' get_operation(25)
-#' get_operation("IPC")
-#' get_operation(30138, ioe = TRUE)
+#' get_operation(operation = 25)
+#' get_operation(operation = "IPC")
+#' get_operation(operation = 30138, ioe = TRUE)
 #' @export
-get_operation <- function(code, ioe = FALSE, lang = "ES") {
+get_operation <- function(operation, ioe = FALSE, lang = "ES") {
 
   # Build URL
   if (ioe) {

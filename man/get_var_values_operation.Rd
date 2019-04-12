@@ -4,10 +4,10 @@
 \alias{get_var_values_operation}
 \title{Get variable values operation}
 \usage{
-get_var_values_operation(op, ioe = FALSE, lang = "ES")
+get_var_values_operation(operation, ioe = FALSE, lang = "ES")
 }
 \arguments{
-\item{op}{operation identification}
+\item{operation}{operation identifier}
 
 \item{ioe}{\code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default}
 
@@ -16,13 +16,8 @@ get_var_values_operation(op, ioe = FALSE, lang = "ES")
 \description{
 This function returns a data frame with all values and variables of an operation from an id or code
 }
-\details{
-Numeric code \code{id}
-Alphabetic code \code{IPC}
-\code{IOE} code (Inventario de Operaciones Estadísticas)
-}
 \examples{
-get_var_values_operation(25)
-get_var_values_operation("IPC")
-get_var_values_operation(30138, ioe = TRUE)
+get_var_values_operation(operation = 25)
+get_var_values_operation(operation = "IPC")
+get_var_values_operation(operation = 30138, ioe = TRUE)
 }

@@ -210,6 +210,11 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
         # Get content
         content <- get_content(url, max_iterations = 3, seconds = 30, verbose = FALSE)
 
+        # If error (no content found) go to next operation
+        if (length(content) == 0) {
+          next
+        }
+
         # Build new content
         for (i in 1:nrow(content)) {
           # Check if series are updated

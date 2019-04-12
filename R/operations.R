@@ -35,9 +35,9 @@ get_operation <- function(operation, ioe = FALSE, lang = "ES") {
 
   # Build URL
   if (ioe) {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/IOE", code)
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/IOE", operation)
   } else {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/", code)
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/", operation)
   }
 
   # Get content

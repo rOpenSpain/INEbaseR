@@ -253,7 +253,7 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
           }
 
           if (found) {
-            message(paste0("Updating serie ", ontent$COD[i], " from operation ", operation, " ..."))
+            message(paste0("Updating serie ", content$COD[i], " from operation ", operation, " ..."))
             data_content$Id <- rbind(data_content$Id, content$Id[i])
             data_content$Operacion <- rbind(data_content$Operacion, content$Operacion$Id[i])
             data_content$COD <- rbind(data_content$COD, content$COD[i])

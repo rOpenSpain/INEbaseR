@@ -3,63 +3,40 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-# Add resources
-source("R/resources.R")
-
+# Build cache file name to check
 get_cache_file_name <- function(data_type, code, extension = ".rds") {
   directory_root <- get_cache_directory_path()
   file_name <- paste0(directory_root, "/", data_type, "-", code, extension)
   return(file_name)
 }
 
+# Get cache directory path
 get_cache_directory_path <- function(package = "INEbaseR", path = "extdata") {
   directory_root_path <- find.package(package)
   directory_path <- paste0(directory_root_path, "/", path)
   return(directory_path)
 }
 
-build_cache_directory <- function() {
-  directory_root <- get_cache_directory_path()
-  if (!dir.exists(directory_root)) {
-    dir.create(directory_root, showWarnings = TRUE, recursive = FALSE, mode = "0755")
-  }
-}
-
+# Check if file is in cache or not
 # Example: check_cache("SERIEOPERATION", 4, get_file_name = TRUE)
 check_cache <- function(data_type, code, get_file_name = FALSE){
 
+  # Build cache file name to check
   file_name <- get_cache_file_name(data_type, code)
 
+  # Check if file exists
   if (file_test("-f", file_name)) {
     if (get_file_name) {
+      # Return a data frame with file name
       return(data.frame(condition = TRUE, file = file_name, stringsAsFactors = FALSE))
     } else {
+      # In this case the file exists
       return(TRUE)
     }
   } else {
+    # File not exists
     return(FALSE)
   }
-
-}
-
-build_cache <- function(data, data_type, code){
-
-  # Build cache directory if not exists
-  build_cache_directory()
-
-  # Clean existing cache
-  if (check_cache(data_type, code)) {
-    clean_cache(data_type, code)
-  }
-
-  # Clean out of date cache files
-  clean_outofdate_cache(data_type, code)
-
-  # Save data into cache
-  file_name <- get_cache_file_name(data_type, code)
-  content <- data
-  save(content, file = file_name, compress = TRUE, compression_level = 6)
-  save.image()
 
 }
 
@@ -105,7 +82,6 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
     series_operation <- get_series_operation(code, pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE, tip = tip, det = det)
 
     if (length(series_operation) == 0) {
-      clean_cache("SERIEOPERATION", code)
       message(paste0("No operations founds for ", operations[operations$Id == code,][["Nombre"]], " (", code, ")"))
     } else {
       print(paste0("Operation '", operations[operations$Id == code,][["Nombre"]], "(", operations[operations$Id == code,][["Id"]], ")", "' has been cached"))
@@ -291,8 +267,7 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
 
 }
 
-# ------------------ RDS Cache ------------------
-
+# Save data to RDS format
 # Example: save_to_rds("provincias", type = "POLYGONS")
 # Example: save_to_rds("comunidades_autonomas")
 # Example: save_to_rds("municipios")
@@ -309,6 +284,7 @@ save_to_rds <- function(data, object, type = "SERIEOPERATION") {
 
 }
 
+# Read data to RDS format
 # Example: get_rds_file_name("provincias", type = "POLYGONS")
 # Example: get_rds_file_name("comunidades_autonomas", type = "POLYGONS")
 # Example: get_rds_file_name("municipios", type = "POLYGONS")
@@ -353,6 +329,7 @@ get_cache_rds <- function(object, type = "SERIEOPERATION") {
 
 }
 
+# Get last serie operation stored in cache
 # Example: get_last_serie(4)
 get_last_serie <- function(operation) {
 
@@ -370,6 +347,7 @@ get_last_serie <- function(operation) {
 
 }
 
+# Find the page of a serie stored in INE API
 # Example: get_serie_page("IPC251541", 25)
 # Example: get_serie_page("IPC251603", 25)
 get_serie_page <- function(serie, operation, page = 1, det = 2, tip = "M", lang = "ES") {
@@ -379,8 +357,11 @@ get_serie_page <- function(serie, operation, page = 1, det = 2, tip = "M", lang 
 
   while(!serie_found) {
 
+    # Build URL
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
-    content <- fromJSON(url)
+
+    # Get content
+    content <- get_content(url, verbose = FALSE)
 
     # If not found: return 0
     if (is.null(content)) {

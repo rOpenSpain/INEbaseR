@@ -3,9 +3,6 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-# Add resources
-source("R/resources.R")
-
 #' @title Get serie
 #' @description This function returns a data frame with a serie from an id or code
 #' @param code serie identification

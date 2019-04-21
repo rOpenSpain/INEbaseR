@@ -318,8 +318,9 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
 
         series <- get_series_operation(operation)
         variables <- get_variables_operation(operation)
-        if (!is.null(variables$Codigo)) {
-          if ("Nombre" %in% names(series$Periodicidad)) {
+
+        if ("Nombre" %in% names(series$Periodicidad)) {
+          if (!is.null(variables$Codigo)) {
             if ((temporal_granularity %in% series$Periodicidad$Nombre) && (geographical_granularity %in% variables$Codigo)) {
               operations <- c(operations, operation)
               if (verbose) {
@@ -329,6 +330,7 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
             }
           }
         }
+
 
       # Temporal granularity
       } else if ((is.null(geographical_granularity)) && (!is.null(temporal_granularity))) {

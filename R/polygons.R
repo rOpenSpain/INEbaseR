@@ -309,6 +309,9 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
 
     # Operation "ETR" (334): Error in open.connection(con, "rb") : HTTP error 500.
     if (operation != "ETR") {
+      if (verbose) {
+        print(paste0("Seraching in operation: ", operation))
+      }
 
       # Geographical and temporal granularity
       if ((!is.null(geographical_granularity)) && (!is.null(temporal_granularity))) {

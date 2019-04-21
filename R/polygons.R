@@ -326,34 +326,31 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
           }
         }
 
-      } else {
-
-        # Temporal granularity
-        if (is.null(geographical_granularity)) {
-          series <- get_series_operation(operation)
-          # Check if column "Nombre" exists
-          if ("Nombre" %in% names(series$Periodicidad)) {
-            if (temporal_granularity %in% series$Periodicidad$Nombre) {
-              operations <- c(operations, operation)
-              if (verbose) {
-                print(paste0("Found (", temporal_granularity, ") in operation: ", operation))
-              }
-              next
-            }
-          }
-        } else {
-          # Geographical granularity
-          variables <- get_variables_operation(operation)
-          if (geographical_granularity %in% variables$Codigo) {
+      # Temporal granularity
+      } else if ((is.null(geographical_granularity)) && (!is.null(temporal_granularity))) {
+        series <- get_series_operation(operation)
+        # Check if column "Nombre" exists
+        if ("Nombre" %in% names(series$Periodicidad)) {
+          if (temporal_granularity %in% series$Periodicidad$Nombre) {
             operations <- c(operations, operation)
             if (verbose) {
-              print(paste0("Found (", geographical_granularity, ") in operation: ", operation))
+              print(paste0("Found (", temporal_granularity, ") in operation: ", operation))
             }
             next
           }
         }
-      }
 
+      # Geographical granularity
+      } else if ((!is.null(geographical_granularity)) && (is.null(temporal_granularity))) {
+        variables <- get_variables_operation(operation)
+        if (geographical_granularity %in% variables$Codigo) {
+          operations <- c(operations, operation)
+          if (verbose) {
+            print(paste0("Found (", geographical_granularity, ") in operation: ", operation))
+          }
+          next
+        }
+      }
     }
   }
 

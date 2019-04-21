@@ -322,6 +322,7 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
             if (verbose) {
               print(paste0("Found (", geographical_granularity, " and ", temporal_granularity, ") in operation: ", operation))
             }
+            next
           }
         }
 
@@ -337,6 +338,7 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
               if (verbose) {
                 print(paste0("Found (", temporal_granularity, ") in operation: ", operation))
               }
+              next
             }
           }
         } else {
@@ -347,6 +349,7 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
             if (verbose) {
               print(paste0("Found (", geographical_granularity, ") in operation: ", operation))
             }
+            next
           }
         }
       }

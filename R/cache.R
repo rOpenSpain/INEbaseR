@@ -203,6 +203,12 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
       page_start <- 1
       page_end <- get_serie_page(last_serie, operation, page = page, det = det, tip = tip, lang = lang)
 
+      # If operation URL (content) is empty
+      if (is.null(page_end)) {
+        message(paste0("No data found in operation ", operation))
+        next
+      }
+
       for (page in page_start:page_end) {
 
         # Build URL
@@ -212,7 +218,8 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
 
         # If error (no content found) go to next operation
         if (length(content) == 0) {
-          next
+          message(paste0("No data found in operation ", operation))
+          break
         }
 
         # Build new content
@@ -222,7 +229,8 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
             if (content$COD[i] == last_serie) {
               message(paste0("Skipped: operation ", operation, " was already updated"))
               already_updated <- TRUE
-              next
+              #next
+              break
             } else {
               message(paste0("It seems that it's necessary to update series of the operation ", operation))
             }
@@ -367,6 +375,10 @@ get_serie_page <- function(serie, operation, page = 1, det = 2, tip = "M", lang 
 
     # Get content
     content <- get_content(url, verbose = FALSE)
+
+    if (length(content) == 0) {
+      return(NULL)
+    }
 
     # If not found: return 0
     if (is.null(content)) {

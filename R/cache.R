@@ -176,105 +176,119 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
 
   message("Note: update all cache may take much time, please be patient ...")
 
+
   # Update all operations
   if (is.null(serie)) {
 
-    # Get all operations
-    operations <- get_operations_all()$Id
-    for (operation in operations) {
+    # OPERATOINS
+    operations <- get_operations_all()
+    for (operation in operations$Id) {
+
+      # Convert operation ID to operation Name
+      operation_name <- operations[operations$Id == operation,]$Nombre
+
+      message(paste0("Checking updates for operation '", operation_name, " (", operation, ")' ..."))
 
       # Flags
-      found <- FALSE
       already_updated <- FALSE
 
-      message(paste0("Updating operation ", operation, " ..."))
+      # Variables
       data_content <- NULL
 
+      # Get series in cache
       series <- get_series_operation(operation)
+
+      # Check if serie is empty
       if (is.null(series)) {
-        message(paste0("Operation ", operation, " not found in cache ..."))
+        message(paste0("** Operation not found in cache"))
         next
       }
 
       # Get last serie in cache
-      last_serie <- get_last_serie(operation)
+      last_serie <- get_last_serie_cache(operation)
 
-      # From page 1, to page XX
-      page_start <- 1
-      page_end <- get_serie_page(last_serie, operation, page = page, det = det, tip = tip, lang = lang)
+      # Get last serie in API
+      last_serie_api <- get_last_serie_api(operation)
 
-      # If operation URL (content) is empty
-      if (is.null(page_end)) {
-        message(paste0("No data found in operation ", operation))
+      # Check if last serie in API and last serie in cache are the same
+      if (last_serie == last_serie_api) {
+        message(paste0("** Skipped: operation was already updated"))
+        already_updated <- TRUE
         next
+      } else {
+        message(paste0("** It seems that it's necessary to update series of the operation"))
+        already_updated <- FALSE
       }
 
-      for (page in page_start:page_end) {
+      # Starting to update operation
+      if (!already_updated) {
 
-        # Build URL
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
-        # Get content
-        content <- get_content(url, max_iterations = 3, seconds = 30, verbose = FALSE)
+        # From page 1, to page XX
+        page_start <- 1
+        page_end <- get_serie_page(last_serie, operation, page = page, det = det, tip = tip, lang = lang)
 
-        # If error (no content found) go to next operation
-        if (length(content) == 0) {
-          message(paste0("No data found in operation ", operation))
-          break
+        # If operation URL (content) is empty
+        if (is.null(page_end)) {
+          message(paste0("** No data found in operation"))
+          next
         }
 
-        # Build new content
-        for (i in 1:nrow(content)) {
-          # Check if series are updated
-          if (i == 1) {
+        # PAGES
+        index_series <- 1
+        for (page in page_start:page_end) {
+
+          # Build URL
+          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
+
+          # Get content
+          content <- get_content(url, max_iterations = 3, seconds = 30, verbose = FALSE)
+
+          # If error (no content found) go to next operation
+          if (length(content) == 0) {
+            message(paste0("** No data found in operation"))
+            break
+          }
+
+          # SERIES
+          message(paste0("** Updating series of operation ... (page ", page, ")"))
+          for (i in 1:nrow(content)) {
+
             if (content$COD[i] == last_serie) {
-              message(paste0("Skipped: operation ", operation, " was already updated"))
-              already_updated <- TRUE
-              #next
+              # Stop if found the last serie stored in cache
               break
             } else {
-              message(paste0("It seems that it's necessary to update series of the operation ", operation))
+              # Data content
+              data_content$Id <- rbind(data_content$Id, content$Id[index_series])
+              data_content$Operacion <- rbind(data_content$Operacion, content$Operacion$Id[index_series])
+              data_content$COD <- rbind(data_content$COD, content$COD[index_series])
+              data_content$Nombre <- rbind(data_content$Nombre, content$Nombre[index_series])
+              data_content$Decimales <- rbind(data_content$Decimales, content$Decimales[index_series])
+              data_content$Clasificacion <- rbind(data_content$Clasificacion, content$Clasificacion$Nombre[index_series])
+              data_content$Unidad <- rbind(data_content$Unidad, content$Unidad$Nombre[index_series])
+              data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[index_series])
+              data_content$MetaData <- rbind(data_content$MetaData, content$MetaData[index_series])
+              index_series <- index_series + 1
             }
-          }
-
-          if (content$COD[i] == last_serie) {
-            found <- TRUE
-            next
-          }
-
-          if (found) {
-            message(paste0("Updating serie ", content$COD[i], " from operation ", operation, " ..."))
-            data_content$Id <- rbind(data_content$Id, content$Id[i])
-            data_content$Operacion <- rbind(data_content$Operacion, content$Operacion$Id[i])
-            data_content$COD <- rbind(data_content$COD, content$COD[i])
-            data_content$Nombre <- rbind(data_content$Nombre, content$Nombre[i])
-            data_content$Decimales <- rbind(data_content$Decimales, content$Decimales[i])
-            # Check if classification is null
-            if (is.null(content$Clasificacion$Nombre[i])) {
-              data_content$Clasificacion <- rbind(data_content$Clasificacion, NA)
-            } else {
-              data_content$Clasificacion <- rbind(data_content$Clasificacion, content$Clasificacion$Nombre[i])
-            }
-            data_content$Unidad <- rbind(data_content$Unidad, content$Unidad$Nombre[i])
-            data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[i])
-            data_content$MetaData <- rbind(data_content$MetaData, content$MetaData[i])
 
           }
 
         }
 
         if (!already_updated) {
+
           # Convert to data frame
           data_content <- data.frame(data_content, stringsAsFactors = FALSE)
 
           # Build data content
-          series <- rbind(series, data_content)
+          series <- rbind(data_content, series)
 
           # Save
           save_to_rds(series, operation, type = "SERIEOPERATION")
+
         }
 
-      }
 
+      }
     }
   }
 
@@ -343,8 +357,8 @@ get_cache_rds <- function(object, type = "SERIEOPERATION") {
 }
 
 # Get last serie operation stored in cache
-# Example: get_last_serie(4)
-get_last_serie <- function(operation) {
+# Example: get_last_serie_cache(6)
+get_last_serie_cache <- function(operation) {
 
   # Get all series operation from cache
   series <- get_cache_rds(operation, type = "SERIEOPERATION")
@@ -354,6 +368,24 @@ get_last_serie <- function(operation) {
 
   # Get last serie COD
   last_cod <- last_serie_row$COD
+
+  # Return
+  return(last_cod)
+
+}
+
+# Get last serie operation stored in API
+# Example: get_last_serie_api(6)
+get_last_serie_api <- function(operation, page = 1, tip = "M", det = 2, lang = "ES") {
+
+  # Build URL
+  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
+
+  # Get content
+  content <- get_content(url, max_iterations = 3, seconds = 30, verbose = FALSE)
+
+  # Get last serie COD
+  last_cod <- content$COD[1]
 
   # Return
   return(last_cod)
@@ -393,7 +425,7 @@ get_serie_page <- function(serie, operation, page = 1, det = 2, tip = "M", lang 
 
       } else {
         # Next page
-        print(paste0("Serie ", serie, " not found in page ", page))
+        # print(paste0("Serie ", serie, " not found in page ", page))
         page <- page + 1
 
       }

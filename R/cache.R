@@ -258,6 +258,7 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
               break
             } else {
               # Data content
+              index_series <- i
               data_content$Id <- rbind(data_content$Id, content$Id[index_series])
               data_content$Operacion <- rbind(data_content$Operacion, content$Operacion$Id[index_series])
               data_content$COD <- rbind(data_content$COD, content$COD[index_series])
@@ -267,7 +268,6 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
               data_content$Unidad <- rbind(data_content$Unidad, content$Unidad$Nombre[index_series])
               data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[index_series])
               data_content$MetaData <- rbind(data_content$MetaData, content$MetaData[index_series])
-              index_series <- index_series + 1
             }
 
           }

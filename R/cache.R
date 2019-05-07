@@ -172,7 +172,14 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
 #' @examples
 #' update_series()
 #' @export
-update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", det = 2, lang = "ES") {
+update_series <- function(serie = NULL, benchmark = TRUE, page = 1, tip = "M", det = 2, lang = "ES") {
+
+  # Start the clock!
+  if (benchmark) {
+    rnorm(100000)
+    rep(NA, 100000)
+    ptm <- proc.time()
+  }
 
   message("Note: update all cache may take much time, please be patient ...")
 
@@ -209,6 +216,12 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
 
       # Get last serie in API
       last_serie_api <- get_last_serie_api(operation)
+
+      # Check if no data in operation
+      if ((length(last_serie_api) == 0) || (length(last_serie) == 0)) {
+        message(paste0("** No data found in operation"))
+        next
+      }
 
       # Check if last serie in API and last serie in cache are the same
       if (last_serie == last_serie_api) {
@@ -264,7 +277,11 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
               data_content$COD <- rbind(data_content$COD, content$COD[index_series])
               data_content$Nombre <- rbind(data_content$Nombre, content$Nombre[index_series])
               data_content$Decimales <- rbind(data_content$Decimales, content$Decimales[index_series])
-              data_content$Clasificacion <- rbind(data_content$Clasificacion, content$Clasificacion$Nombre[index_series])
+              if (is.null(content$Clasificacion$Nombre[index_series])) {
+                data_content$Clasificacion <- rbind(data_content$Clasificacion, NA)
+              } else {
+                data_content$Clasificacion <- rbind(data_content$Clasificacion, content$Clasificacion$Nombre[index_series])
+              }
               data_content$Unidad <- rbind(data_content$Unidad, content$Unidad$Nombre[index_series])
               data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[index_series])
               data_content$MetaData <- rbind(data_content$MetaData, content$MetaData[index_series])
@@ -290,6 +307,11 @@ update_series <- function(serie = NULL, benchmark = FALSE, page = 1, tip = "M", 
 
       }
     }
+  }
+
+  # Stop the clock
+  if (benchmark) {
+    print(proc.time() - ptm)
   }
 
 }

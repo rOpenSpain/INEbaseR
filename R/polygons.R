@@ -319,9 +319,9 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
         series <- get_series_operation(operation)
         variables <- get_variables_operation(operation)
 
-        if ("Nombre" %in% names(series$Periodicidad)) {
+        if ("Nombre" %in% names(series)) {
           if (!is.null(variables$Codigo)) {
-            if ((temporal_granularity %in% series$Periodicidad$Nombre) && (geographical_granularity %in% variables$Codigo)) {
+            if ((temporal_granularity %in% series$Periodicidad) && (geographical_granularity %in% variables$Codigo)) {
               operations <- c(operations, operation)
               if (verbose) {
                 print(paste0("Found (", geographical_granularity, " and ", temporal_granularity, ") in operation: ", operation))
@@ -336,8 +336,8 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
       } else if ((is.null(geographical_granularity)) && (!is.null(temporal_granularity))) {
         series <- get_series_operation(operation)
         # Check if column "Nombre" exists
-        if ("Nombre" %in% names(series$Periodicidad)) {
-          if (temporal_granularity %in% series$Periodicidad$Nombre) {
+        if ("Nombre" %in% names(series)) {
+          if (temporal_granularity %in% series$Periodicidad) {
             operations <- c(operations, operation)
             if (verbose) {
               print(paste0("Found (", temporal_granularity, ") in operation: ", operation))

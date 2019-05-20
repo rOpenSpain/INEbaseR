@@ -27,8 +27,13 @@ get_data_serie <- function(serie, date_start = NULL, date_end = NULL, nult = 0, 
   }
 
   # Date format
-  date_start <- format.Date(date_start,'%Y%m%d')
-  date_end <- format.Date(date_end,'%Y%m%d')
+  if (!is.null(date_start)) {
+    date_start <- format.Date(date_start,'%Y%m%d')
+  }
+
+  if (!is.null(date_end)) {
+    date_end <- format.Date(date_end,'%Y%m%d')
+  }
 
   # Build URL
   if (nult == 0) {

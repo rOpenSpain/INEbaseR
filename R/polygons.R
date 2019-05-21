@@ -543,7 +543,7 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
   series_list <- c()
   variables <- get_variables_all()
 
-  # Get serie
+  # Get series
   for (i in 1:nrow(series)) {
 
     if (grepl(pattern = name, x = series$Nombre[i])) {
@@ -567,6 +567,7 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
 
       variable_id <- variable_data$Id
 
+      # No classification found
       if (is.null(series$Clasificacion[i])) {
         if (variable_id == geographical_id) {
           series_list <- c(series_list, series$COD[i])
@@ -574,14 +575,30 @@ get_series_by_classification <- function(serie, classification = NULL, verbose =
             print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
           }
         }
+
+      # Classification found
       } else {
         if (!is.null(variable_id)) {
-          if ((variable_id == geographical_id) && (series$Clasificacion[i] == classification)) {
-            series_list <- c(series_list, series$COD[i])
-            if (verbose) {
-              print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
+
+          # If there is not classification
+          if ((is.na(series$Clasificacion[i])) || (is.na(classification))) {
+            if (variable_id == geographical_id) {
+              series_list <- c(series_list, series$COD[i])
+              if (verbose) {
+                print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
+              }
+            }
+
+          # If there is classification
+          } else {
+            if ((variable_id == geographical_id) && (series$Clasificacion[i] == classification)) {
+              series_list <- c(series_list, series$COD[i])
+              if (verbose) {
+                print(paste0("Found (", series$COD[i], "): ", series$Nombre[i]))
+              }
             }
           }
+
         }
         #else {
         #  print(paste0("No se han encontrado coincidencias geográficas en esta serie"))

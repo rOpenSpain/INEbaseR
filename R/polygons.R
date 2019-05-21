@@ -181,7 +181,14 @@ get_natcode <- function(serie = NULL, all = TRUE, verbose = TRUE) {
 #' draw_serie("IPC251521")
 #' draw_serie("UA42121")
 #' @export
-draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) {
+draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE, benchmark = FALSE) {
+
+  # Start the clock (data)
+  if (benchmark) {
+    rnorm(100000)
+    rep(NA, 100000)
+    ptm <- proc.time()
+  }
 
   # Variables
   geographical_granularity <- NULL
@@ -222,6 +229,19 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) 
   # Conert to data frame
   data <- data.frame(data, stringsAsFactors = FALSE)
 
+  # Stop the clock (data)
+  if (benchmark) {
+    time <- (proc.time() - ptm)[[3]]
+    message(paste0("Time elapsed (data): ", time, " (s)"))
+  }
+
+  # Start the clock (polygons)
+  if (benchmark) {
+    rnorm(100000)
+    rep(NA, 100000)
+    ptm <- proc.time()
+  }
+
   # POLYGONS
   message("Building polygons ...")
 
@@ -257,7 +277,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) 
   map <- get_cache_rds(geographical_granularity, type = "POLYGONS")
 
   # Represent map and series
-  highchart(type = "map") %>%
+  hc <- highchart(type = "map") %>%
     hc_chart(backgroundColor = "#ffffff", zoomType = "xy") %>%
     hc_mapNavigation(enabled = TRUE) %>%
     hc_colorAxis(min = min(data$value), max = max(data$value), type = 'logarithmic') %>%
@@ -274,6 +294,14 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE) 
       dataLabels = list(enabled = TRUE, format = '{point.properties.nameunit}'),
       tooltip = list(pointFormat = paste0("{point.properties.nameunit}: <b>{point.value}</b> (", serie_metadata$Unidad$Nombre, ")"))
     )
+
+  # Stop the clock (polygons)
+  if (benchmark) {
+    time <- (proc.time() - ptm)[[3]]
+    message(paste0("Time elapsed (polygons): ", time, " (s)"))
+  }
+
+  return(hc)
 
 }
 

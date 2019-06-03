@@ -199,7 +199,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE, 
   message("Note: represent all polygons may take much time, please be patient ...")
 
   # Get all related series from a serie
-  series <- get_series_by_classification(serie, classification = classification, verbose = verbose)
+  series <- get_series_by_common_parameters(serie, classification = classification, verbose = verbose)
 
   # DATA
   message("Getting data ...")
@@ -473,18 +473,18 @@ get_series_by_granularity <- function(operation, geographical_granularity = NULL
 
 }
 
-#' @title Get series by classification
-#' @description This function returns a list of all series of an operation that are in the same classification of a specific serie
+#' @title Get series by common parameters
+#' @description This function returns a list of all series of an operation that have the same classification, name and geographical granularity of a specific serie
 #' @param serie (string) serie identification
 #' @param classification (string) serie classification, if \code{classification = NULL} this value will be auto-detected
 #' @param verbose (boolean) to show more information about this process, \code{verbose = TRUE} by default
 #' @examples
-#' get_series_by_classification("IPC251539", classification = "Base 1992")
-#' get_series_by_classification("IPC251539")
-#' get_series_by_classification("DPOP37286")
-#' get_series_by_classification("UA42121")
+#' get_series_by_common_parameters("IPC251539", classification = "Base 1992")
+#' get_series_by_common_parameters("IPC251539")
+#' get_series_by_common_parameters("DPOP37286")
+#' get_series_by_common_parameters("UA42121")
 #' @export
-get_series_by_classification <- function(serie, classification = NULL, verbose = TRUE) {
+get_series_by_common_parameters <- function(serie, classification = NULL, verbose = TRUE) {
 
 
   # Get serie metadata

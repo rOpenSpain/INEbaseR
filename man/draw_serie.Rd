@@ -4,7 +4,8 @@
 \alias{draw_serie}
 \title{Draw serie}
 \usage{
-draw_serie(serie, nult = 0, classification = NULL, verbose = FALSE)
+draw_serie(serie, nult = 0, classification = NULL, verbose = FALSE,
+  benchmark = FALSE)
 }
 \arguments{
 \item{serie}{(string) serie id}

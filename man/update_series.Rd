@@ -4,7 +4,7 @@
 \alias{update_series}
 \title{Update series}
 \usage{
-update_series(serie = NULL, benchmark = FALSE, page = 1, tip = "M",
+update_series(serie = NULL, benchmark = TRUE, page = 1, tip = "M",
   det = 2, lang = "ES")
 }
 \arguments{

@@ -233,13 +233,17 @@ convert_natcode_to_geocode <- function(natcode = NULL, geocode = NULL, exponenti
 #' @param serie (string) serie id
 #' @param nult (int) last \code{n} serie data, if \code{nult = 0} this value will be auto-calculated
 #' @param classification (string) serie classification, if \code{classification = NULL} this value will be auto-detected
+#' @param map_scale (int) refers to the relationship or ratio between distance on a map and the corresponding distance on the ground.
+#' For example, on a \code{1:1000000} scale map, 1cm on the map equals 1km on the ground. Possible values are: \code{1, 3, 10, 20 or 60}, and
+#' it's only for PROV or CCAA geographical granularity, \code{map_scale = 60} by default and \code{map_scale = NULL} for high detailed map.
 #' @param verbose (boolean) show more information during the process
+#' @param benchmark (boolean) used to measure the performance of the system, \code{benchmark = FALSE} by default.
 #' @examples
 #' draw_serie("IPC251541")
 #' draw_serie("IPC251521")
 #' draw_serie("UA42121")
 #' @export
-draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE, benchmark = FALSE) {
+draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, verbose = FALSE, benchmark = FALSE) {
 
   # Start the clock (data)
   if (benchmark) {
@@ -280,7 +284,11 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE, 
     # Generate dataframe with necesary data
     data$name <- rbind(data$name, series[i])
     data$value <- rbind(data$value, serie_data$Data$Valor)
-    data$natcode <- rbind(data$natcode, serie_natcode)
+    if (is.null(map_scale)) {
+      data$natcode <- rbind(data$natcode, serie_natcode)
+    } else {
+      data$geocode <- rbind(data$geocode, convert_natcode_to_geocode(natcode = serie_natcode))
+    }
 
   }
 
@@ -332,7 +340,16 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE, 
   operation_name <- serie_metadata$Operacion$Nombre
 
   # Get polygon from cache
-  map <- get_cache_rds(geographical_granularity, type = "POLYGONS")
+  joinby <- NULL
+  if (is.null(map_scale)) {
+    map <- get_cache_rds(geographical_granularity, type = "POLYGONS")
+    joinby <- "natcode"
+  } else {
+    object <- paste0(geographical_granularity, "-EUROSTAT-", map_scale)
+    map <- get_cache_rds(object, type = "POLYGONS")
+    joinby <- "geocode"
+  }
+
 
   # Represent map and series
   hc <- highchart(type = "map") %>%
@@ -346,9 +363,9 @@ draw_serie <- function(serie, nult = 0, classification = NULL, verbose = FALSE, 
       data = data,
       showInLegend = FALSE,
       borderWidth = 0,
-      keys = c("name", "value", "natcode"),
+      keys = c("name", "value", joinby),
       name = serie_metadata$MetaData[serie_metadata$MetaData$Variable$Id == variable_id,]$Variable$Nombre,
-      joinBy = "natcode",
+      joinBy = joinby,
       dataLabels = list(enabled = TRUE, format = '{point.properties.nameunit}'),
       tooltip = list(pointFormat = paste0("{point.properties.nameunit}: <b>{point.value}</b> (", serie_metadata$Unidad$Nombre, ")"))
     )

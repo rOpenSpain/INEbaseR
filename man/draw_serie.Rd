@@ -4,8 +4,8 @@
 \alias{draw_serie}
 \title{Draw serie}
 \usage{
-draw_serie(serie, nult = 0, classification = NULL, verbose = FALSE,
-  benchmark = FALSE)
+draw_serie(serie, nult = 0, classification = NULL, map_scale = 60,
+  verbose = FALSE, benchmark = FALSE)
 }
 \arguments{
 \item{serie}{(string) serie id}
@@ -14,7 +14,13 @@ draw_serie(serie, nult = 0, classification = NULL, verbose = FALSE,
 
 \item{classification}{(string) serie classification, if \code{classification = NULL} this value will be auto-detected}
 
+\item{map_scale}{(int) refers to the relationship or ratio between distance on a map and the corresponding distance on the ground.
+For example, on a \code{1:1000000} scale map, 1cm on the map equals 1km on the ground. Possible values are: \code{1, 3, 10, 20 or 60}, and
+it's only for PROV or CCAA geographical granularity, \code{map_scale = 60} by default and \code{map_scale = NULL} for high detailed map.}
+
 \item{verbose}{(boolean) show more information during the process}
+
+\item{benchmark}{(boolean) used to measure the performance of the system, \code{benchmark = FALSE} by default.}
 }
 \description{
 This function allows representing series data into a map

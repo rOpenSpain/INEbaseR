@@ -191,13 +191,12 @@ convert_natcode_to_geocode <- function(natcode = NULL, geocode = NULL, exponenti
   # Get the complete table used for codes conversion.
   data <- get_cache_rds("natcode_to_geocode", type = "DATATABLE")
   data <- data.frame(data, stringsAsFactors = FALSE)
+  code <- NULL
 
   # If all params are null, you will get the complete table used for codes conversion.
   if ((is.null(natcode)) && (is.null(geocode))) {
     return(data)
   }
-
-  code <- NULL
 
   # Convert natcode to/from geocode
   if ((!is.null(natcode)) && (is.null(geocode))) {
@@ -207,6 +206,11 @@ convert_natcode_to_geocode <- function(natcode = NULL, geocode = NULL, exponenti
     if ((is.null(natcode)) && (!is.null(geocode))) {
       code <- data[data$geocode == geocode,]$natcode
     }
+  }
+
+  # If no results, return NULL
+  if (length(code) == 0) {
+    code <- NULL
   }
 
   # Check if code not found

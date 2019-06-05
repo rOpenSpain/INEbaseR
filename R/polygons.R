@@ -169,6 +169,60 @@ get_natcode <- function(serie = NULL, all = TRUE, verbose = TRUE) {
 
 }
 
+#' @title Convert Natcode to Geocode
+#' @description This function allows converting from natcode to geocode and vice-versa.
+#' If all params are null, you will get the complete table used for codes conversion.
+#' @param natcode (int) geographical code from INE
+#' @param geocode (string) geographical code from Eurostat
+#' @param exponential_notation (boolean) to show or not exponential notation. \code{e.g. e+10}
+#' @examples
+#' convert_natcode_to_geocode()
+#' convert_natcode_to_geocode(natcode = 34050000000)
+#' convert_natcode_to_geocode(geocode = "ES70")
+#' @export
+convert_natcode_to_geocode <- function(natcode = NULL, geocode = NULL, exponential_notation = FALSE) {
+
+  # Force R not to use exponential notation (e.g. e+10)
+  # Source: https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html
+  if (!exponential_notation) {
+    options("scipen" = 100, "digits" = 4)
+  }
+
+  # Get the complete table used for codes conversion.
+  data <- get_cache_rds("natcode_to_geocode", type = "DATATABLE")
+  data <- data.frame(data, stringsAsFactors = FALSE)
+
+  # If all params are null, you will get the complete table used for codes conversion.
+  if ((is.null(natcode)) && (is.null(geocode))) {
+    return(data)
+  }
+
+  code <- NULL
+
+  # Convert natcode to/from geocode
+  if ((!is.null(natcode)) && (is.null(geocode))) {
+      code <- data[data$natcode == natcode,]$geocode
+      code <- as.character(code)
+  } else {
+    if ((is.null(natcode)) && (!is.null(geocode))) {
+      code <- data[data$geocode == geocode,]$natcode
+    }
+  }
+
+  # Check if code not found
+  if (is.null(code)) {
+    if ((!is.null(natcode)) && (is.null(geocode))) {
+      message(paste0("Error: no code found for natcode ", natcode))
+    } else {
+      if ((is.null(natcode)) && (!is.null(geocode))) {
+        message(paste0("Error: no code found for geocode ", geocode))
+      }
+    }
+  }
+
+  return(code)
+}
+
 
 #' @title Draw serie
 #' @description This function allows representing series data into a map

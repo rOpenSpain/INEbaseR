@@ -368,7 +368,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, v
       keys = c("name", "value", joinby),
       name = serie_metadata$MetaData[serie_metadata$MetaData$Variable$Id == variable_id,]$Variable$Nombre,
       joinBy = joinby,
-      dataLabels = list(enabled = TRUE, format = '{point.properties.nameunit}'),
+      dataLabels = list(enabled = TRUE, format = properties_name),
       tooltip = list(pointFormat = paste0(properties_name, ": <b>{point.value}</b> (", serie_metadata$Unidad$Nombre, ")"))
     )
 

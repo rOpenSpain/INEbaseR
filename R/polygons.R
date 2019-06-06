@@ -344,10 +344,12 @@ draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, v
   if (is.null(map_scale)) {
     map <- get_cache_rds(geographical_granularity, type = "POLYGONS")
     joinby <- "natcode"
+    properties_name <- "{point.properties.nameunit}"
   } else {
     object <- paste0(geographical_granularity, "-EUROSTAT-", map_scale)
     map <- get_cache_rds(object, type = "POLYGONS")
     joinby <- "geocode"
+    properties_name <- "{point.properties.nombre}"
   }
 
 
@@ -367,7 +369,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, v
       name = serie_metadata$MetaData[serie_metadata$MetaData$Variable$Id == variable_id,]$Variable$Nombre,
       joinBy = joinby,
       dataLabels = list(enabled = TRUE, format = '{point.properties.nameunit}'),
-      tooltip = list(pointFormat = paste0("{point.properties.nameunit}: <b>{point.value}</b> (", serie_metadata$Unidad$Nombre, ")"))
+      tooltip = list(pointFormat = paste0(properties_name, ": <b>{point.value}</b> (", serie_metadata$Unidad$Nombre, ")"))
     )
 
   # Stop the clock (polygons)

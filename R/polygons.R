@@ -239,8 +239,8 @@ convert_natcode_to_geocode <- function(natcode = NULL, geocode = NULL, exponenti
 #' @param verbose (boolean) show more information during the process
 #' @param benchmark (boolean) used to measure the performance of the system, \code{benchmark = FALSE} by default.
 #' @examples
-#' draw_serie("IPC251541")
 #' draw_serie("IPC251521")
+#' draw_serie("IPC251541")
 #' draw_serie("UA42121")
 #' @export
 draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, verbose = FALSE, benchmark = FALSE) {
@@ -349,7 +349,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, v
     object <- paste0(geographical_granularity, "-EUROSTAT-", map_scale)
     map <- get_cache_rds(object, type = "POLYGONS")
     joinby <- "geocode"
-    properties_name <- "{point.properties.nombre}"
+    properties_name <- "{point.properties.name}"
   }
 
 

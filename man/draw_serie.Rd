@@ -26,7 +26,7 @@ it's only for PROV or CCAA geographical granularity, \code{map_scale = 60} by de
 This function allows representing series data into a map
 }
 \examples{
-draw_serie("IPC251541")
 draw_serie("IPC251521")
+draw_serie("IPC251541")
 draw_serie("UA42121")
 }

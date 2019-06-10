@@ -284,7 +284,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, v
     # Generate dataframe with necesary data
     data$name <- rbind(data$name, series[i])
     data$value <- rbind(data$value, serie_data$Data$Valor)
-    if (is.null(map_scale)) {
+    if (!is.null(map_scale)) {
       data$natcode <- rbind(data$natcode, serie_natcode)
     } else {
       data$geocode <- rbind(data$geocode, convert_natcode_to_geocode(natcode = serie_natcode))
@@ -323,6 +323,9 @@ draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, v
   } else {
     if (variable_codigo == "MUN") {
       geographical_granularity <- "municipios"
+      if (!is.null(map_scale)) {
+        stop(paste0("Error: geographical granularity Municipios (MUN) has no map scaled, please use map_scale = NULL instead of map_scale = ", map_scale, "."))
+      }
     } else {
       geographical_granularity <- "comunidades_autonomas"
     }

@@ -3,42 +3,6 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-plot_detect_date_pattern <- function(timestamp_vector) {
-
-  # get periodicity
-
-  pattern <- c()
-  # search in vector of time stamp
-  for (i in 1:(length(timestamp_vector)-1)){
-
-    # GET A PATTERN
-    month <- as.numeric(format(timestamp_vector[i], "%m")) ## get numeric month
-
-    # if is not out of vector
-    if (i + 1 <= length(timestamp_vector)) {
-      nextmonth <- as.numeric(format(timestamp_vector[i+1], "%m"))
-      if (nextmonth-month <= 0){
-        nextmonth <- as.numeric(format(timestamp_vector[i+1], "%m"))+12 # if next month is 1 (january) and this month is 12 (december)
-      }
-    }
-
-    pattern <- c(pattern, nextmonth - month) # pattern vector
-
-  }
-
-  # check if the pattern values are all equals
-  if(ifelse(length(unique(pattern)) == 1, TRUE, FALSE)) {
-    pattern <- pattern[1]
-  }
-  else {
-    pattern <- -1
-  }
-
-  # the pattern is returned
-  return(pattern)
-
-}
-
 #' @title Get frequency
 #' @description This function return the periodicity (number) of a time serie
 #' @param periodicity string with a periodicity

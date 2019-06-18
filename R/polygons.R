@@ -474,7 +474,7 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
 
 }
 
-# Get series by granularity
+# Get series by granularity (Private)
 # Examples
 # get_series_by_granularity("IPC", geographical_granularity = "PROV")
 # get_series_by_granularity("IPC", temporal_granularity = "Mensual")
@@ -548,7 +548,7 @@ get_series_by_granularity <- function(operation, geographical_granularity = NULL
 }
 
 
-# Get series by common parameters
+# Get series by common parameters (Private)
 # Examples:
 # get_series_by_common_parameters("IPC251539", classification = "Base 1992")
 # get_series_by_common_parameters("IPC251539")

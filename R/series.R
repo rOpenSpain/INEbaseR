@@ -169,7 +169,7 @@ get_series <- function(code = NULL, resource = "metadata", help = FALSE, ioe = F
 }
 
 
-# Get serie metadata (private)
+# Get serie metadata (Private)
 # Old name: get_serie()
 # Examples:
 # get_serie_metadata("IPC206449")
@@ -439,7 +439,7 @@ get_series_table <- function(code, det = 0, tip = NULL, lang = "ES") {
 }
 
 
-# Get series metadata operation
+# Get series metadata operation (Private)
 # Old name: get_series_metadataoperation()
 # Examples:
 # get_series_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
@@ -516,7 +516,7 @@ get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, 
 }
 
 
-# Get serie last-n
+# Get serie last-n (Private)
 # Old name: get_serie_nult()
 # Example:
 # get_serie_nlast("IPC251541")

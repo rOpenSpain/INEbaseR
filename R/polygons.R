@@ -25,7 +25,7 @@ get_geographical_variable <- function(serie) {
   variable_data <- NULL
 
   # Get serie metadata
-  serie_metadata <- get_serie(serie, det = 2, tip = "M")
+  serie_metadata <- get_series(serie, det = 2, tip = "M")
 
   # Get serie variables (id)
   serie_variables_id <- serie_metadata$MetaData$Variable$Id
@@ -85,7 +85,7 @@ get_natcode <- function(serie = NULL, all = TRUE, verbose = TRUE) {
   }
 
   # Get serie metadata
-  serie_metadata <- get_serie(serie, det = 2, tip = "M")
+  serie_metadata <- get_series(serie, det = 2, tip = "M")
 
   # Get geographical variable id
   variable_id <- get_geographical_variable(serie)
@@ -312,7 +312,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, v
   message("Building polygons ...")
 
   # Get serie metadata
-  serie_metadata <- get_serie(serie, det = 2, tip = "M")
+  serie_metadata <- get_series(serie, det = 2, tip = "M")
   # Get geographical variable id
   variable_id <- get_geographical_variable(serie)
   # Get geographical variable code
@@ -494,7 +494,7 @@ get_series_by_granularity <- function(operation, geographical_granularity = NULL
   for (serie in series$COD) {
 
     # Get serie metadata
-    serie_metadata <- get_serie(serie, det = 2, tip = "M")
+    serie_metadata <- get_series(serie, det = 2, tip = "M")
 
     # Temporal and geographical granularity
     if ((!is.null(geographical_granularity)) && (!is.null(temporal_granularity))) {
@@ -568,7 +568,7 @@ get_series_by_common_parameters <- function(serie, classification = NULL, verbos
 
 
   # Get serie metadata
-  serie_metadata <- get_serie(serie, det = 2, tip = "M")
+  serie_metadata <- get_series(serie, det = 2, tip = "M")
 
   # Get classification name
   name_splited <- strsplit(serie_metadata$Nombre, "[.] ")[[1]]

@@ -80,7 +80,7 @@ plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0,
   #timestamp_vector <- as.POSIXct((data$Fecha + 0.1) / 1000, origin = "1970-01-01", tz = "CET")
 
   data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
-  serie <- get_serie(code)
+  serie <- get_series(code)
   frequency <- get_frequency(serie$T3_Periodicidad, data)
 
   plot(x = as.Date(frequency), y =  data$Valor, xlab = "", ylab = "", type = type)
@@ -104,7 +104,7 @@ plot_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0,
 highcharts_series <- function(code, date_start = NA, date_end = NA, nult = 0, det = 0, lang = "ES") {
 
   data <- get_data_serie(code, date_start, date_end, nult, det, lang)$Data
-  serie <- get_serie(code)
+  serie <- get_series(code)
   frequency <- get_frequency(serie$T3_Periodicidad)
   data_ts <- ts(data = data$Valor, start = data$Anyo[[1]], frequency = frequency)
 

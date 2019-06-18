@@ -326,7 +326,7 @@ save_to_rds <- function(data, object, type = "SERIEOPERATION") {
   file_name_rds <- get_rds_file_name(object, type = type)
 
   # Save an object to a file
-  saveRDS(data, file = file_name_rds)
+  saveRDS(data, file = file_name_rds, version = 2)
 
   # Output messege
   message(paste0("Notification: ",  object, "' compressed successfully to RDS format."))

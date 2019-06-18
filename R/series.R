@@ -1,40 +1,176 @@
 # API INE (Series)
-#
-# Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
-# Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
+# Author: Andres Nacimiento Garcia <andresnacimiento[at]gmail[dot]com>
+# Project Director: Carlos J. Perez Gonzalez <cpgonzal[at]ull[dot]es>
 
 
 #' @title Get series
-#' @description This function returns a data frame with a serie from an id or code
-#' @param serie (string) serie identificator
+#' @description This function returns data or metadata from an operation, table or a serie
+#' @param code (string) serie, operation or table identificator
 #' @param resource (string) resource to access, by default \code{resource = "metadata"} to get serie metadata.
-#'  Possible values are \code{metadata, operation, values, table, metadataoperation, data, by_granularity, by_common_parameters or nult}
+#'  Possible values are \code{metadata, operation, values, table, metadataoperation, data, by_granularity, by_common_parameters or nlast}
+#' @param help (boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.
+#' @param ioe (boolean) \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
 #' @param det (int) \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
 #' @param tip (string) \code{tip = M} to obtain the metadata (crossing variables-values) of the series
 #' @param lang (string) language used to obtain information
+#' @param query (string) string separated by \code{AND} with syntax \code{variable = value} using natural language
+#' @param p (int) periodicity, \code{p = 1} by default
+#' @param date_start (string) start date in format \code{YYYY-MM-DD}
+#' @param date_end (string) end date in format \code{YYYY-MM-DD}
+#' @param nlast (int) last \code{n} serie values
+#' @param classification (string) serie classification, if \code{classification = NULL} this value will be auto-detected
+#' @param verbose (boolean) to show more information about this process, \code{verbose = FALSE} by default
+#' @param benchmark (boolean) used to measure the performance of the system, \code{benchmark = FALSE} by default.
+#' @param geographical_granularity (string) geographical granularity
+#' @param temporal_granularity (string) temporal granularity
 #' @examples
 #' get_series("IPC206449")
-#' get_series("IPC206449", det = 2, tip = "M")
+#' get_series(resource = "metadata", help = TRUE)
+#' get_series("IPC", resource = "operation")
+#' get_series("IPC206449", resource = "values")
+#' get_series(22350, resource = "table")
+#' get_series("IPC", resource = "metadataoperation", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
+#' get_series("IPC251541", resource = "nlast")
+#' get_series("IPC206449", resource = "data", nlast = 5)
+#' get_series("IPC", resource = "by_granularity", geographical_granularity = "CCAA", verbose = TRUE)
+#' get_series("IPC251539", resource = "by_common_parameters", verbose = TRUE)
 #' @export
-get_series <- function(serie, resource = "metadata", det = 0, tip = NULL, lang = "ES") {
+get_series <- function(code = NULL, resource = "metadata", help = FALSE, ioe = FALSE, det = 0, tip = NULL, lang = "ES", query = NULL, p = NULL, date_start = NULL, date_end = NULL, nlast = NULL, classification = NULL, verbose = FALSE, benchmark = FALSE, geographical_granularity = NULL, temporal_granularity = NULL) {
 
   content <- NULL
 
   switch(resource,
     # Get serie metadata
     metadata = {
-      content <- get_serie_metadata(serie, det, tip, lang)
+      # Help
+      if (help) {
+        params <- c("code (serie id)", "det", "tip", "lang")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_series("IPC206449")'))
+        message(paste0('Example (extended): get_series(code = "IPC206449", resource = "metadata", det = 2, tip = "M", lang = "ES")'))
+      } else {
+        content <- get_serie_metadata(code, det, tip, lang)
+      }
+    },
+    # Get series of an operation from cache
+    operation = {
+      # Help
+      if (help) {
+        params <- c("code (operation id)", "ioe", "benchmark")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_series("IPC", resource = "operation")'))
+        message(paste0('Example (extended): get_series(code = "IPC", resource = "operation", ioe = FALSE, benchmark = FALSE)'))
+      } else {
+        content <- get_series_operation_cache(code, ioe, benchmark)
+      }
+    },
+    # Get serie values
+    values = {
+      # Help
+      if (help) {
+        params <- c("code (serie id)", "det", "lang")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_series("IPC206449", resource = "values")'))
+        message(paste0('Example (extended): get_series(code = "IPC206449", resource = "values", det = 1, lang = "ES")'))
+      } else {
+        content <- get_series_values(code, det, lang)
+      }
+    },
+    # Get serie tables
+    table = {
+      # Help
+      if (help) {
+        params <- c("code (table id)", "det", "tip", "lang")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_series(22350, resource = "table")'))
+        message(paste0('Example (extended): get_series(code = 22350, resource = "table", det = 2, tip = "M", lang = "ES")'))
+      } else {
+        content <- get_series_table(code, det, tip, lang)
+      }
+    },
+    # Get series by metadata crossing
+    metadataoperation = {
+      # Help
+      if (help) {
+        params <- c("code (operation id)", "query", "p", "det", "tip", "ioe", "lang")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_series("IPC", resource = "metadataoperation", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")'))
+        message(paste0('Example (extended): get_series(code = "IPC", resource = "metadataoperation", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL", p = 1, det = 2, tip = "M", ioe = FALSE, lang = "ES")'))
+      } else {
+        content <- get_series_metadataoperation(code, query, p, det, tip, ioe, lang)
+      }
+    },
+    # Get serie data
+    data = {
+      # Help
+      if (help) {
+        params <- c("code (serie id)", "date_start", "date_end", "nlast", "det", "lang")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_series("IPC206449", resource = "data", nlast = 5)'))
+        message(paste0('Example (extended): get_series(code = "IPC206449", resource = "data", date_start = "2013-01-01", data_end = "2016-01-01", nlast = NULL, det = 2, lang = "ES")'))
+      } else {
+        content <- get_data_serie(code, date_start, date_end, nlast, det, lang)
+      }
+    },
+    # Get series filtered by granularity (temporal or geographical granularity)
+    by_granularity = {
+      # Help
+      if (help) {
+        params <- c("code (operation id)", "geographical_granularity", "temporal_granularity", "verbose")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_series("IPC", resource = "by_granularity", geographical_granularity = "CCAA", verbose = TRUE)'))
+        message(paste0('Example (extended): get_series(code = "IPC", resource = "by_granularity", geographical_granularity = "CCAA", temporal_granularity = "Mensual", verbose = TRUE)'))
+      } else {
+        content <- get_series_by_granularity(code, geographical_granularity, temporal_granularity, verbose)
+      }
+    },
+    # Get series filtered by common parameters (name, geographical granularity and classification)
+    by_common_parameters = {
+      # Help
+      if (help) {
+        params <- c("code (serie id)", "classification", "verbose")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_series("IPC251539", resource = "by_common_parameters", verbose = TRUE)'))
+        message(paste0('Example (extended): get_series(code = "IPC251539", resource = "by_common_parameters", classification = "Base 1992", verbose = TRUE)'))
+      } else {
+        content <- get_series_by_common_parameters(code, classification, verbose)
+      }
+    },
+    # Get serie n-last data
+    nlast = {
+      # Help
+      if (help) {
+        params <- c("code (serie id)")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_series("IPC251541", resource = "nlast")'))
+        message(paste0('Example (extended): get_series("IPC251541", resource = "nlast")'))
+      } else {
+        content <- get_serie_nlast(code)
+      }
     },
     {
-      stop('ERROR: Possible values are metadata, operation, values, table, metadataoperation, data, by_granularity, by_common_parameters or nult')
+      stop('ERROR: Possible values of param "resource" are: metadata, operation, values, table, metadataoperation, data, by_granularity, by_common_parameters or nlast')
     }
   )
 
-  return(content)
+  if (!is.null(content)) {
+    return(content)
+  }
 
 }
 
+
 # Get serie metadata (private)
+# Old name: get_serie()
 # Examples:
 # get_serie_metadata("IPC206449")
 # get_serie_metadata("IPC206449", det = 2, tip = "M")
@@ -54,41 +190,63 @@ get_serie_metadata <- function(serie, det = 0, tip = NULL, lang = "ES") {
   data <- fromJSON(url)
 
   return(data)
+
 }
 
-#' @title Get series operation
-#' @description This function returns a data frame with all series of an operation from an id or code
-#' @param code operation identification
-#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
-#' @param tip \code{tip = M} to obtain the metadata (crossing variables-values) of the series.
-#' @param pagination \code{TRUE} to obtain data page by page and \code{FALSE} by default.
-#' @param page \code{page = 1} to obtain data of an specific page (to use this, \code{pagination = FALSE}).
-#' @param page_start \code{page_start = 1} start page range to obtain data (to use this, \code{pagination = TRUE}).
-#' @param page_end \code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).
-#' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
-#' @param lang language used to obtain information
-#' @param cache used to load data from local cache instead API, \code{cache = FALSE} by default.
-#' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
-#' @details
-#' Numeric code \code{id}
-#' Alphabetic code \code{IPC}
-#' \code{IOE} code (Inventario de Operaciones Estadísticas)
-#' @examples
-#' get_series_operation(25)
-#' get_series_operation(25, 2, "M")
-#' get_series_operation(30138, ioe = TRUE)
-#' get_series_operation(30138, 2, "M", ioe = TRUE)
-#' get_series_operation("IPC", det = 2, tip = "M")
-#' get_series_operation(25, pagination = FALSE, page = 1, cache = FALSE)
-#' get_series_operation(25, pagination = TRUE, page_start = 1, page_end = 2, cache = FALSE)
-#' @export
-get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, page = NA, page_start = NA, page_end = NA, ioe = FALSE, lang = "ES", cache = TRUE, benchmark = FALSE) {
+
+# Get all series (metadata) of an operation from the cache (Private)
+# Old name: get_series_operation(cache = TRUE)
+# Examples:
+# get_series_operation_cache(25)
+# get_series_operation_cache(30138, ioe = TRUE)
+# get_series_operation_cache("IPC")
+get_series_operation_cache <- function(operation, ioe = FALSE, benchmark = FALSE) {
+
+  # Start the clock!
+  if (benchmark) {
+    rnorm(100000)
+    rep(NA, 100000)
+    ptm <- proc.time()
+  }
+
+  # Convert code to ID
+  operations <- get_operations_all()
+  if (class(operation) == "character") {
+    operation <- operations[operations$Codigo == operation,]$Id
+  } else {
+    if (ioe) {
+      operation <- operations[operations$Cod_IOE == operation,]$Id
+    }
+  }
+
+  # Get data from cache
+  data <- get_cache_rds(operation, type = "SERIEOPERATION")
+  if (is.null(data)) {
+    return(NULL)
+  }
+
+  # Stop the clock
+  if (benchmark) {
+    print(proc.time() - ptm)
+  }
+
+  return(data)
+
+}
+
+
+# Get all series (metadata) of an operation from API (Private)
+# Old name: get_series_operation(cache = FALSE)
+# Examples:
+# get_series_operation_api(25, pagination = FALSE, page = 1)
+# get_series_operation_api(25, pagination = TRUE, page_start = 1, page_end = 2)
+get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination = FALSE, page = NULL, page_start = NULL, page_end = NULL, ioe = FALSE, lang = "ES", benchmark = FALSE) {
 
   # Checking options
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
 
-  if ((tip != "M") && (!is.na(tip)))
+  if ((tip != "M") && (!is.null(tip)))
     stop("You have defined 'tip' parameter with an incorrect value.")
 
   # Start the clock!
@@ -101,136 +259,126 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
   # Convert code to ID
   operations <- get_operations_all()
   if (class(code) == "character") {
-    code <- operations[operations$Codigo == code,]$Id
+    operation <- operations[operations$Codigo == operation,]$Id
   } else {
     if (ioe) {
-      code <- operations[operations$Cod_IOE == code,]$Id
-    }
-  }
-
-  # Get data from cache
-  if (cache) {
-    data <- get_cache_rds(code, type = "SERIEOPERATION")
-    if (is.null(data)) {
-      return(NULL)
+      operation <- operations[operations$Cod_IOE == operation,]$Id
     }
   }
 
   # Get data from API
-  else {
+  data <- NULL
 
-    data <- NULL
+  if (pagination) {
 
-    if (pagination) {
+    empty_content <- FALSE
+    page <- 1
 
-      empty_content <- FALSE
-      page <- 1
+    if (!is.null(page_start)) {
+      if (page_start <= 0) {
+        stop("You have defined 'page_start' parameter with an incorrect value.")
+      } else {
+        page <- page_start
+      }
+    }
 
-      if (!is.na(page_start)) {
-        if (page_start <= 0) {
-          stop("You have defined 'page_start' parameter with an incorrect value.")
-        } else {
-          page <- page_start
-        }
+    while (!empty_content) {
+
+      # URL definition
+      if (ioe) {
+        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", operation, "?page=", page, "&det=", det, "&tip=", tip)
+      }
+      else {
+        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
       }
 
-      while (!empty_content) {
+      #print(url)
+      # Get content
+      content <- get_content(url, max_iterations = 3, seconds = 30)
 
-        # URL definition
-        if (ioe) {
-          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
-        }
-        else {
-          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
-        }
-
-        #print(url)
-        # Get content
-        content <- get_content(url, max_iterations = 3, seconds = 30)
-
-        if (length(content) == 0) {
-          empty_content <- TRUE
-          next
-          # print(paste0("No content found in page ", page))
-        } else {
-          data_content <- NULL
-          for (i in 1:nrow(content)) {
-            # Id
-            if ((tip == "M") && (det == 2)) {
-              data_content$Id <- rbind(data_content$Id, content$Id[i])
-              data_content$Operacion <- rbind(data_content$Operacion, content$Operacion$Id[i])
+      if (length(content) == 0) {
+        empty_content <- TRUE
+        next
+        # print(paste0("No content found in page ", page))
+      } else {
+        data_content <- NULL
+        for (i in 1:nrow(content)) {
+          # Id
+          if ((tip == "M") && (det == 2)) {
+            data_content$Id <- rbind(data_content$Id, content$Id[i])
+            data_content$Operacion <- rbind(data_content$Operacion, content$Operacion$Id[i])
+          }
+          data_content$COD <- rbind(data_content$COD, content$COD[i])
+          data_content$T3_Operacion <- rbind(data_content$T3_Operacion, content$T3_Operacion[i])
+          data_content$Nombre <- rbind(data_content$Nombre, content$Nombre[i])
+          data_content$Decimales <- rbind(data_content$Decimales, content$Decimales[i])
+          data_content$T3_Periodicidad <- rbind(data_content$T3_Periodicidad, content$T3_Periodicidad[i])
+          data_content$T3_Publicacion <- rbind(data_content$T3_Publicacion, content$T3_Publicacion[i])
+          data_content$T3_Clasificacion <- rbind(data_content$T3_Clasificacion, content$T3_Clasificacion[i])
+          data_content$T3_Escala <- rbind(data_content$T3_Escala, content$T3_Escala[i])
+          data_content$T3_Unidad <- rbind(data_content$T3_Unidad, content$T3_Unidad[i])
+          # Periodicidad (nomrbe) y Metadata
+          if ((tip == "M") && (det == 2)) {
+            # Check if classification is null
+            if (is.null(content$Clasificacion$Nombre[i])) {
+              data_content$Clasificacion <- rbind(data_content$Clasificacion, NA)
+            } else {
+              data_content$Clasificacion <- rbind(data_content$Clasificacion, content$Clasificacion$Nombre[i])
             }
-            data_content$COD <- rbind(data_content$COD, content$COD[i])
-            data_content$T3_Operacion <- rbind(data_content$T3_Operacion, content$T3_Operacion[i])
-            data_content$Nombre <- rbind(data_content$Nombre, content$Nombre[i])
-            data_content$Decimales <- rbind(data_content$Decimales, content$Decimales[i])
-            data_content$T3_Periodicidad <- rbind(data_content$T3_Periodicidad, content$T3_Periodicidad[i])
-            data_content$T3_Publicacion <- rbind(data_content$T3_Publicacion, content$T3_Publicacion[i])
-            data_content$T3_Clasificacion <- rbind(data_content$T3_Clasificacion, content$T3_Clasificacion[i])
-            data_content$T3_Escala <- rbind(data_content$T3_Escala, content$T3_Escala[i])
-            data_content$T3_Unidad <- rbind(data_content$T3_Unidad, content$T3_Unidad[i])
-            # Periodicidad (nomrbe) y Metadata
-            if ((tip == "M") && (det == 2)) {
-              # Check if classification is null
-              if (is.null(content$Clasificacion$Nombre[i])) {
-                data_content$Clasificacion <- rbind(data_content$Clasificacion, NA)
-              } else {
-                data_content$Clasificacion <- rbind(data_content$Clasificacion, content$Clasificacion$Nombre[i])
-              }
-              data_content$Unidad <- rbind(data_content$Unidad, content$Unidad$Nombre[i])
-              data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[i])
-              data_content$MetaData <- rbind(data_content$MetaData, content$MetaData[i])
-            }
-
+            data_content$Unidad <- rbind(data_content$Unidad, content$Unidad$Nombre[i])
+            data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[i])
+            data_content$MetaData <- rbind(data_content$MetaData, content$MetaData[i])
           }
 
         }
 
-        # Convert to data frame
-        data_content <- data.frame(data_content, stringsAsFactors = FALSE)
-
-        # Build data content
-        data <- rbind(data, data_content)
-
-        if (!is.na(page_end)) {
-          if (page == page_end)
-            break
-        }
-
-        page <- page + 1
-
       }
 
       # Convert to data frame
-      data <- data.frame(data, stringsAsFactors = FALSE)
+      data_content <- data.frame(data_content, stringsAsFactors = FALSE)
 
-    # Get all data
-    } else {
+      # Build data content
+      data <- rbind(data, data_content)
 
-      if (is.na(page)) {
-        # URL definition
-        if (ioe) {
-          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", NULL, "&det=", det, "&tip=", tip)
-        }
-        else {
-          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", NULL, "&det=", det, "&tip=", tip)
-        }
-      } else {
-        # URL definition
-        if (ioe) {
-          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
-        }
-        else {
-          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
-        }
+      if (!is.null(page_end)) {
+        if (page == page_end)
+          break
       }
 
-      data <- fromJSON(url)
+      page <- page + 1
+
     }
 
-    save_to_rds(data, code, type = "SERIEOPERATION")
+    # Convert to data frame
+    data <- data.frame(data, stringsAsFactors = FALSE)
 
+    # Get all data
+  } else {
+
+    if (is.null(page)) {
+      # URL definition
+      if (ioe) {
+        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", NULL, "&det=", det, "&tip=", tip)
+      }
+      else {
+        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", NULL, "&det=", det, "&tip=", tip)
+      }
+    } else {
+      # URL definition
+      if (ioe) {
+        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
+      }
+      else {
+        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
+      }
+    }
+
+    data <- fromJSON(url)
   }
+
+  save_to_rds(data, code, type = "SERIEOPERATION")
+
+
 
   # Stop the clock
   if (benchmark) {
@@ -238,70 +386,77 @@ get_series_operation <- function(code, det = 0, tip = NA, pagination = FALSE, pa
   }
 
   return(data)
+
 }
 
-#' @title Get series values
-#' @description This function returns a data frame with the metadata that defines a series from an id or code
-#' @param code serie identification
-#' @param det \code{det = 1} to see the detail of the variable to which it belongs, \code{det = 0} by default
-#' @param lang language used to obtain information
-#' @examples
-#' get_series_values("IPC206449")
-#' get_series_values("IPC206449", 1)
-#' @export
+
+# Get series values (Private)
+# Old name: get_series_values()
+# get_series_values("IPC206449")
+# get_series_values("IPC206449", det = 1)
 get_series_values <- function(code, det = 0, lang = "ES") {
-  if ((det < 0) || (det > 1))
+
+  # Check params
+  if ((det < 0) || (det > 1)) {
     stop("You have defined 'det' parameter with an incorrect value.")
-  return(fromJSON(paste0("http://servicios.ine.es/wstempus/js/", lang, "/VALORES_SERIE/", code, "?det=", det)))
+  }
+
+  # Build URL
+  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/VALORES_SERIE/", code, "?det=", det)
+
+  # Get content
+  content <- fromJSON(url)
+
+  return(content)
+
 }
 
-#' @title Get series table
-#' @description This function returns a data frame with all series of a table from an id or code
-#' @param code table identification
-#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
-#' @param tip \code{tip = M} to obtain the metadata (crossing variables-values) of the series.
-#' @param lang language used to obtain information
-#' @examples
-#' get_series_table(22350)
-#' get_series_table(22350, 2, "M")
-#' @export
-get_series_table <- function(code, det = 0, tip = NA, lang = "ES") {
-  if ((det < 0) || (det > 2))
+
+# Get series table (Private)
+# Old name: get_series_table()
+# Examples:
+# get_series_table(22350)
+# get_series_table(22350, 2, "M")
+get_series_table <- function(code, det = 0, tip = NULL, lang = "ES") {
+
+  # Check det param
+  if ((det < 0) || (det > 2)) {
     stop("You have defined 'det' parameter with an incorrect value.")
-  if ((tip != "M") && (!is.na(tip)))
+  }
+
+  # Check tip param
+  if ((tip != "M") && (!is.null(tip))) {
     stop("You have defined 'tip' parameter with an incorrect value.")
-  return(fromJSON(paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_TABLA/", code, "?det=", det, "&tip=", tip)))
+  }
+
+  # Build URL
+  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_TABLA/", code, "?det=", det, "&tip=", tip)
+
+  # Get content
+  content <- fromJSON(url)
+
+  return(content)
 }
 
-#' @title Get series metadata operation
-#' @description This function returns a data frame with all series by metadata crossing from an id or code
-#' @param code operation identification
-#' @param query string separated by \code{AND} with syntax \code{variable = value} using natural language
-#' @param p periodicity, \code{p = 1} by default
-#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
-#' @param tip \code{tip = M} to obtain the metadata (crossing variables-values) of the series.
-#' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
-#' @param lang language used to obtain information
-#' @details
-#' Numeric code \code{id}
-#' Alphabetic code \code{IPC}
-#' \code{IOE} code (Inventario de Operaciones Estadísticas)
-#' Código identificativo de la operación (IOE30138 /IPC/ 25) y códigos identificativos de las variables y valores:
-#' Provincias (FK_VARIABLE=115) = "Madrid" (FK_VALOR=29)  >  g1=115:29
-#' Tipo de dato (FK_VARIABLE=3) = “Variación mensual”   (FK_VALOR=84) > g2=3:84
-#' Grupos ECOICOP (FK_VARIABLE=762) = "Todos los grupos ECOICOP” (FK_VALOR=null) >  g3=762:
-#' Serie mensual (FK_PERIODICIDAD=1) >  p=1  (Ver PUBLICACIONES_OPERACION)
-#' @examples
-#' get_series_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
-#' @export
-get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, tip = NA, ioe = FALSE, lang = "ES"){
 
-  if ((det < 0) || (det > 2))
+# Get series metadata operation
+# Old name: get_series_metadataoperation()
+# Examples:
+# get_series_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
+get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, tip = NULL, ioe = FALSE, lang = "ES") {
+
+  # Checking params
+  if ((det < 0) || (det > 2)) {
     stop("You have defined 'det' parameter with an incorrect value.")
-  if ((p <= 0) && (!is.null(p)))
+  }
+
+  if ((p <= 0) && (!is.null(p))) {
     stop("You have defined 'p' (periodicity) parameter with an incorrect value.")
-  if ((tip != "M") && (!is.na(tip)))
+  }
+
+  if ((tip != "M") && (!is.null(tip))) {
     stop("You have defined 'tip' parameter with an incorrect value.")
+  }
 
   # Split query
   df_queries <- NULL
@@ -361,19 +516,17 @@ get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, 
 }
 
 
-#' @title Get serie last-n
-#' @description This function returns the auto-calculated last-n series
-#' @param serie (string) serie identificator
-#' @examples
-#' get_serie_nult("IPC251541")
-#' @export
-get_serie_nult <- function(serie) {
+# Get serie last-n
+# Old name: get_serie_nult()
+# Example:
+# get_serie_nlast("IPC251541")
+get_serie_nlast <- function(serie) {
 
   # Last "n"
   nult <- 0
 
   # Get metadata serie
-  serie_metadata <- get_serie(serie, det = 2, tip = "M")
+  serie_metadata <- get_series(serie, det = 2, tip = "M")
 
   periodicity <- serie_metadata$Periodicidad$Nombre
   if (periodicity == "Mensual") {

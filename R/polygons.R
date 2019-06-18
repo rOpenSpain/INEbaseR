@@ -474,21 +474,15 @@ get_operations_by_granularity <- function(geographical_granularity = NULL, tempo
 
 }
 
-#' @title Get series by granularity
-#' @description This function returns a list of all series of an operation that has a temporal or geographic granularity specified by the user
-#' @param operation (string) operation identification
-#' @param geographical_granularity (string) geographical granularity
-#' @param temporal_granularity (string) temporal granularity
-#' @param verbose (boolean) show more information during the process
-#' @examples
-#' get_series_by_granularity("IPC", geographical_granularity = "PROV")
-#' get_series_by_granularity("IPC", temporal_granularity = "Mensual")
-#' get_series_by_granularity("IPC", geographical_granularity = "PROV", temporal_granularity = "Mensual")
-#' @export
+# Get series by granularity
+# Examples
+# get_series_by_granularity("IPC", geographical_granularity = "PROV")
+# get_series_by_granularity("IPC", temporal_granularity = "Mensual")
+# get_series_by_granularity("IPC", geographical_granularity = "PROV", temporal_granularity = "Mensual")
 get_series_by_granularity <- function(operation, geographical_granularity = NULL, temporal_granularity = NULL, verbose = TRUE) {
 
   # Get series list
-  series <- get_series_operation(operation)
+  series <- get_series(operation, resource = "operation")
   series_list <- c()
 
   for (serie in series$COD) {
@@ -553,17 +547,13 @@ get_series_by_granularity <- function(operation, geographical_granularity = NULL
 
 }
 
-#' @title Get series by common parameters
-#' @description This function returns a list of all series of an operation that have the same classification, name and geographical granularity of a specific serie
-#' @param serie (string) serie identification
-#' @param classification (string) serie classification, if \code{classification = NULL} this value will be auto-detected
-#' @param verbose (boolean) to show more information about this process, \code{verbose = TRUE} by default
-#' @examples
-#' get_series_by_common_parameters("IPC251539", classification = "Base 1992")
-#' get_series_by_common_parameters("IPC251539")
-#' get_series_by_common_parameters("DPOP37286")
-#' get_series_by_common_parameters("UA42121")
-#' @export
+
+# Get series by common parameters
+# Examples:
+# get_series_by_common_parameters("IPC251539", classification = "Base 1992")
+# get_series_by_common_parameters("IPC251539")
+# get_series_by_common_parameters("DPOP37286")
+# get_series_by_common_parameters("UA42121")
 get_series_by_common_parameters <- function(serie, classification = NULL, verbose = TRUE) {
 
 
@@ -604,7 +594,7 @@ get_series_by_common_parameters <- function(serie, classification = NULL, verbos
   message(paste0("Note: serie ", serie," has '", geographical_name, " (", geographical_code, ")' as geographical granularity."))
 
   # Get series operation
-  series <- get_series_operation(operacion)
+  series <- get_series(operacion, resource = "operation")
 
   # Autoselect classification if is NULL
   if (is.null(classification)) {

@@ -4,25 +4,60 @@
 \alias{get_series}
 \title{Get series}
 \usage{
-get_series(serie, resource = "metadata", det = 0, tip = NULL,
-  lang = "ES")
+get_series(code = NULL, resource = "metadata", help = FALSE,
+  ioe = FALSE, det = 0, tip = NULL, lang = "ES", query = NULL,
+  p = NULL, date_start = NULL, date_end = NULL, nlast = NULL,
+  classification = NULL, verbose = FALSE, benchmark = FALSE,
+  geographical_granularity = NULL, temporal_granularity = NULL)
 }
 \arguments{
-\item{serie}{(string) serie identificator}
+\item{code}{(string) serie, operation or table identificator}
 
 \item{resource}{(string) resource to access, by default \code{resource = "metadata"} to get serie metadata.
-Possible values are \code{metadata, operation, values, table, metadataoperation, data, by_granularity, by_common_parameters or nult}}
+Possible values are \code{metadata, operation, values, table, metadataoperation, data, by_granularity, by_common_parameters or nlast}}
+
+\item{help}{(boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.}
+
+\item{ioe}{(boolean) \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default}
 
 \item{det}{(int) \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default}
 
 \item{tip}{(string) \code{tip = M} to obtain the metadata (crossing variables-values) of the series}
 
 \item{lang}{(string) language used to obtain information}
+
+\item{query}{(string) string separated by \code{AND} with syntax \code{variable = value} using natural language}
+
+\item{p}{(int) periodicity, \code{p = 1} by default}
+
+\item{date_start}{(string) start date in format \code{YYYY-MM-DD}}
+
+\item{date_end}{(string) end date in format \code{YYYY-MM-DD}}
+
+\item{nlast}{(int) last \code{n} serie values}
+
+\item{classification}{(string) serie classification, if \code{classification = NULL} this value will be auto-detected}
+
+\item{verbose}{(boolean) to show more information about this process, \code{verbose = FALSE} by default}
+
+\item{benchmark}{(boolean) used to measure the performance of the system, \code{benchmark = FALSE} by default.}
+
+\item{geographical_granularity}{(string) geographical granularity}
+
+\item{temporal_granularity}{(string) temporal granularity}
 }
 \description{
-This function returns a data frame with a serie from an id or code
+This function returns data or metadata from an operation, table or a serie
 }
 \examples{
 get_series("IPC206449")
-get_series("IPC206449", det = 2, tip = "M")
+get_series(resource = "metadata", help = TRUE)
+get_series("IPC", resource = "operation")
+get_series("IPC206449", resource = "values")
+get_series(22350, resource = "table")
+get_series("IPC", resource = "metadataoperation", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
+get_series("IPC251541", resource = "nlast")
+get_series("IPC206449", resource = "data", nlast = 5)
+get_series("IPC", resource = "by_granularity", geographical_granularity = "CCAA", verbose = TRUE)
+get_series("IPC251539", resource = "by_common_parameters", verbose = TRUE)
 }

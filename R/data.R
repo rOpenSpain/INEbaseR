@@ -3,20 +3,12 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-#' @title Get data serie
-#' @description This function returns a data frame with data of a serie from an id or/and from a date or date range
-#' @param serie serie identifier
-#' @param date_start start date in format (string) \code{YYYY-MM-DD}
-#' @param date_end end date in format (string) \code{YYYY-MM-DD}
-#' @param nult last \code{n} values
-#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
-#' @param lang language used to obtain information
-#' @examples
-#' get_data_serie("IPC206449", nult = 1)
-#' get_data_serie("IPC206449", nult = 5)
-#' get_data_serie("IPC206449", "2013-01-01", "2016-01-01")
-#' get_data_serie("IPC206449", "2010-01-01")
-#' @export
+# Get data serie
+# Examples:
+# get_data_serie("IPC206449", nult = 1)
+# get_data_serie("IPC206449", nult = 5)
+# get_data_serie("IPC206449", "2013-01-01", "2016-01-01")
+# get_data_serie("IPC206449", "2010-01-01")
 get_data_serie <- function(serie, date_start = NULL, date_end = NULL, nult = 0, det = 0, lang = "ES") {
 
   # Checking options

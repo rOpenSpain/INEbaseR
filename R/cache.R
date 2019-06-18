@@ -203,7 +203,7 @@ update_series <- function(serie = NULL, benchmark = TRUE, page = 1, tip = "M", d
       data_content <- NULL
 
       # Get series in cache
-      series <- get_series_operation(operation)
+      series <- get_series(operation, resource = "operation")
 
       # Check if serie is empty
       if (is.null(series)) {

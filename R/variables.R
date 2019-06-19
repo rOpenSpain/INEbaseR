@@ -45,16 +45,11 @@ get_variables_operation <- function(operation, ioe = FALSE, lang = "ES") {
   return(content)
 }
 
-#' @title Get variable values operation
-#' @description This function returns a data frame with all values and variables of an operation from an id or code
-#' @param operation operation identifier
-#' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
-#' @param lang language used to obtain information
-#' @examples
-#' get_var_values_operation(operation = 25)
-#' get_var_values_operation(operation = "IPC")
-#' get_var_values_operation(operation = 30138, ioe = TRUE)
-#' @export
+# Get variable values operation
+# Examples:
+# get_var_values_operation(operation = 25)
+# get_var_values_operation(operation = "IPC")
+# get_var_values_operation(operation = 30138, ioe = TRUE)
 get_var_values_operation <- function(operation, ioe = FALSE, lang = "ES") {
 
   # Variables

@@ -3,16 +3,6 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-# Example: parse_param("Población residente (Personas). ")
-parse_param <- function(param) {
-
-  param <- trimws(param) # Remove white spaces
-  param <- gsub("[(]", "[(]", param) # Replace ( for [(]
-  param <- gsub("[)]", "[)]", param) # Replace ) for [)]
-
-  return(param)
-}
-
 #' @title Get geographical variable
 #' @description This function returns the geographical variable of a serie
 #' @param serie (string) serie id
@@ -385,16 +375,12 @@ draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, v
 
 }
 
-#' @title Get operations by granularity
-#' @description This function returns a list of all operations that have a temporal or geographic granularity specified by user
-#' @param geographical_granularity (string) geographical granularity
-#' @param temporal_granularity (string) temporal granularity
-#' @param verbose (boolean) show more information during the process
-#' @examples
-#' get_operations_by_granularity(geographical_granularity = "PROV")
-#' get_operations_by_granularity(temporal_granularity = "Anual")
-#' get_operations_by_granularity(geographical_granularity = "PROV", temporal_granularity = "Mensual")
-#' @export
+
+# Get operations by granularity
+# Examples:
+# get_operations_by_granularity(geographical_granularity = "PROV")
+# get_operations_by_granularity(temporal_granularity = "Anual")
+# get_operations_by_granularity(geographical_granularity = "PROV", temporal_granularity = "Mensual")
 get_operations_by_granularity <- function(geographical_granularity = NULL, temporal_granularity = NULL, verbose = TRUE) {
 
   # Check geographical granularity

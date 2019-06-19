@@ -162,7 +162,7 @@ get_series <- function(code = NULL, resource = "metadata", help = FALSE, ioe = F
     }
   )
 
-  if (!is.null(content)) {
+  if (!help) {
     return(content)
   }
 

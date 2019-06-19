@@ -13,8 +13,6 @@
 #' @param det (int) \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
 #' @param tip (string) \code{tip = M} to obtain the metadata (crossing variables-values) of the series
 #' @param lang (string) language used to obtain information
-#' @param query (string) string separated by \code{AND} with syntax \code{variable = value} using natural language
-#' @param p (int) periodicity, \code{p = 1} by default
 #' @param date_start (string) start date in format \code{YYYY-MM-DD}
 #' @param date_end (string) end date in format \code{YYYY-MM-DD}
 #' @param nlast (int) last \code{n} serie values
@@ -29,13 +27,12 @@
 #' get_series("IPC", resource = "operation")
 #' get_series("IPC206449", resource = "values")
 #' get_series(22350, resource = "table")
-#' get_series("IPC", resource = "metadataoperation", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
 #' get_series("IPC251541", resource = "nlast")
 #' get_series("IPC206449", resource = "data", nlast = 5)
 #' get_series("IPC", resource = "by_granularity", geographical_granularity = "CCAA", verbose = TRUE)
 #' get_series("IPC251539", resource = "by_common_parameters", verbose = TRUE)
 #' @export
-get_series <- function(code = NULL, resource = "metadata", help = FALSE, ioe = FALSE, det = 0, tip = NULL, lang = "ES", query = NULL, p = NULL, date_start = NULL, date_end = NULL, nlast = NULL, classification = NULL, verbose = FALSE, benchmark = FALSE, geographical_granularity = NULL, temporal_granularity = NULL) {
+get_series <- function(code = NULL, resource = "metadata", help = FALSE, ioe = FALSE, det = 0, tip = NULL, lang = "ES", date_start = NULL, date_end = NULL, nlast = NULL, classification = NULL, verbose = FALSE, benchmark = FALSE, geographical_granularity = NULL, temporal_granularity = NULL) {
 
   content <- NULL
 
@@ -90,19 +87,6 @@ get_series <- function(code = NULL, resource = "metadata", help = FALSE, ioe = F
         message(paste0('Example (extended): get_series(code = 22350, resource = "table", det = 2, tip = "M", lang = "ES")'))
       } else {
         content <- get_series_table(code, det, tip, lang)
-      }
-    },
-    # Get series by metadata crossing
-    metadataoperation = {
-      # Help
-      if (help) {
-        params <- c("code (operation id)", "query", "p", "det", "tip", "ioe", "lang")
-        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
-        message(paste0("- ", params, "\n"))
-        message(paste0('Example (basic): get_series("IPC", resource = "metadataoperation", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")'))
-        message(paste0('Example (extended): get_series(code = "IPC", resource = "metadataoperation", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL", p = 1, det = 2, tip = "M", ioe = FALSE, lang = "ES")'))
-      } else {
-        content <- get_series_metadataoperation(code, query, p, det, tip, ioe, lang)
       }
     },
     # Get serie data
@@ -441,9 +425,10 @@ get_series_table <- function(code, det = 0, tip = NULL, lang = "ES") {
 
 # Get series metadata operation (Private)
 # Old name: get_series_metadataoperation()
+# How to call: get_metadata_crossing("IPC", resource = "series", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
 # Examples:
 # get_series_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
-get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, tip = NULL, ioe = FALSE, lang = "ES") {
+get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, tip = NULL, lang = "ES") {
 
   # Checking params
   if ((det < 0) || (det > 2)) {
@@ -497,21 +482,16 @@ get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, 
   urlStr <- paste0(result, collapse = "")
 
   # Build URL
-  if (ioe) {
-    if (is.null(p)) {
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/IOE", code, "?", urlStr, "tip=", tip, "&det=", det)
-    } else {
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/IOE", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det)
-    }
+  if (is.null(p)) {
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "tip=", tip, "&det=", det)
   } else {
-    if (is.null(p)) {
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "tip=", tip, "&det=", det)
-    } else {
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det)
-    }
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det)
   }
 
-  return(fromJSON(url))
+  # Get content
+  content <- get_content(url, verbose = FALSE)
+
+  return(content)
 
 }
 

@@ -5,8 +5,8 @@
 \title{Get series}
 \usage{
 get_series(code = NULL, resource = "metadata", help = FALSE,
-  ioe = FALSE, det = 0, tip = NULL, lang = "ES", query = NULL,
-  p = NULL, date_start = NULL, date_end = NULL, nlast = NULL,
+  ioe = FALSE, det = 0, tip = NULL, lang = "ES",
+  date_start = NULL, date_end = NULL, nlast = NULL,
   classification = NULL, verbose = FALSE, benchmark = FALSE,
   geographical_granularity = NULL, temporal_granularity = NULL)
 }
@@ -25,10 +25,6 @@ Possible values are \code{metadata, operation, values, table, metadataoperation,
 \item{tip}{(string) \code{tip = M} to obtain the metadata (crossing variables-values) of the series}
 
 \item{lang}{(string) language used to obtain information}
-
-\item{query}{(string) string separated by \code{AND} with syntax \code{variable = value} using natural language}
-
-\item{p}{(int) periodicity, \code{p = 1} by default}
 
 \item{date_start}{(string) start date in format \code{YYYY-MM-DD}}
 
@@ -55,7 +51,6 @@ get_series(resource = "metadata", help = TRUE)
 get_series("IPC", resource = "operation")
 get_series("IPC206449", resource = "values")
 get_series(22350, resource = "table")
-get_series("IPC", resource = "metadataoperation", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
 get_series("IPC251541", resource = "nlast")
 get_series("IPC206449", resource = "data", nlast = 5)
 get_series("IPC", resource = "by_granularity", geographical_granularity = "CCAA", verbose = TRUE)

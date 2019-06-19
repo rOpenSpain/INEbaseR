@@ -51,7 +51,7 @@ get_data_serie <- function(serie, date_start = NULL, date_end = NULL, nult = 0, 
 
 
 # Get data table
-# Examples
+# Examples:
 # get_data_table(22350, 4)
 get_data_table <- function(id, nlast = 0, det = 0, tip = NULL, lang = "ES") {
 
@@ -78,20 +78,11 @@ get_data_table <- function(id, nlast = 0, det = 0, tip = NULL, lang = "ES") {
 
 }
 
-#' @title Get data metadata-operation
-#' @description This function returns a data frame with latest \code{n} series data by crossing metadata from an id or code
-#' @param operation operation identifier
-#' @param query string separated by \code{AND} with syntax \code{variable = value} using natural language
-#' @param p periodicity
-#' @param nult last \code{n} values
-#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
-#' @param tip \code{tip = AM} to obtain the metadata (crossing variables-values) of the series and a friendly output.
-#' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
-#' @param lang language used to obtain information
-#' @examples
-#' get_data_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variacion mensual AND Grupos ECOICOP = NULL", nult = 1)
-#' @export
-get_data_metadataoperation <- function(operation, query = NULL, p = 1, nult = 1, det = 0, tip = NULL, ioe = FALSE, lang = "ES") {
+# Get data metadata-operation
+# How to call: get_metadata_crossing("IPC", resource = "data", query = "Provincias = Madrid AND Tipo de dato = Variacion mensual AND Grupos ECOICOP = NULL", nlast = 5)
+# Examples:
+# get_data_metadataoperation("IPC", query = "Provincias = Madrid AND Tipo de dato = Variacion mensual AND Grupos ECOICOP = NULL", nult = 5)
+get_data_metadataoperation <- function(operation, query = NULL, p = 1, nult = 1, det = 0, tip = NULL, lang = "ES") {
 
   # Checking det
   if ((det < 0) || (det > 2)) {
@@ -148,11 +139,7 @@ get_data_metadataoperation <- function(operation, query = NULL, p = 1, nult = 1,
   urlStr <- paste0(result, collapse = "")
 
   # Build URL
-  if (ioe) {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_METADATAOPERACION/IOE", operation, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det, "&nult=", nult)
-  } else {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_METADATAOPERACION/", operation, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det, "&nult=", nult)
-  }
+  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_METADATAOPERACION/", operation, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det, "&nult=", nult)
 
   # Get content
   content <- get_content(url, verbose = FALSE)

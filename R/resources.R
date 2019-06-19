@@ -30,3 +30,13 @@ get_content <- function(url, loop = 1, max_iterations = 10, seconds = 60, verbos
   return(content)
 
 }
+
+# Example: parse_param("Población residente (Personas). ")
+parse_param <- function(param) {
+
+  param <- trimws(param) # Remove white spaces
+  param <- gsub("[(]", "[(]", param) # Replace ( for [(]
+  param <- gsub("[)]", "[)]", param) # Replace ) for [)]
+
+  return(param)
+}

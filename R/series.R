@@ -258,7 +258,7 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
 
   # Convert code to ID
   operations <- get_operations_all()
-  if (class(code) == "character") {
+  if (class(operation) == "character") {
     operation <- operations[operations$Codigo == operation,]$Id
   } else {
     if (ioe) {

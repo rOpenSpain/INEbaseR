@@ -1,7 +1,7 @@
-# API INE (Data)
+# API INE (Series)
+# Author: Andres Nacimiento Garcia <andresnacimiento[at]gmail[dot]com>
+# Project Director: Carlos J. Perez Gonzalez <cpgonzal[at]ull[dot]es>
 
-# Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
-# Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
 # Get data serie
 # Examples:
@@ -49,17 +49,11 @@ get_data_serie <- function(serie, date_start = NULL, date_end = NULL, nult = 0, 
 
 }
 
-#' @title Get data table
-#' @description This function returns a data frame with latest \code{n} data of a table from an id or code
-#' @param id table identifier
-#' @param nult last \code{n} values
-#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
-#' @param tip \code{tip = AM} to obtain the metadata (crossing variables-values) of the series and a friendly output.
-#' @param lang language used to obtain information
-#' @examples
-#' get_data_table(22350, 4)
-#' @export
-get_data_table <- function(id, nult = 0, det = 0, tip = NULL, lang = "ES") {
+
+# Get data table
+# Examples
+# get_data_table(22350, 4)
+get_data_table <- function(id, nlast = 0, det = 0, tip = NULL, lang = "ES") {
 
   # Checking det
   if ((det < 0) || (det > 2)) {
@@ -71,10 +65,10 @@ get_data_table <- function(id, nult = 0, det = 0, tip = NULL, lang = "ES") {
   }
 
   # Build URL
-  if (nult == 0) {
+  if (nlast == 0) {
     url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_TABLA/", id)
   } else {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_TABLA/", id, "?nult=", nult)
+    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_TABLA/", id, "?nult=", nlast)
   }
 
   # Get content

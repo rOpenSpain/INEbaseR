@@ -33,6 +33,6 @@ This function returns data or metadata by metadata crossing
 }
 \examples{
 get_metadata_crossing(resource = "series", help = TRUE)
-get_metadata_crossing("IPC", resource = "series", query = "Provincias = Madrid AND Tipo de dato = Variación mensual AND Grupos ECOICOP = NULL")
+get_metadata_crossing("IPC", resource = "series", query = "Provincias = Madrid AND Tipo de dato = Variacion mensual AND Grupos ECOICOP = NULL")
 get_metadata_crossing("IPC", resource = "data", query = "Provincias = Madrid AND Tipo de dato = Variacion mensual AND Grupos ECOICOP = NULL", nlast = 5)
 }

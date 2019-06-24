@@ -107,7 +107,7 @@ get_var_values_operation <- function(operation, ioe = FALSE, lang = "ES") {
   var_val_op_name_variable <- NULL
 
   # Get operation variables
-  variables <- get_variables_operation(operation, ioe, lang)
+  variables <- get_variables(operation, resource = "operation", ioe = ioe, lang = lang)
 
   count <- 1
   for (id in variables$Id){

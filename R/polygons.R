@@ -261,7 +261,7 @@ draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, v
 
     # Calculate last n serie data
     if (nult == 0) {
-      nult <- get_serie_nult(series[i])
+      nult <- get_series(series[i], resource = "nlast")
     }
 
     # Get serie data

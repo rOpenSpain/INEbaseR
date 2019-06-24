@@ -95,6 +95,7 @@ get_variables_operation <- function(operation, ioe = FALSE, lang = "ES") {
 }
 
 # Get variable values operation
+# How to call: get_operations("IPC", resource = "variables_values")
 # Examples:
 # get_var_values_operation(operation = 25)
 # get_var_values_operation(operation = "IPC")

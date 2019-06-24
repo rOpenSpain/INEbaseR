@@ -1,14 +1,67 @@
 # API INE (Variables)
-#
-# Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
-# Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
+# Author: Andres Nacimiento Garcia <andresnacimiento[at]gmail[dot]com>
+# Project Director: Carlos J. Perez Gonzalez <cpgonzal[at]ull[dot]es>
 
-#' @title Get variables (all)
-#' @description This function returns a data frame with all system variables
+
+#' @title Get variables
+#' @description This function returns all or operations variables
+#' @param code operation identifier
+#' @param resource (string) resource to access, by default \code{resource = "metadata"} to get serie metadata.
+#'  Possible values are \code{all or operation}
+#' @param help (boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.
+#' @param ioe (boolean) \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
 #' @param lang language used to obtain information
 #' @examples
-#' get_variables_all()
+#' get_variables()
+#' get_variables(resource = "all", help = TRUE)
+#' get_variables("IPC", resource = "operation")
 #' @export
+get_variables <- function(code = NULL, resource = "all", help = FALSE, ioe = FALSE, lang = "ES") {
+
+  content <- NULL
+
+  switch(resource,
+    all = {
+      # Help
+      if (help) {
+        params <- c("lang")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_variables()'))
+        message(paste0('Example (extended): get_variables(resource = "all", lang = "ES")'))
+      } else {
+        content <- get_variables_all(lang)
+      }
+    },
+    operation = {
+      # Help
+      if (help) {
+        params <- c("code (operation id)", "ioe", "lang")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_variables("IPC", resource = "operation")'))
+        message(paste0('Example (extended): get_variables("IPC", resource = "operation", ioe = FALSE, lang = "ES")'))
+      } else {
+        content <- get_variables_operation(code, ioe, lang)
+      }
+    },
+    {
+      stop('ERROR: Possible values of param "resource" are: all or operation')
+    }
+  )
+
+  if (!help) {
+    return(content)
+  }
+
+}
+
+# Get variables (all)
+# How to call:
+# get_variables()
+# get_variables(resources = "all")
+# Examples:
+# get_variables_all()
 get_variables_all <- function(lang = "ES") {
 
   # Build URL
@@ -20,16 +73,12 @@ get_variables_all <- function(lang = "ES") {
   return(content)
 }
 
-#' @title Get variable operation
-#' @description This function returns a data frame with system variables of an operation from an id or code
-#' @param operation operation identifier
-#' @param ioe \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
-#' @param lang language used to obtain information
-#' @examples
-#' get_variables_operation(operation = 25)
-#' get_variables_operation(operation = "IPC")
-#' get_variables_operation(operation = 30138, ioe = TRUE)
-#' @export
+# Get variable operation
+# How to call: get_variables("IPC", resource = "operation")
+# Examples:
+# get_variables_operation(operation = 25)
+# get_variables_operation(operation = "IPC")
+# get_variables_operation(operation = 30138, ioe = TRUE)
 get_variables_operation <- function(operation, ioe = FALSE, lang = "ES") {
 
   # Build URL

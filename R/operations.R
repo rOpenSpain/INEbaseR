@@ -1,4 +1,4 @@
-# API INE (Series)
+# API INE (Operations)
 # Author: Andres Nacimiento Garcia <andresnacimiento[at]gmail[dot]com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal[at]ull[dot]es>
 

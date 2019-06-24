@@ -102,6 +102,7 @@ get_operations_all <- function(lang = "ES") {
 
 }
 
+
 # Get operation
 # Examples:
 # get_operation(operation = 25)

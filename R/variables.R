@@ -5,12 +5,12 @@
 
 #' @title Get variables
 #' @description This function returns all or operations variables
-#' @param code operation identifier
+#' @param code (string) operation identifier
 #' @param resource (string) resource to access, by default \code{resource = "metadata"} to get serie metadata.
 #'  Possible values are \code{all or operation}
 #' @param help (boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.
 #' @param ioe (boolean) \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default
-#' @param lang language used to obtain information
+#' @param lang (string) language used to obtain information
 #' @examples
 #' get_variables()
 #' get_variables(resource = "all", help = TRUE)
@@ -56,6 +56,7 @@ get_variables <- function(code = NULL, resource = "all", help = FALSE, ioe = FAL
 
 }
 
+
 # Get variables (all)
 # How to call:
 # get_variables()
@@ -72,6 +73,7 @@ get_variables_all <- function(lang = "ES") {
 
   return(content)
 }
+
 
 # Get variable operation
 # How to call: get_variables("IPC", resource = "operation")
@@ -93,6 +95,7 @@ get_variables_operation <- function(operation, ioe = FALSE, lang = "ES") {
 
   return(content)
 }
+
 
 # Get variable values operation
 # How to call: get_operations("IPC", resource = "variables_values")

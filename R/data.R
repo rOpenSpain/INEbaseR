@@ -78,6 +78,7 @@ get_data_table <- function(id, nlast = 0, det = 0, tip = NULL, lang = "ES") {
 
 }
 
+
 # Get data metadata-operation
 # How to call: get_metadata_crossing("IPC", resource = "data", query = "Provincias = Madrid AND Tipo de dato = Variacion mensual AND Grupos ECOICOP = NULL", nlast = 5)
 # Examples:

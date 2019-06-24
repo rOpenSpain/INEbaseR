@@ -8,7 +8,7 @@ get_variables(code = NULL, resource = "all", help = FALSE,
   ioe = FALSE, lang = "ES")
 }
 \arguments{
-\item{code}{operation identifier}
+\item{code}{(string) operation identifier}
 
 \item{resource}{(string) resource to access, by default \code{resource = "metadata"} to get serie metadata.
 Possible values are \code{all or operation}}
@@ -17,7 +17,7 @@ Possible values are \code{all or operation}}
 
 \item{ioe}{(boolean) \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default}
 
-\item{lang}{language used to obtain information}
+\item{lang}{(string) language used to obtain information}
 }
 \description{
 This function returns all or operations variables

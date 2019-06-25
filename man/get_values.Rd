@@ -10,7 +10,7 @@ get_values(code = NULL, resource = "all", operation = NULL,
 \arguments{
 \item{code}{(int) variable indentificator}
 
-\item{resource}{(string) resource to access, by default \code{resource = "metadata"} to get serie metadata.
+\item{resource}{(string) resource to access, by default \code{resource = "all"} to get serie metadata.
 Possible values are \code{all or variable_operation}}
 
 \item{operation}{(string) operation indentificator}

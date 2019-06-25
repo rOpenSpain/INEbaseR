@@ -7,7 +7,7 @@
 #' @description This function returns values from a variable or variable operation
 #' @param code (int) variable indentificator
 #' @param operation (string) operation indentificator
-#' @param resource (string) resource to access, by default \code{resource = "metadata"} to get serie metadata.
+#' @param resource (string) resource to access, by default \code{resource = "all"} to get serie metadata.
 #'  Possible values are \code{all or variable_operation}
 #' @param help (boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.
 #' @param det (int) \code{det = 1} to see the detail of the variable to which it belongs, \code{det = 0} by default

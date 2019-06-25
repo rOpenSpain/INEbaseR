@@ -4,16 +4,27 @@
 \alias{get_publications}
 \title{Get publications}
 \usage{
-get_publications(det = 0, lang = "ES")
+get_publications(code = NULL, resource = "all", help = FALSE,
+  det = 0, ioe = FALSE, lang = "ES")
 }
 \arguments{
-\item{det}{\code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default}
+\item{code}{(string) operation or publication indentificator}
 
-\item{lang}{language used to obtain information}
+\item{resource}{(string) resource to access, by default \code{resource = "all"} to get serie metadata.
+Possible values are \code{all, operation or date}}
+
+\item{help}{(boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.}
+
+\item{det}{(int) \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default}
+
+\item{ioe}{(boolean) \code{TRUE} if code is in format \code{IO30138}, and \code{FALSE} by default}
+
+\item{lang}{(string) language used to obtain information}
 }
 \description{
-This function returns a data frame with all available publications from an id or code
+This function returns all available publications from an operation or a date
 }
 \examples{
 get_publications()
+get_publications(resource = "all", help = TRUE)
 }

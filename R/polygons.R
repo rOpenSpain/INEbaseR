@@ -1,14 +1,82 @@
 # API INE (Polygons)
-#
-# Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
-# Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
+# Author: Andres Nacimiento Garcia <andresnacimiento[at]gmail[dot]com>
+# Project Director: Carlos J. Perez Gonzalez <cpgonzal[at]ull[dot]es>
 
-#' @title Get geographical variable
-#' @description This function returns the geographical variable of a serie
-#' @param serie (string) serie id
+
+#' @title Get geographical
+#' @description This function returns geographical information
+#' @param code (string) serie id
+#' @param resource (string) resource to access, by default \code{resource = "variable"} to get serie metadata.
+#'  Possible values are \code{variable, natcode or natcode_to_geocode}
+#' @param all (boolean) if \code{all = TRUE} you will get all natcodes
+#' @param verbose (boolean) show more information during the process
+#' @param natcode (int) geographical code from INE
+#' @param geocode (string) geographical code from Eurostat
+#' @param exponential_notation (boolean) to show or not exponential notation. \code{e.g. e+10}
+#' @param help (boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.
 #' @examples
-#' get_geographical_variable("IPC251522")
+#' get_geographical("IPC251522")
+#' get_geographical(resource = "variable", help = TRUE)
+#' get_geographical("IPC251522", resource = "natcode")
+#' get_geographical(natcode = 34050000000, resource = "natcode_to_geocode")
 #' @export
+get_geographical <- function(code = NULL, resource = "variable", all = FALSE, verbose = FALSE, natcode = NULL, geocode = NULL, exponential_notation = FALSE, help = FALSE) {
+
+  content <- NULL
+
+  switch(resource,
+    variable = {
+      # Help
+      if (help) {
+        params <- c("code (serie id)")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_geographical("IPC251522")'))
+        message(paste0('Example (extended): get_geographical("IPC251522", resource = "variable")'))
+      } else {
+        content <- get_geographical_variable(code)
+      }
+    },
+    natcode = {
+      # Help
+      if (help) {
+        params <- c("code (serie id)", "all", "verbose")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_geographical("IPC251522", resource = "natcode")'))
+        message(paste0('Example (extended): get_geographical("IPC251522", resource = "natcode", all = FALSE, verbose = FALSE)'))
+      } else {
+        content <- get_natcode(code, all, verbose)
+      }
+    },
+    natcode_to_geocode = {
+      # Help
+      if (help) {
+        params <- c("natcode", "geocode", "exponential_notation")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): get_geographical(natcode = 34050000000, resource = "natcode_to_geocode")'))
+        message(paste0('Example (extended): get_geographical(natcode = 34050000000, geocode = NULL, resource = "natcode_to_geocode", exponential_notation = FALSE)'))
+      } else {
+        content <- convert_natcode_to_geocode(natcode, geocode, exponential_notation)
+      }
+    },
+    {
+      stop('ERROR: Possible values of param "resource" are: variable, natcode or natcode_to_geocode')
+    }
+  )
+
+  if (!help) {
+    return(content)
+  }
+
+}
+
+
+# Get geographical variable
+# How to call: get_geographical("IPC251522", resource = "variable")
+# Examples:
+# get_geographical_variable("IPC251522")
 get_geographical_variable <- function(serie) {
 
   # Variables
@@ -37,17 +105,13 @@ get_geographical_variable <- function(serie) {
   return(variable_data$Id)
 }
 
-#' @title Get natcode
-#' @description This function allows get all natcodes or calculate a natcode from a serie and a geographical granularity
-#' @param serie (string) serie identificator
-#' @param all (bool) if \code{all = TRUE} you will get all natcodes
-#' @param verbose (boolean) show more information during the process
-#' @examples
-#' get_natcode()
-#' get_natcode("IPC251522")
-#' get_natcode("IPC251541")
-#' get_natcode("DPOP37286")
-#' @export
+# Get natcode
+# How to call: get_geographical("IPC251522", resource = "natcode")
+# Examples:
+# get_natcode()
+# get_natcode("IPC251522")
+# get_natcode("IPC251541")
+# get_natcode("DPOP37286")
 get_natcode <- function(serie = NULL, all = TRUE, verbose = TRUE) {
 
   # Natcode format:
@@ -159,17 +223,13 @@ get_natcode <- function(serie = NULL, all = TRUE, verbose = TRUE) {
 
 }
 
-#' @title Convert Natcode to Geocode
-#' @description This function allows converting from natcode to geocode and vice-versa.
-#' If all params are null, you will get the complete table used for codes conversion.
-#' @param natcode (int) geographical code from INE
-#' @param geocode (string) geographical code from Eurostat
-#' @param exponential_notation (boolean) to show or not exponential notation. \code{e.g. e+10}
-#' @examples
-#' convert_natcode_to_geocode()
-#' convert_natcode_to_geocode(natcode = 34050000000)
-#' convert_natcode_to_geocode(geocode = "ES70")
-#' @export
+
+# Convert Natcode to Geocode
+# How to call: get_geographical(natcode = 34050000000, resource = "natcode_to_geocode")
+# Examples:
+# convert_natcode_to_geocode()
+# convert_natcode_to_geocode(natcode = 34050000000)
+# convert_natcode_to_geocode(geocode = "ES70")
 convert_natcode_to_geocode <- function(natcode = NULL, geocode = NULL, exponential_notation = FALSE) {
 
   # Force R not to use exponential notation (e.g. e+10)

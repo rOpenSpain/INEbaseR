@@ -15,6 +15,8 @@
 #' @examples
 #' get_publications()
 #' get_publications(resource = "all", help = TRUE)
+#' get_publications("IPC", resource = "operation")
+#' get_publications(8, resource = "date")
 #' @export
 get_publications <- function(code = NULL, resource = "all", help = FALSE, det = 0, ioe = FALSE, lang = "ES") {
 

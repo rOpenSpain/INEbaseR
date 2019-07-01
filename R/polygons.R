@@ -73,6 +73,84 @@ get_geographical <- function(code = NULL, resource = "variable", all = FALSE, ve
 }
 
 
+#' @title Represent series
+#' @description This function allows representing series data in maps or charts
+#' @param code (string) serie identificator
+#' @param resource (string) resource to access, by default \code{resource = "all"} to get serie metadata.
+#'  Possible values are \code{maps, plot or highcharts}
+#' @param help (boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.
+#' @param nlast (int) last \code{n} serie data, if \code{nult = 0} this value will be auto-calculated
+#' @param date_start (date) start date in format (string) \code{YYYY-MM-DD}
+#' @param date_end (date) end date in format (string) \code{YYYY-MM-DD}
+#' @param classification (string) serie classification, if \code{classification = NULL} this value will be auto-detected
+#' @param map_scale (int) refers to the relationship or ratio between distance on a map and the corresponding distance on the ground.
+#' For example, on a \code{1:1000000} scale map, 1cm on the map equals 1km on the ground. Possible values are: \code{1, 3, 10, 20 or 60}, and
+#' it's only for PROV or CCAA geographical granularity, \code{map_scale = 60} by default and \code{map_scale = NULL} for high detailed map.
+#' @param verbose (boolean) show more information during the process
+#' @param benchmark (boolean) used to measure the performance of the system, \code{benchmark = FALSE} by default.
+#' @param det (int) \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
+#' @param type (string) what type of plot should be drawn, \code{type = "p"} (for points) by default. See \code{type} in \code{\link{plot}}
+#' @param lang (string) language used to obtain information
+#' @examples
+#' represent_series("IPC251521", resource = "maps")
+#' represent_series(resource = "maps", help = TRUE)
+#' represent_series("IPC251521", resource = "maps", map_scale = NULL)
+#' represent_series("IPC206449", resource = "plot", nlast = 5)
+#' represent_series("IPC206449", resource = "highcharts", nlast = 5)
+#' @export
+represent_series <- function(code = NULL, resource = "maps", help = FALSE, nlast = 0, date_start = NA, date_end = NA, classification = NULL, map_scale = 60, verbose = FALSE, benchmark = FALSE, det = 0, type = NA, lang = "ES") {
+
+  content <- NULL
+
+  switch(resource,
+    maps = {
+      # Help
+      if (help) {
+        params <- c("code (serie id)", "nlast", "classification", "map_scale", "verbose", "benchmark")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): represent_series("IPC251521", resource = "maps")'))
+        message(paste0('Example (extended): represent_series("IPC251521", resource = "maps", nlast = 0, classification = NULL, map_scale = 60, verbose = FALSE, benchmark = FALSE)'))
+      } else {
+        content <- draw_serie(code, nlast, classification, map_scale, verbose, benchmark)
+      }
+    },
+    plot = {
+      # Help
+      if (help) {
+        params <- c("code (serie id)", "date_start", "date_end", "nlast", "det", "type", "lang")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): represent_series("IPC206449", resource = "plot", nlast = 5)'))
+        message(paste0('Example (extended): represent_series("IPC206449", resource = "plot", date_start = NA, date_end = NA, nlast = 5, det = 0, type = "l", lang = "ES")'))
+      } else {
+        content <- plot_series(code, date_start, date_end, nlast, det, type, lang)
+      }
+    },
+    highcharts = {
+      # Help
+      if (help) {
+        params <- c("code (serie id)", "date_start", "date_end", "nlast", "det", "lang")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): represent_series("IPC206449", resource = "highcharts", nlast = 5)'))
+        message(paste0('Example (extended): represent_series("IPC206449", resource = "highcharts", date_start = NA, date_end = NA, nlast = 5, det = 0, lang = "ES")'))
+      } else {
+        content <- highcharts_series(code, date_start, date_end, nlast, det, lang)
+      }
+    },
+    {
+      stop('ERROR: Possible values of param "resource" are: maps, plot or highcharts')
+    }
+  )
+
+  if (!help) {
+    return(content)
+  }
+
+}
+
+
 # Get geographical variable
 # How to call: get_geographical("IPC251522", resource = "variable")
 # Examples:
@@ -278,21 +356,12 @@ convert_natcode_to_geocode <- function(natcode = NULL, geocode = NULL, exponenti
 }
 
 
-#' @title Draw serie
-#' @description This function allows representing series data into a map
-#' @param serie (string) serie id
-#' @param nult (int) last \code{n} serie data, if \code{nult = 0} this value will be auto-calculated
-#' @param classification (string) serie classification, if \code{classification = NULL} this value will be auto-detected
-#' @param map_scale (int) refers to the relationship or ratio between distance on a map and the corresponding distance on the ground.
-#' For example, on a \code{1:1000000} scale map, 1cm on the map equals 1km on the ground. Possible values are: \code{1, 3, 10, 20 or 60}, and
-#' it's only for PROV or CCAA geographical granularity, \code{map_scale = 60} by default and \code{map_scale = NULL} for high detailed map.
-#' @param verbose (boolean) show more information during the process
-#' @param benchmark (boolean) used to measure the performance of the system, \code{benchmark = FALSE} by default.
-#' @examples
-#' draw_serie("IPC251521")
-#' draw_serie("IPC251541")
-#' draw_serie("UA42121")
-#' @export
+# Draw serie (private)
+# How to call: represent_series("IPC251521", resource = "maps")
+# Examples:
+# draw_serie("IPC251521")
+# draw_serie("IPC251541")
+# draw_serie("UA42121")
 draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, verbose = FALSE, benchmark = FALSE) {
 
   # Start the clock (data)

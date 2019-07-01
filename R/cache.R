@@ -7,7 +7,7 @@
 #' @description This function allows to update cache data
 #' @param code (string) operation identificator
 #' @param resource (string) resource to access, by default \code{resource = "all"} to get serie metadata.
-#'  Possible values are \code{all or variable_operation}
+#'  Possible values are \code{all or series}
 #' @param help (boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.
 #' @param n (int) number of operation to update starting from first operation getted from \code{get_operations_all()} function.
 #' @param page (int) \code{page = 1} to obtain data of an specific page (to use this, \code{pagination = FALSE}).
@@ -54,7 +54,7 @@ update_cache <- function(code = NULL, resource = "series", help = FALSE, n = 0, 
       }
     },
     {
-      stop('ERROR: Possible values of param "resource" are: all or variable_operation')
+      stop('ERROR: Possible values of param "resource" are: all or series')
     }
   )
 

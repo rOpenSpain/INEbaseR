@@ -13,7 +13,7 @@ update_cache(code = NULL, resource = "series", help = FALSE, n = 0,
 \item{code}{(string) operation identificator}
 
 \item{resource}{(string) resource to access, by default \code{resource = "all"} to get serie metadata.
-Possible values are \code{all or variable_operation}}
+Possible values are \code{all or series}}
 
 \item{help}{(boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.}
 

@@ -1,64 +1,77 @@
-# API INE (cache)
-#
-# Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
-# Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
+# API INE (Cache)
+# Author: Andres Nacimiento Garcia <andresnacimiento[at]gmail[dot]com>
+# Project Director: Carlos J. Perez Gonzalez <cpgonzal[at]ull[dot]es>
 
-# Build cache file name to check
-get_cache_file_name <- function(data_type, code, extension = ".rds") {
-  directory_root <- get_cache_directory_path()
-  file_name <- paste0(directory_root, "/", data_type, "-", code, extension)
-  return(file_name)
-}
 
-# Get cache directory path
-get_cache_directory_path <- function(package = "INEbaseR", path = "extdata") {
-  directory_root_path <- find.package(package)
-  directory_path <- paste0(directory_root_path, "/", path)
-  return(directory_path)
-}
+#' @title Update cache
+#' @description This function allows to update cache data
+#' @param code (string) operation identificator
+#' @param resource (string) resource to access, by default \code{resource = "all"} to get serie metadata.
+#'  Possible values are \code{all or variable_operation}
+#' @param help (boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.
+#' @param n (int) number of operation to update starting from first operation getted from \code{get_operations_all()} function.
+#' @param page (int) \code{page = 1} to obtain data of an specific page (to use this, \code{pagination = FALSE}).
+#' @param pagination (boolean) \code{TRUE} to obtain data page by page and \code{FALSE} by default.
+#' @param page_start (int) \code{page_start = 1} start page range to obtain data (to use this, \code{pagination = TRUE}).
+#' @param page_end (int) \code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).
+#' @param benchmark (boolean) used to measure the performance of the system, \code{benchmark = FALSE} by default.
+#' @param force (boolean) to force to update all cache data, \code{force = FALSE} by default.
+#' @param ignore_series (list) list of operation identificators to ignore. More slow series to cache are: 16, 49, 330 and 334
+#' @param tip (string) \code{tip = M} to obtain the metadata (crossing variables-values) of the series.
+#' @param det (int) \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
+#' @param lang (string) language used to obtain information
+#' @examples
+#' update_cache(resource = "series")
+#' update_cache(resource = "series", help = TRUE)
+#' @export
+update_cache <- function(code = NULL, resource = "series", help = FALSE, n = 0, page = 1, pagination = TRUE, page_start = NA, page_end = NA, benchmark = FALSE, force = FALSE, ignore_series = NULL, tip = "M", det = 2, lang = "ES") {
 
-# Check if file is in cache or not
-# Example: check_cache("SERIEOPERATION", 4, get_file_name = TRUE)
-check_cache <- function(data_type, code, get_file_name = FALSE){
+  content <- NULL
 
-  # Build cache file name to check
-  file_name <- get_cache_file_name(data_type, code)
-
-  # Check if file exists
-  if (file_test("-f", file_name)) {
-    if (get_file_name) {
-      # Return a data frame with file name
-      return(data.frame(condition = TRUE, file = file_name, stringsAsFactors = FALSE))
-    } else {
-      # In this case the file exists
-      return(TRUE)
+  switch(resource,
+    series = {
+      # Help
+      if (help) {
+        params <- c("code (operation id)", "benchmark", "page", "tip", "det", "lang")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): update_cache(resource = "series")'))
+        message(paste0('Example (extended): update_cache("IPC", resource = "series", benchmark = FALSE, page = 1, tip = "M", det = 2, lang = "ES")'))
+      } else {
+        content <- update_series(code, benchmark, page, tip, det, lang)
+      }
+    },
+    all = {
+      # Help
+      if (help) {
+        params <- c("code", "n", "page", "pagination", "page_start", "page_end", "benchmark", "force", "ignore_series", "tip", "det")
+        message(paste0('Available params for resource = ', '"', resource, '"', ' are: '))
+        message(paste0("- ", params, "\n"))
+        message(paste0('Example (basic): update_cache("IPC", resource = "all")'))
+        message(paste0('Example (extended): update_cache("IPC", resource = "all", n = 0, page = NA, pagination = TRUE, page_start = NA, page_end = NA, benchmark = TRUE, force = FALSE, ignore_series = NULL, tip = "M", det = 2)'))
+      } else {
+        content <- update_cache_all(code, n, page, pagination, page_start, page_end, benchmark, force, ignore_series, tip, det)
+      }
+    },
+    {
+      stop('ERROR: Possible values of param "resource" are: all or variable_operation')
     }
-  } else {
-    # File not exists
-    return(FALSE)
+  )
+
+  if (!help) {
+    return(content)
   }
 
 }
 
-#' @title Update cache
-#' @description This function allow update specific or all cache data
-#' @param code operation identificator
-#' @param n number of operation to update starting from first operation getted from \code{get_operations_all()} function.
-#' @param page \code{page = 1} to obtain data of an specific page (to use this, \code{pagination = FALSE}).
-#' @param pagination \code{TRUE} to obtain data page by page and \code{FALSE} by default.
-#' @param page_start \code{page_start = 1} start page range to obtain data (to use this, \code{pagination = TRUE}).
-#' @param page_end \code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).
-#' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
-#' @param force (boolean) to force to update all cache data, \code{force = FALSE} by default.
-#' @param ignore_series (int) list of operation identificators to ignore. More slow series to cache are: 16, 49, 330 and 334
-#' @param tip \code{tip = M} to obtain the metadata (crossing variables-values) of the series.
-#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
-#' @examples
-#' update_cache(code = 249)
-#' update_cache(code = 249, page = 1)
-#' update_cache(n = 3)
-#' @export
-update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_start = NA, page_end = NA, benchmark = TRUE, force = FALSE, ignore_series = NULL, tip = "M", det = 2) {
+
+# Update cache
+# How to call: update_cache("IPC", resource = "all")
+# Examples:
+# update_cache_all(code = 249)
+# update_cache_all(code = 249, page = 1)
+# update_cache_all(n = 3)
+update_cache_all <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_start = NA, page_end = NA, benchmark = TRUE, force = FALSE, ignore_series = NULL, tip = "M", det = 2) {
 
   if (n < 0)
     stop("You have defined 'n' parameter with an incorrect value.")
@@ -161,17 +174,10 @@ update_cache <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_sta
 }
 
 
-#' @title Update series
-#' @description This function allow update specific or all cache data
-#' @param serie serie identificator
-#' @param benchmark used to measure the performance of the system, \code{benchmark = FALSE} by default.
-#' @param page \code{page = 1} to obtain data of an specific page.
-#' @param tip \code{tip = M} to obtain the metadata (crossing variables-values) of the series.
-#' @param det \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default
-#' @param lang language used to obtain information
-#' @examples
-#' update_series()
-#' @export
+# Update series
+# How to call: update_cache(resource = "series")
+# Examples:
+# update_series()
 update_series <- function(serie = NULL, benchmark = TRUE, page = 1, tip = "M", det = 2, lang = "ES") {
 
   # Start the clock!
@@ -316,6 +322,47 @@ update_series <- function(serie = NULL, benchmark = TRUE, page = 1, tip = "M", d
 
 }
 
+
+# Build cache file name to check
+get_cache_file_name <- function(data_type, code, extension = ".rds") {
+  directory_root <- get_cache_directory_path()
+  file_name <- paste0(directory_root, "/", data_type, "-", code, extension)
+  return(file_name)
+}
+
+
+# Get cache directory path
+get_cache_directory_path <- function(package = "INEbaseR", path = "extdata") {
+  directory_root_path <- find.package(package)
+  directory_path <- paste0(directory_root_path, "/", path)
+  return(directory_path)
+}
+
+
+# Check if file is in cache or not
+# Example: check_cache("SERIEOPERATION", 4, get_file_name = TRUE)
+check_cache <- function(data_type, code, get_file_name = FALSE){
+
+  # Build cache file name to check
+  file_name <- get_cache_file_name(data_type, code)
+
+  # Check if file exists
+  if (file_test("-f", file_name)) {
+    if (get_file_name) {
+      # Return a data frame with file name
+      return(data.frame(condition = TRUE, file = file_name, stringsAsFactors = FALSE))
+    } else {
+      # In this case the file exists
+      return(TRUE)
+    }
+  } else {
+    # File not exists
+    return(FALSE)
+  }
+
+}
+
+
 # Save data to RDS format
 # Example: save_to_rds("provincias", type = "POLYGONS")
 # Example: save_to_rds("comunidades_autonomas")
@@ -332,6 +379,7 @@ save_to_rds <- function(data, object, type = "SERIEOPERATION") {
   message(paste0("Notification: ",  object, "' compressed successfully to RDS format."))
 
 }
+
 
 # Read data to RDS format
 # Example: get_rds_file_name("provincias", type = "POLYGONS")
@@ -378,6 +426,7 @@ get_cache_rds <- function(object, type = "SERIEOPERATION") {
 
 }
 
+
 # Get last serie operation stored in cache
 # Example: get_last_serie_cache(6)
 get_last_serie_cache <- function(operation) {
@@ -396,6 +445,7 @@ get_last_serie_cache <- function(operation) {
 
 }
 
+
 # Get last serie operation stored in API
 # Example: get_last_serie_api(6)
 get_last_serie_api <- function(operation, page = 1, tip = "M", det = 2, lang = "ES") {
@@ -413,6 +463,7 @@ get_last_serie_api <- function(operation, page = 1, tip = "M", det = 2, lang = "
   return(last_cod)
 
 }
+
 
 # Find the page of a serie stored in INE API
 # Example: get_serie_page("IPC251541", 25)

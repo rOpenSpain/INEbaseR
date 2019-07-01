@@ -4,38 +4,45 @@
 \alias{update_cache}
 \title{Update cache}
 \usage{
-update_cache(code = 0, n = 0, page = NA, pagination = TRUE,
-  page_start = NA, page_end = NA, benchmark = TRUE, force = FALSE,
-  ignore_series = NULL, tip = "M", det = 2)
+update_cache(code = NULL, resource = "series", help = FALSE, n = 0,
+  page = 1, pagination = TRUE, page_start = NA, page_end = NA,
+  benchmark = FALSE, force = FALSE, ignore_series = NULL,
+  tip = "M", det = 2, lang = "ES")
 }
 \arguments{
-\item{code}{operation identificator}
+\item{code}{(string) operation identificator}
 
-\item{n}{number of operation to update starting from first operation getted from \code{get_operations_all()} function.}
+\item{resource}{(string) resource to access, by default \code{resource = "all"} to get serie metadata.
+Possible values are \code{all or variable_operation}}
 
-\item{page}{\code{page = 1} to obtain data of an specific page (to use this, \code{pagination = FALSE}).}
+\item{help}{(boolean) type any value for \code{resource} param and type \code{help = TRUE} to see params available for this \code{resource}.}
 
-\item{pagination}{\code{TRUE} to obtain data page by page and \code{FALSE} by default.}
+\item{n}{(int) number of operation to update starting from first operation getted from \code{get_operations_all()} function.}
 
-\item{page_start}{\code{page_start = 1} start page range to obtain data (to use this, \code{pagination = TRUE}).}
+\item{page}{(int) \code{page = 1} to obtain data of an specific page (to use this, \code{pagination = FALSE}).}
 
-\item{page_end}{\code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).}
+\item{pagination}{(boolean) \code{TRUE} to obtain data page by page and \code{FALSE} by default.}
 
-\item{benchmark}{used to measure the performance of the system, \code{benchmark = FALSE} by default.}
+\item{page_start}{(int) \code{page_start = 1} start page range to obtain data (to use this, \code{pagination = TRUE}).}
+
+\item{page_end}{(int) \code{page_end = 2} end page range to obtain data (to use this, \code{pagination = TRUE}).}
+
+\item{benchmark}{(boolean) used to measure the performance of the system, \code{benchmark = FALSE} by default.}
 
 \item{force}{(boolean) to force to update all cache data, \code{force = FALSE} by default.}
 
-\item{ignore_series}{(int) list of operation identificators to ignore. More slow series to cache are: 16, 49, 330 and 334}
+\item{ignore_series}{(list) list of operation identificators to ignore. More slow series to cache are: 16, 49, 330 and 334}
 
-\item{tip}{\code{tip = M} to obtain the metadata (crossing variables-values) of the series.}
+\item{tip}{(string) \code{tip = M} to obtain the metadata (crossing variables-values) of the series.}
 
-\item{det}{\code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default}
+\item{det}{(int) \code{det = 2} to see two levels of depth, specifically to access the \code{PubFechaAct} object, \code{det = 0} by default}
+
+\item{lang}{(string) language used to obtain information}
 }
 \description{
-This function allow update specific or all cache data
+This function allows to update cache data
 }
 \examples{
-update_cache(code = 249)
-update_cache(code = 249, page = 1)
-update_cache(n = 3)
+update_cache(resource = "series")
+update_cache(resource = "series", help = TRUE)
 }

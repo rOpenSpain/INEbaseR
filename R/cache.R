@@ -398,17 +398,16 @@ get_rds_file_name <- function(object, extension = ".rds", type = "SERIESOPERATIO
 }
 
 
-#' @title Get rds content (cache)
-#' @description This function returns the content of a RDS file in cache
-#' @param object (string) an object of the "type" option
-#' @param type (string) type of content do you want to read, \code{type = "/POLYGONS-"} by default
-#' @examples
-#' get_cache_rds("provincias", type = "POLYGONS")
-#' get_cache_rds("comunidades_autonomas", type = "POLYGONS")
-#' get_cache_rds("municipios", type = "POLYGONS")
-#' get_cache_rds("natcodes", type = "DATATABLE")
-#' get_cache_rds(4, type = "SERIEOPERATION")
-#' @export
+# Get rds content (cache)
+# description This function returns the content of a RDS file in cache
+# param object (string) an object of the "type" option
+# param type (string) type of content do you want to read, \code{type = "/POLYGONS-"} by default
+# Examples:
+# get_cache_rds("provincias", type = "POLYGONS")
+# get_cache_rds("comunidades_autonomas", type = "POLYGONS")
+# get_cache_rds("municipios", type = "POLYGONS")
+# get_cache_rds("natcodes", type = "DATATABLE")
+# get_cache_rds(4, type = "SERIEOPERATION")
 get_cache_rds <- function(object, type = "SERIEOPERATION") {
 
   # File name to load (RDS)

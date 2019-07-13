@@ -5,9 +5,9 @@
 \title{Represent series}
 \usage{
 represent_series(code = NULL, resource = "maps", help = FALSE,
-  nlast = 0, date_start = NA, date_end = NA, classification = NULL,
-  map_scale = 60, verbose = FALSE, benchmark = FALSE, det = 0,
-  type = NA, lang = "ES")
+  nlast = 0, date_start = NULL, date_end = NULL,
+  classification = NULL, map_scale = 60, verbose = FALSE,
+  benchmark = FALSE, det = 0, type = NA, lang = "ES")
 }
 \arguments{
 \item{code}{(string) serie identificator}

@@ -98,7 +98,7 @@ get_geographical <- function(code = NULL, resource = "variable", all = FALSE, ve
 #' represent_series("IPC206449", resource = "plot", nlast = 5)
 #' represent_series("IPC206449", resource = "highcharts", nlast = 5)
 #' @export
-represent_series <- function(code = NULL, resource = "maps", help = FALSE, nlast = 0, date_start = NA, date_end = NA, classification = NULL, map_scale = 60, verbose = FALSE, benchmark = FALSE, det = 0, type = NA, lang = "ES") {
+represent_series <- function(code = NULL, resource = "maps", help = FALSE, nlast = 0, date_start = NULL, date_end = NULL, classification = NULL, map_scale = 60, verbose = FALSE, benchmark = FALSE, det = 0, type = NA, lang = "ES") {
 
   content <- NULL
 

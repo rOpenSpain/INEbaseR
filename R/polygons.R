@@ -308,7 +308,7 @@ get_natcode <- function(serie = NULL, all = TRUE, verbose = TRUE) {
 # convert_natcode_to_geocode()
 # convert_natcode_to_geocode(natcode = 34050000000)
 # convert_natcode_to_geocode(geocode = "ES70")
-convert_natcode_to_geocode <- function(natcode = NULL, geocode = NULL, exponential_notation = FALSE) {
+convert_natcode_to_geocode <- function(natcode = NULL, geocode = NULL, exponential_notation = FALSE, verbose = FALSE) {
 
   # Force R not to use exponential notation (e.g. e+10)
   # Source: https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html
@@ -342,12 +342,14 @@ convert_natcode_to_geocode <- function(natcode = NULL, geocode = NULL, exponenti
   }
 
   # Check if code not found
-  if (is.null(code)) {
-    if ((!is.null(natcode)) && (is.null(geocode))) {
-      message(paste0("Error: no code found for natcode ", natcode))
-    } else {
-      if ((is.null(natcode)) && (!is.null(geocode))) {
-        message(paste0("Error: no code found for geocode ", geocode))
+  if (verbose) {
+    if (is.null(code)) {
+      if ((!is.null(natcode)) && (is.null(geocode))) {
+        message(paste0("Warning: no code found for natcode ", natcode))
+      } else {
+        if ((is.null(natcode)) && (!is.null(geocode))) {
+          message(paste0("Warning: no code found for geocode ", geocode))
+        }
       }
     }
   }
@@ -395,18 +397,21 @@ draw_serie <- function(serie, nult = 0, classification = NULL, map_scale = 60, v
 
     # Get serie data
     #serie_data <- get_data_serie(serie, det = 2, nult = nult)
-    serie_data <- get_data_serie(series[i], det = 2, nult = 1)
+    #serie_data <- get_data_serie(series[i], det = 2, nult = 1)
+    serie_data <- get_series(series[i], resource = "data", nlast = 1, det = 2)
 
     # Get natcode
     serie_natcode <- get_natcode(series[i], verbose = verbose)
 
     # Generate dataframe with necesary data
-    data$name <- rbind(data$name, series[i])
-    data$value <- rbind(data$value, serie_data$Data$Valor)
-    if (is.null(map_scale)) {
-      data$natcode <- rbind(data$natcode, serie_natcode)
-    } else {
-      data$geocode <- rbind(data$geocode, convert_natcode_to_geocode(natcode = serie_natcode))
+    if ((!is.null(serie_data$Data$Valor)) && (length(serie_data$Data$Valor) == 1)) {
+      data$name <- rbind(data$name, series[i])
+      data$value <- rbind(data$value, serie_data$Data$Valor)
+      if (is.null(map_scale)) {
+        data$natcode <- rbind(data$natcode, serie_natcode)
+      } else {
+        data$geocode <- rbind(data$geocode, convert_natcode_to_geocode(natcode = serie_natcode))
+      }
     }
 
   }
@@ -673,7 +678,8 @@ get_series_by_common_parameters <- function(serie, classification = NULL, verbos
 
 
   # Get serie metadata
-  serie_metadata <- get_series(serie, det = 2, tip = "M")
+  #serie_metadata <- get_series(serie, det = 2, tip = "M")
+  serie_metadata <- get_series(serie, resource = "metadata", det = 2, tip = "M", lang = "ES")
 
   # Get classification name
   name_splited <- strsplit(serie_metadata$Nombre, "[.] ")[[1]]
@@ -696,6 +702,10 @@ get_series_by_common_parameters <- function(serie, classification = NULL, verbos
   # Variable ID
   geographical_variables <- c(115, 19, 70)
   variable_id <- serie_metadata$MetaData$Variable$Id
+  if (is.null(variable_id)) {
+    message("Warning: maybe this operation should be upgraded in cache.")
+  }
+
   geographical_id <- 0
   for (variable in variable_id) {
     if (variable %in% geographical_variables) {

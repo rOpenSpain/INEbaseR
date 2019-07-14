@@ -24,7 +24,7 @@
 #' update_cache(resource = "series")
 #' update_cache(resource = "series", help = TRUE)
 #' @export
-update_cache <- function(code = NULL, resource = "series", help = FALSE, n = 0, page = 1, pagination = TRUE, page_start = NA, page_end = NA, benchmark = FALSE, force = FALSE, ignore_series = NULL, tip = "M", det = 2, lang = "ES") {
+update_cache <- function(code = NULL, resource = "series", help = FALSE, n = 0, page = 1, pagination = TRUE, page_start = NULL, page_end = NULL, benchmark = FALSE, force = FALSE, ignore_series = NULL, tip = "M", det = 2, lang = "ES") {
 
   content <- NULL
 
@@ -71,7 +71,7 @@ update_cache <- function(code = NULL, resource = "series", help = FALSE, n = 0, 
 # update_cache_all(code = 249)
 # update_cache_all(code = 249, page = 1)
 # update_cache_all(n = 3)
-update_cache_all <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_start = NA, page_end = NA, benchmark = TRUE, force = FALSE, ignore_series = NULL, tip = "M", det = 2) {
+update_cache_all <- function(code = 0, n = 0, page = NA, pagination = TRUE, page_start = NULL, page_end = NULL, benchmark = TRUE, force = FALSE, ignore_series = NULL, tip = "M", det = 2) {
 
   if (n < 0)
     stop("You have defined 'n' parameter with an incorrect value.")
@@ -92,7 +92,7 @@ update_cache_all <- function(code = 0, n = 0, page = NA, pagination = TRUE, page
 
   if (code > 0) {
 
-    series_operation <- get_series_operation(code, pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE, tip = tip, det = det)
+    series_operation <- get_series_operation_api(code, pagination = pagination, page = page, page_start = page_start, page_end = page_end, tip = tip, det = det)
 
     if (length(series_operation) == 0) {
       message(paste0("No operations founds for ", operations[operations$Id == code,][["Nombre"]], " (", code, ")"))
@@ -124,13 +124,13 @@ update_cache_all <- function(code = 0, n = 0, page = NA, pagination = TRUE, page
             print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (by user)"))
 
           } else {
-            series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE, tip = tip, det = det)
+            series_operation <- get_series_operation_api(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, tip = tip, det = det)
             print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
           }
 
         # Don't ignore series
         } else {
-          series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE, tip = tip, det = det)
+          series_operation <- get_series_operation_api(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, tip = tip, det = det)
           print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
         }
 
@@ -144,7 +144,7 @@ update_cache_all <- function(code = 0, n = 0, page = NA, pagination = TRUE, page
             print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (by user)"))
           } else {
             if (!check_cache("SERIEOPERATION", operations$Id[i])) {
-              series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE, tip = tip, det = det)
+              series_operation <- get_series_operation_api(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, tip = tip, det = det)
               print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
             } else {
               print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (already is updated)"))
@@ -155,7 +155,7 @@ update_cache_all <- function(code = 0, n = 0, page = NA, pagination = TRUE, page
         } else {
 
           if (!check_cache("SERIEOPERATION", operations$Id[i])) {
-            series_operation <- get_series_operation(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE, tip = tip, det = det)
+            series_operation <- get_series_operation_cache(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE, tip = tip, det = det)
             print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
           } else {
             print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (already is updated)"))

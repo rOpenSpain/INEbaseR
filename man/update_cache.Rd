@@ -5,7 +5,7 @@
 \title{Update cache}
 \usage{
 update_cache(code = NULL, resource = "series", help = FALSE, n = 0,
-  page = 1, pagination = TRUE, page_start = NA, page_end = NA,
+  page = 1, pagination = TRUE, page_start = NULL, page_end = NULL,
   benchmark = FALSE, force = FALSE, ignore_series = NULL,
   tip = "M", det = 2, lang = "ES")
 }

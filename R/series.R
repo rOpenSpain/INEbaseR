@@ -360,7 +360,7 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
     data <- fromJSON(url)
   }
 
-  save_to_rds(data, code, type = "SERIEOPERATION")
+  save_to_rds(data, operation, type = "SERIEOPERATION")
 
 
 

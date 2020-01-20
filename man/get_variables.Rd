@@ -4,8 +4,13 @@
 \alias{get_variables}
 \title{Get variables}
 \usage{
-get_variables(code = NULL, resource = "all", help = FALSE,
-  ioe = FALSE, lang = "ES")
+get_variables(
+  code = NULL,
+  resource = "all",
+  help = FALSE,
+  ioe = FALSE,
+  lang = "ES"
+)
 }
 \arguments{
 \item{code}{(string) operation identifier}

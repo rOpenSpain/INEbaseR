@@ -4,9 +4,16 @@
 \alias{get_operations}
 \title{Get operations}
 \usage{
-get_operations(code = NULL, resource = "all", help = FALSE,
-  ioe = FALSE, geographical_granularity = NULL,
-  temporal_granularity = NULL, verbose = TRUE, lang = "ES")
+get_operations(
+  code = NULL,
+  resource = "all",
+  help = FALSE,
+  ioe = FALSE,
+  geographical_granularity = NULL,
+  temporal_granularity = NULL,
+  verbose = TRUE,
+  lang = "ES"
+)
 }
 \arguments{
 \item{code}{(string) operation identificator}

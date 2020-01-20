@@ -4,8 +4,15 @@
 \alias{get_values}
 \title{Get values}
 \usage{
-get_values(code = NULL, resource = "all", operation = NULL,
-  help = FALSE, det = 0, ioe = FALSE, lang = "ES")
+get_values(
+  code = NULL,
+  resource = "all",
+  operation = NULL,
+  help = FALSE,
+  det = 0,
+  ioe = FALSE,
+  lang = "ES"
+)
 }
 \arguments{
 \item{code}{(int) variable indentificator}

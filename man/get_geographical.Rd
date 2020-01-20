@@ -4,9 +4,16 @@
 \alias{get_geographical}
 \title{Get geographical}
 \usage{
-get_geographical(code = NULL, resource = "variable", all = FALSE,
-  verbose = FALSE, natcode = NULL, geocode = NULL,
-  exponential_notation = FALSE, help = FALSE)
+get_geographical(
+  code = NULL,
+  resource = "variable",
+  all = FALSE,
+  verbose = FALSE,
+  natcode = NULL,
+  geocode = NULL,
+  exponential_notation = FALSE,
+  help = FALSE
+)
 }
 \arguments{
 \item{code}{(string) serie id}

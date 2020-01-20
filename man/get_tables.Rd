@@ -4,9 +4,18 @@
 \alias{get_tables}
 \title{Get tables}
 \usage{
-get_tables(code = NULL, resource = "operation", help = FALSE,
-  grp = NULL, geo = 0, nlast = 0, det = 0, tip = NULL,
-  ioe = FALSE, lang = "ES")
+get_tables(
+  code = NULL,
+  resource = "operation",
+  help = FALSE,
+  grp = NULL,
+  geo = 0,
+  nlast = 0,
+  det = 0,
+  tip = NULL,
+  ioe = FALSE,
+  lang = "ES"
+)
 }
 \arguments{
 \item{code}{operation (string/int) or table (int) identificator}

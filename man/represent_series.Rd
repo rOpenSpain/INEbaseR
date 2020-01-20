@@ -4,10 +4,21 @@
 \alias{represent_series}
 \title{Represent series}
 \usage{
-represent_series(code = NULL, resource = "maps", help = FALSE,
-  nlast = 0, date_start = NULL, date_end = NULL,
-  classification = NULL, map_scale = 60, verbose = FALSE,
-  benchmark = FALSE, det = 0, type = NA, lang = "ES")
+represent_series(
+  code = NULL,
+  resource = "maps",
+  help = FALSE,
+  nlast = 0,
+  date_start = NULL,
+  date_end = NULL,
+  classification = NULL,
+  map_scale = 60,
+  verbose = FALSE,
+  benchmark = FALSE,
+  det = 0,
+  type = NA,
+  lang = "ES"
+)
 }
 \arguments{
 \item{code}{(string) serie identificator}

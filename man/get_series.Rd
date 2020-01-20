@@ -4,11 +4,23 @@
 \alias{get_series}
 \title{Get series}
 \usage{
-get_series(code = NULL, resource = "metadata", help = FALSE,
-  ioe = FALSE, det = 0, tip = NULL, lang = "ES",
-  date_start = NULL, date_end = NULL, nlast = NULL,
-  classification = NULL, verbose = FALSE, benchmark = FALSE,
-  geographical_granularity = NULL, temporal_granularity = NULL)
+get_series(
+  code = NULL,
+  resource = "metadata",
+  help = FALSE,
+  ioe = FALSE,
+  det = 0,
+  tip = NULL,
+  lang = "ES",
+  date_start = NULL,
+  date_end = NULL,
+  nlast = NULL,
+  classification = NULL,
+  verbose = FALSE,
+  benchmark = FALSE,
+  geographical_granularity = NULL,
+  temporal_granularity = NULL
+)
 }
 \arguments{
 \item{code}{(string) serie, operation or table identificator}

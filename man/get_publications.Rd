@@ -4,8 +4,14 @@
 \alias{get_publications}
 \title{Get publications}
 \usage{
-get_publications(code = NULL, resource = "all", help = FALSE,
-  det = 0, ioe = FALSE, lang = "ES")
+get_publications(
+  code = NULL,
+  resource = "all",
+  help = FALSE,
+  det = 0,
+  ioe = FALSE,
+  lang = "ES"
+)
 }
 \arguments{
 \item{code}{(string) operation or publication indentificator}

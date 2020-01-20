@@ -4,9 +4,17 @@
 \alias{get_metadata_crossing}
 \title{Get metadata crossing}
 \usage{
-get_metadata_crossing(code = NULL, resource = "series", help = FALSE,
-  query = NULL, p = 1, det = 0, tip = NULL, nlast = 1,
-  lang = "ES")
+get_metadata_crossing(
+  code = NULL,
+  resource = "series",
+  help = FALSE,
+  query = NULL,
+  p = 1,
+  det = 0,
+  tip = NULL,
+  nlast = 1,
+  lang = "ES"
+)
 }
 \arguments{
 \item{code}{(string) operation identificator}

@@ -1,5 +1,9 @@
 # INEbaseR project
 
+<!-- badges: start -->
+[![rOS-badge](https://ropenspain.github.io/rostemplate/reference/figures/ropenspain-badge.svg)](https://ropenspain.es/)
+<!-- badges: end -->
+
 ## Description
 
 R package for obtaining and analyzing open data from INE (Instituto Nacional de Estadística) API.

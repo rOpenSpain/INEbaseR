@@ -3,3 +3,6 @@
 .RData
 .Ruserdata
 .Rproj
+INEbaseR.Rcheck/
+INEbaseR*.tar.gz
+INEbaseR*.tgz

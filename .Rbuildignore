@@ -3,3 +3,6 @@
 ^\.github$
 ^docs$
 ^_pkgdown\.yml$
+^INEbaseR\.Rcheck$
+^INEbaseR.*\.tar\.gz$
+^INEbaseR.*\.tgz$

@@ -358,9 +358,11 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
     data <- fromJSON(url)
   }
 
-  save_to_rds(data, operation, type = "SERIEOPERATION")
-
-
+  if (!is.null(data) && NROW(data) > 0) {
+    save_to_rds(data, operation, type = "SERIEOPERATION")
+  } else {
+    message(paste0("Warning: no series data for operation ", operation, ". Cache not updated."))
+  }
 
   # Stop the clock
   if (benchmark) {

@@ -387,7 +387,7 @@ save_to_rds <- function(data, object, type = "SERIEOPERATION") {
 # Example: get_rds_file_name("municipios", type = "POLYGONS")
 # Example: get_rds_file_name("natcodes", type = "DATATABLE")
 # Example: get_rds_file_name(25, type = "SERIESOPERATION")
-get_rds_file_name <- function(object, extension = ".rds", type = "SERIESOPERATION") {
+get_rds_file_name <- function(object, extension = ".rds", type = "SERIEOPERATION") {
 
   directory_root <- get_cache_directory_path()
   type <- paste0("/", type, "-")

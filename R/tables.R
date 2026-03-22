@@ -112,9 +112,9 @@ get_tables_operation <- function(code, det = 0, geo = 0, tip = NULL, ioe = FALSE
 
   # Build URL
   if (ioe) {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/TABLAS_OPERACION/IOE", code, "?det=", det, "&geo=", geo, "&tip=", tip)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/TABLAS_OPERACION/IOE", code, "?det=", det, "&geo=", geo, "&tip=", tip)
   } else {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/TABLAS_OPERACION/", code, "?det=", det, "&geo=", geo, "&tip=", tip)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/TABLAS_OPERACION/", code, "?det=", det, "&geo=", geo, "&tip=", tip)
   }
 
   # Get content
@@ -131,7 +131,7 @@ get_tables_operation <- function(code, det = 0, geo = 0, tip = NULL, ioe = FALSE
 get_tables_group <- function(id, lang = "ES") {
 
   # Build URL
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/GRUPOS_TABLA/", id)
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/GRUPOS_TABLA/", id)
 
   # Get content
   content <- fromJSON(url)
@@ -153,7 +153,7 @@ get_tables_group_values <- function(id, grp, det = 0, lang = "ES") {
   }
 
   # Build URL
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/VALORES_GRUPOSTABLA/", id, "/", grp, "?det=", det)
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/VALORES_GRUPOSTABLA/", id, "/", grp, "?det=", det)
 
   # Get content
   content <- fromJSON(url)

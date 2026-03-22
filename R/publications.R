@@ -83,7 +83,7 @@ get_publications_all <- function(det = 0, lang = "ES") {
   }
 
   # Build URL
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/PUBLICACIONES?det=", det)
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/PUBLICACIONES?det=", det)
 
   # Get content
   content <- get_content(url, verbose = FALSE)
@@ -107,9 +107,9 @@ get_publications_operation <- function(code, ioe = FALSE, det = 0, lang = "ES") 
 
   # Build URL
   if (ioe) {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/PUBLICACIONES_OPERACION/IOE", code, "?det=", det)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/PUBLICACIONES_OPERACION/IOE", code, "?det=", det)
   } else {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/PUBLICACIONES_OPERACION/", code, "?det=", det)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/PUBLICACIONES_OPERACION/", code, "?det=", det)
   }
 
   # Get content
@@ -132,7 +132,7 @@ get_publications_date <- function(code, det = 0, lang = "ES") {
   }
 
   # Build URL
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/PUBLICACIONFECHA_PUBLICACION/", code, "?det=", det)
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/PUBLICACIONFECHA_PUBLICACION/", code, "?det=", det)
 
   # Get content
   content <- get_content(url, verbose = FALSE)

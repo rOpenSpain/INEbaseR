@@ -168,7 +168,7 @@ get_serie_metadata <- function(serie, det = 0, tip = NULL, lang = "ES") {
     stop("You have defined 'tip' parameter with an incorrect value.")
 
   # URL definition
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE/", serie, "?det=", det, "&tip=", tip)
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIE/", serie, "?det=", det, "&tip=", tip)
 
   # Get data
   data <- fromJSON(url)
@@ -270,10 +270,10 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
 
       # URL definition
       if (ioe) {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", operation, "?page=", page, "&det=", det, "&tip=", tip)
+        url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", operation, "?page=", page, "&det=", det, "&tip=", tip)
       }
       else {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
+        url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
       }
 
       #print(url)
@@ -342,18 +342,18 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
     if (is.null(page)) {
       # URL definition
       if (ioe) {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", NULL, "&det=", det, "&tip=", tip)
+        url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", operation, "?page=", NULL, "&det=", det, "&tip=", tip)
       }
       else {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", NULL, "&det=", det, "&tip=", tip)
+        url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", NULL, "&det=", det, "&tip=", tip)
       }
     } else {
       # URL definition
       if (ioe) {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", code, "?page=", page, "&det=", det, "&tip=", tip)
+        url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", operation, "?page=", page, "&det=", det, "&tip=", tip)
       }
       else {
-        url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", code, "?page=", page, "&det=", det, "&tip=", tip)
+        url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
       }
     }
 
@@ -386,7 +386,7 @@ get_series_values <- function(code, det = 0, lang = "ES") {
   }
 
   # Build URL
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/VALORES_SERIE/", code, "?det=", det)
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/VALORES_SERIE/", code, "?det=", det)
 
   # Get content
   content <- fromJSON(url)
@@ -414,7 +414,7 @@ get_series_table <- function(code, det = 0, tip = NULL, lang = "ES") {
   }
 
   # Build URL
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_TABLA/", code, "?det=", det, "&tip=", tip)
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_TABLA/", code, "?det=", det, "&tip=", tip)
 
   # Get content
   content <- fromJSON(url)
@@ -483,9 +483,9 @@ get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, 
 
   # Build URL
   if (is.null(p)) {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "tip=", tip, "&det=", det)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "tip=", tip, "&det=", det)
   } else {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIE_METADATAOPERACION/", code, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det)
   }
 
   # Get content

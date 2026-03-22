@@ -27,7 +27,7 @@ get_content <- function(url, loop = 1, max_iterations = 10, seconds = 60, verbos
     }
   }) # END tryCatch
 
-  return(content)
+  return(result)
 
 }
 

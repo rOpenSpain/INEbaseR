@@ -66,7 +66,7 @@ get_variables <- function(code = NULL, resource = "all", help = FALSE, ioe = FAL
 get_variables_all <- function(lang = "ES") {
 
   # Build URL
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/VARIABLES")
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/VARIABLES")
 
   # Get content
   content <- get_content(url, verbose = FALSE)
@@ -85,9 +85,9 @@ get_variables_operation <- function(operation, ioe = FALSE, lang = "ES") {
 
   # Build URL
   if (ioe) {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/VARIABLES_OPERACION/IOE", operation)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/VARIABLES_OPERACION/IOE", operation)
   } else {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/VARIABLES_OPERACION/", operation)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/VARIABLES_OPERACION/", operation)
   }
 
   # Get content

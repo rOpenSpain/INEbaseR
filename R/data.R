@@ -30,15 +30,15 @@ get_data_serie <- function(serie, date_start = NULL, date_end = NULL, nult = 0, 
   # Build URL
   if (nult == 0) {
     if (is.null(date_end)) {
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?date=", date_start, ":&det=", det)
+      url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?date=", date_start, ":&det=", det)
     } else {
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?date=", date_start, ":", date_end, "&det=", det)
+      url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?date=", date_start, ":", date_end, "&det=", det)
     }
   } else {
     if (is.null(date_end)) {
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?nult=", nult, "&date=", date_start, ":&det=", det)
+      url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?nult=", nult, "&date=", date_start, ":&det=", det)
     } else {
-      url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?nult=", nult, "&date=", date_start, ":", date_end, "&det=", det)
+      url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/DATOS_SERIE/", serie, "?nult=", nult, "&date=", date_start, ":", date_end, "&det=", det)
     }
   }
 
@@ -66,9 +66,9 @@ get_data_table <- function(id, nlast = 0, det = 0, tip = NULL, lang = "ES") {
 
   # Build URL
   if (nlast == 0) {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_TABLA/", id)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/DATOS_TABLA/", id)
   } else {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_TABLA/", id, "?nult=", nlast)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/DATOS_TABLA/", id, "?nult=", nlast)
   }
 
   # Get content
@@ -140,7 +140,7 @@ get_data_metadataoperation <- function(operation, query = NULL, p = 1, nult = 1,
   urlStr <- paste0(result, collapse = "")
 
   # Build URL
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/DATOS_METADATAOPERACION/", operation, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det, "&nult=", nult)
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/DATOS_METADATAOPERACION/", operation, "?", urlStr, "p=", p, "&tip=", tip, "&det=", det, "&nult=", nult)
 
   # Get content
   content <- get_content(url, verbose = FALSE)

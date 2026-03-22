@@ -124,13 +124,13 @@ update_cache_all <- function(code = 0, n = 0, page = NA, pagination = TRUE, page
             print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (by user)"))
 
           } else {
-            series_operation <- get_series_operation_api(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, tip = tip, det = det)
+            series_operation <- get_series_operation_api(operation = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, tip = tip, det = det)
             print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
           }
 
         # Don't ignore series
         } else {
-          series_operation <- get_series_operation_api(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, tip = tip, det = det)
+          series_operation <- get_series_operation_api(operation = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, tip = tip, det = det)
           print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
         }
 
@@ -144,7 +144,7 @@ update_cache_all <- function(code = 0, n = 0, page = NA, pagination = TRUE, page
             print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (by user)"))
           } else {
             if (!check_cache("SERIEOPERATION", operations$Id[i])) {
-              series_operation <- get_series_operation_api(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, tip = tip, det = det)
+              series_operation <- get_series_operation_api(operation = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, tip = tip, det = det)
               print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
             } else {
               print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (already is updated)"))
@@ -155,7 +155,7 @@ update_cache_all <- function(code = 0, n = 0, page = NA, pagination = TRUE, page
         } else {
 
           if (!check_cache("SERIEOPERATION", operations$Id[i])) {
-            series_operation <- get_series_operation_cache(code = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, cache = FALSE, tip = tip, det = det)
+            series_operation <- get_series_operation_api(operation = operations$Id[i], pagination = pagination, page = page, page_start = page_start, page_end = page_end, tip = tip, det = det)
             print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' has been cached"))
           } else {
             print(paste0("[", i, "] ", "Operation '", operations$Nombre[i], "(", operations$Id[i], ")", "' IGNORED (already is updated)"))
@@ -257,7 +257,7 @@ update_series <- function(serie = NULL, benchmark = TRUE, page = 1, tip = "M", d
         for (page in page_start:page_end) {
 
           # Build URL
-          url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
+          url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
 
           # Get content
           content <- get_content(url, max_iterations = 3, seconds = 30, verbose = FALSE)
@@ -450,7 +450,7 @@ get_last_serie_cache <- function(operation) {
 get_last_serie_api <- function(operation, page = 1, tip = "M", det = 2, lang = "ES") {
 
   # Build URL
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
 
   # Get content
   content <- get_content(url, max_iterations = 3, seconds = 30, verbose = FALSE)
@@ -475,7 +475,7 @@ get_serie_page <- function(serie, operation, page = 1, det = 2, tip = "M", lang 
   while(!serie_found) {
 
     # Build URL
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
 
     # Get content
     content <- get_content(url, verbose = FALSE)

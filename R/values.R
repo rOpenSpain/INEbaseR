@@ -72,7 +72,7 @@ get_values_all <- function(id, det = 0, lang = "ES") {
   }
 
   # Build URL
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/VALORES_VARIABLE/", id, "?det=", det)
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/VALORES_VARIABLE/", id, "?det=", det)
 
   # Get content
   content <- get_content(url, verbose = FALSE)
@@ -98,9 +98,9 @@ get_values_variableoperation <- function(id, op, det = 0, ioe = FALSE, lang = "E
 
   # Build URL
   if (ioe) {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/VALORES_VARIABLEOPERACION/", id, "/IOE", op, "?det=", det)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/VALORES_VARIABLEOPERACION/", id, "/IOE", op, "?det=", det)
   } else {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/VALORES_VARIABLEOPERACION/", id, "/", op, "?det=", det)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/VALORES_VARIABLEOPERACION/", id, "/", op, "?det=", det)
   }
 
   # Get content

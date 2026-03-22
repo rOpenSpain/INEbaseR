@@ -93,7 +93,7 @@ get_operations <- function(code = NULL, resource = "all", help = FALSE, ioe = FA
 get_operations_all <- function(lang = "ES") {
 
   # Build URL
-  url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACIONES_DISPONIBLES")
+  url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/OPERACIONES_DISPONIBLES")
 
   # Get content
   content <- get_content(url, verbose = FALSE)
@@ -112,9 +112,9 @@ get_operation <- function(operation, ioe = FALSE, lang = "ES") {
 
   # Build URL
   if (ioe) {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/IOE", operation)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/OPERACION/IOE", operation)
   } else {
-    url <- paste0("http://servicios.ine.es/wstempus/js/", lang, "/OPERACION/", operation)
+    url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/OPERACION/", operation)
   }
 
   # Get content

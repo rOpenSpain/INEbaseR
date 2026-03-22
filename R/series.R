@@ -164,7 +164,7 @@ get_serie_metadata <- function(serie, det = 0, tip = NULL, lang = "ES") {
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
 
-  if ((tip != "M") && (!is.null(tip)))
+  if (!is.null(tip) && !(tip %in% c("M", "A", "AM")))
     stop("You have defined 'tip' parameter with an incorrect value.")
 
   # URL definition
@@ -230,7 +230,7 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
   if ((det < 0) || (det > 2))
     stop("You have defined 'det' parameter with an incorrect value.")
 
-  if ((tip != "M") && (!is.null(tip)))
+  if (!is.null(tip) && !(tip %in% c("M", "A", "AM")))
     stop("You have defined 'tip' parameter with an incorrect value.")
 
   # Start the clock!
@@ -332,8 +332,10 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
     }
 
     # Fallback: if no data with det/tip, retry with basic params
-    if ((is.null(data) || NROW(data) == 0) && (det > 0 || !is.null(tip))) {
-      message(paste0("Warning: retrying operation ", operation, " with det=0 (basic mode)..."))
+    # Fallback: if no data with tip=M (metadata causes timeouts on large ops),
+    # retry with det=2 without tip (keeps 10K items/page, full structure minus MetaData)
+    if ((is.null(data) || NROW(data) == 0) && !is.null(tip)) {
+      message(paste0("Warning: retrying operation ", operation, " with det=", det, " without tip (no metadata)..."))
 
       empty_content <- FALSE
       page <- 1
@@ -341,10 +343,10 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
 
       while (!empty_content) {
         if (ioe) {
-          url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", operation, "?page=", page, "&det=0")
+          url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", operation, "?page=", page, "&det=", det)
         }
         else {
-          url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=0")
+          url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det)
         }
 
         content <- get_content(url, max_iterations = 3, seconds = 30, delay = 1)
@@ -353,16 +355,17 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
           empty_content <- TRUE
           next
         } else {
+          # det=2 without tip: nested objects available but no MetaData
+          clasificacion <- if (!is.null(content$Clasificacion)) content$Clasificacion$Nombre else content$FK_Clasificacion
           data_content <- data.frame(
+            Id = content$Id,
+            Operacion = content$Operacion$Id,
             COD = content$COD,
-            FK_Operacion = content$FK_Operacion,
             Nombre = content$Nombre,
             Decimales = content$Decimales,
-            FK_Periodicidad = content$FK_Periodicidad,
-            FK_Publicacion = content$FK_Publicacion,
-            FK_Clasificacion = content$FK_Clasificacion,
-            FK_Escala = content$FK_Escala,
-            FK_Unidad = content$FK_Unidad,
+            Clasificacion = clasificacion,
+            Unidad = content$Unidad$Nombre,
+            Periodicidad = content$Periodicidad$Nombre,
             stringsAsFactors = FALSE
           )
         }
@@ -453,7 +456,7 @@ get_series_table <- function(code, det = 0, tip = NULL, lang = "ES") {
   }
 
   # Check tip param
-  if ((tip != "M") && (!is.null(tip))) {
+  if (!is.null(tip) && !(tip %in% c("M", "A", "AM"))) {
     stop("You have defined 'tip' parameter with an incorrect value.")
   }
 
@@ -483,7 +486,7 @@ get_series_metadataoperation <- function(code, query = NULL, p = NULL, det = 0, 
     stop("You have defined 'p' (periodicity) parameter with an incorrect value.")
   }
 
-  if ((tip != "M") && (!is.null(tip))) {
+  if (!is.null(tip) && !(tip %in% c("M", "A", "AM"))) {
     stop("You have defined 'tip' parameter with an incorrect value.")
   }
 

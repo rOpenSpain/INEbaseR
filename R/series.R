@@ -331,8 +331,52 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
 
     }
 
+    # Fallback: if no data with det/tip, retry with basic params
+    if ((is.null(data) || NROW(data) == 0) && (det > 0 || !is.null(tip))) {
+      message(paste0("Warning: retrying operation ", operation, " with det=0 (basic mode)..."))
+
+      empty_content <- FALSE
+      page <- 1
+      if (!is.null(page_start)) page <- page_start
+
+      while (!empty_content) {
+        if (ioe) {
+          url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/IOE", operation, "?page=", page, "&det=0")
+        }
+        else {
+          url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=0")
+        }
+
+        content <- get_content(url, max_iterations = 3, seconds = 30, delay = 1)
+
+        if (length(content) == 0) {
+          empty_content <- TRUE
+          next
+        } else {
+          data_content <- data.frame(
+            COD = content$COD,
+            FK_Operacion = content$FK_Operacion,
+            Nombre = content$Nombre,
+            Decimales = content$Decimales,
+            FK_Periodicidad = content$FK_Periodicidad,
+            FK_Publicacion = content$FK_Publicacion,
+            FK_Clasificacion = content$FK_Clasificacion,
+            FK_Escala = content$FK_Escala,
+            FK_Unidad = content$FK_Unidad,
+            stringsAsFactors = FALSE
+          )
+        }
+
+        data <- rbind(data, data_content)
+        if (!is.null(page_end) && page == page_end) break
+        page <- page + 1
+      }
+    }
+
     # Convert to data frame
-    data <- data.frame(data, stringsAsFactors = FALSE)
+    if (!is.null(data) && NROW(data) > 0) {
+      data <- data.frame(data, stringsAsFactors = FALSE)
+    }
 
     # Get all data
   } else {

@@ -260,7 +260,7 @@ update_series <- function(serie = NULL, benchmark = TRUE, page = 1, tip = "M", d
           url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
 
           # Get content
-          content <- get_content(url, max_iterations = 3, seconds = 30, verbose = FALSE)
+          content <- get_content(url, max_iterations = 3, seconds = 30, verbose = FALSE, delay = 1)
 
           # If error (no content found) go to next operation
           if (length(content) == 0) {
@@ -453,7 +453,7 @@ get_last_serie_api <- function(operation, page = 1, tip = "M", det = 2, lang = "
   url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
 
   # Get content
-  content <- get_content(url, max_iterations = 3, seconds = 30, verbose = FALSE)
+  content <- get_content(url, max_iterations = 3, seconds = 30, verbose = FALSE, delay = 1)
 
   # Get last serie COD
   last_cod <- content$COD[1]
@@ -478,7 +478,7 @@ get_serie_page <- function(serie, operation, page = 1, det = 2, tip = "M", lang 
     url <- paste0("https://servicios.ine.es/wstempus/js/", lang, "/SERIES_OPERACION/", operation, "?page=", page, "&det=", det, "&tip=", tip)
 
     # Get content
-    content <- get_content(url, verbose = FALSE)
+    content <- get_content(url, verbose = FALSE, delay = 1)
 
     if (length(content) == 0) {
       return(NULL)

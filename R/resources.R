@@ -3,11 +3,16 @@
 # Author: Andres Nacimiento Garcia <andresnacimiento@gmail.com>
 # Project Director: Carlos J. Perez Gonzalez <cpgonzal@ull.es>
 
-get_content <- function(url, loop = 1, max_iterations = 10, seconds = 60, verbose = TRUE) {
+get_content <- function(url, loop = 1, max_iterations = 10, seconds = 60, verbose = TRUE, delay = 0) {
 
   # Print URL
   if (verbose) {
     print(url)
+  }
+
+  # Throttle requests to avoid overloading the API
+  if (delay > 0 && loop == 1) {
+    Sys.sleep(delay)
   }
 
   content <- NULL
@@ -23,7 +28,7 @@ get_content <- function(url, loop = 1, max_iterations = 10, seconds = 60, verbos
     if (loop == max_iterations) {
       return(NULL)
     } else {
-      get_content(url, loop + 1, max_iterations, seconds)
+      get_content(url, loop + 1, max_iterations, seconds, verbose, delay)
     }
   }) # END tryCatch
 

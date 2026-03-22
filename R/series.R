@@ -278,48 +278,46 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
 
       #print(url)
       # Get content
-      content <- get_content(url, max_iterations = 3, seconds = 30)
+      content <- get_content(url, max_iterations = 3, seconds = 30, delay = 1)
 
       if (length(content) == 0) {
         empty_content <- TRUE
         next
-        # print(paste0("No content found in page ", page))
       } else {
-        data_content <- NULL
-        for (i in 1:nrow(content)) {
-          # Id
-          if ((tip == "M") && (det == 2)) {
-            data_content$Id <- rbind(data_content$Id, content$Id[i])
-            data_content$Operacion <- rbind(data_content$Operacion, content$Operacion$Id[i])
-          }
-          data_content$COD <- rbind(data_content$COD, content$COD[i])
-          data_content$T3_Operacion <- rbind(data_content$T3_Operacion, content$T3_Operacion[i])
-          data_content$Nombre <- rbind(data_content$Nombre, content$Nombre[i])
-          data_content$Decimales <- rbind(data_content$Decimales, content$Decimales[i])
-          data_content$T3_Periodicidad <- rbind(data_content$T3_Periodicidad, content$T3_Periodicidad[i])
-          data_content$T3_Publicacion <- rbind(data_content$T3_Publicacion, content$T3_Publicacion[i])
-          data_content$T3_Clasificacion <- rbind(data_content$T3_Clasificacion, content$T3_Clasificacion[i])
-          data_content$T3_Escala <- rbind(data_content$T3_Escala, content$T3_Escala[i])
-          data_content$T3_Unidad <- rbind(data_content$T3_Unidad, content$T3_Unidad[i])
-          # Periodicidad (nomrbe) y Metadata
-          if ((tip == "M") && (det == 2)) {
-            # Check if classification is null
-            if (is.null(content$Clasificacion$Nombre[i])) {
-              data_content$Clasificacion <- rbind(data_content$Clasificacion, NA)
-            } else {
-              data_content$Clasificacion <- rbind(data_content$Clasificacion, content$Clasificacion$Nombre[i])
-            }
-            data_content$Unidad <- rbind(data_content$Unidad, content$Unidad$Nombre[i])
-            data_content$Periodicidad <- rbind(data_content$Periodicidad, content$Periodicidad$Nombre[i])
-            data_content$MetaData <- rbind(data_content$MetaData, content$MetaData[i])
-          }
 
+        # Build data_content using vectorized extraction (no row-by-row loop)
+        if ((tip == "M") && (det == 2)) {
+          # Full metadata mode: nested objects available
+          clasificacion <- if (!is.null(content$Clasificacion)) content$Clasificacion$Nombre else content$FK_Clasificacion
+          data_content <- data.frame(
+            Id = content$Id,
+            Operacion = content$Operacion$Id,
+            COD = content$COD,
+            Nombre = content$Nombre,
+            Decimales = content$Decimales,
+            Clasificacion = clasificacion,
+            Unidad = content$Unidad$Nombre,
+            Periodicidad = content$Periodicidad$Nombre,
+            stringsAsFactors = FALSE
+          )
+          data_content[["MetaData"]] <- content$MetaData
+        } else {
+          # Basic mode: only FK references
+          data_content <- data.frame(
+            COD = content$COD,
+            FK_Operacion = content$FK_Operacion,
+            Nombre = content$Nombre,
+            Decimales = content$Decimales,
+            FK_Periodicidad = content$FK_Periodicidad,
+            FK_Publicacion = content$FK_Publicacion,
+            FK_Clasificacion = content$FK_Clasificacion,
+            FK_Escala = content$FK_Escala,
+            FK_Unidad = content$FK_Unidad,
+            stringsAsFactors = FALSE
+          )
         }
 
       }
-
-      # Convert to data frame
-      data_content <- data.frame(data_content, stringsAsFactors = FALSE)
 
       # Build data content
       data <- rbind(data, data_content)

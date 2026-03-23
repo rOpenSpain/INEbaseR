@@ -10,13 +10,13 @@ R package for obtaining and analyzing open data from INE (Instituto Nacional de 
 
 ## Installation
 
-To install this package from Github, first install devtools package:
+To install this package from GitHub, first install the devtools package:
 
 ```
 install.packages("devtools")
 ```
 
-To get this package from this repository, type the command:
+Then install INEbaseR directly from this repository:
 
 ```
 devtools::install_github("oddworldng/INEbaseR")
@@ -34,8 +34,8 @@ devtools::install_github("oddworldng/INEbaseR")
 
 ## Awards and honours
 
-* Winner of award to the best research project of XII Concurso Universitario de Software Libre (nacional) (may of 2018)
-* Winner of special award to the best project of VIII Concurso Universitario de Software Libre of University of La Laguna (apr. of 2018)
+* Winner of the best research project award at the XII Concurso Universitario de Software Libre (nacional) (May 2018)
+* Winner of the special award for best project at the VIII Concurso Universitario de Software Libre, University of La Laguna (April 2018)
 
 ## References and citations
 
@@ -46,7 +46,7 @@ Andres Nacimiento and Carlos J. Perez (2018). INEbaseR: R package for obtaining 
 INE (Instituto Nacional de Estadistica) API. R package version 0.1.0.
 ```
 
-**A BibTeX entry for LaTeX users is**
+**A BibTeX entry for LaTeX users:**
 
 ```
 @Manual{,

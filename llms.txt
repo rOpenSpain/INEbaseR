@@ -2,7 +2,7 @@
 
 ## Description
 
-R package for obtaining and analyzing open data from INE (Instituto
+R package for accessing and analyzing open data from the INE (Instituto
 Nacional de Estadística) API.
 
 ## Installation

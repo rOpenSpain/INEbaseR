@@ -256,6 +256,7 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
   if (pagination) {
 
     empty_content <- FALSE
+    had_page_error <- FALSE
     page <- 1
 
     if (!is.null(page_start)) {
@@ -281,6 +282,10 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
       content <- get_content(url, max_iterations = 3, seconds = 30, delay = 1)
 
       if (length(content) == 0) {
+        # Mark as partial failure if we already had data (mid-pagination error)
+        if (!is.null(data) && NROW(data) > 0) {
+          had_page_error <- TRUE
+        }
         empty_content <- TRUE
         next
       } else {
@@ -334,9 +339,10 @@ get_series_operation_api <- function(operation, det = 0, tip = NULL, pagination 
     # Fallback: if no data with det/tip, retry with basic params
     # Fallback: if no data with tip=M (metadata causes timeouts on large ops),
     # retry with det=2 without tip (keeps 10K items/page, full structure minus MetaData)
-    if ((is.null(data) || NROW(data) == 0) && !is.null(tip)) {
+    if (!is.null(tip) && (is.null(data) || NROW(data) == 0 || had_page_error)) {
       message(paste0("Warning: retrying operation ", operation, " with det=", det, " without tip (no metadata)..."))
 
+      data <- NULL
       empty_content <- FALSE
       page <- 1
       if (!is.null(page_start)) page <- page_start
